@@ -6,7 +6,7 @@ import java.util.*;
 public class Choice {
 	private static final int MAX_ALTERNATIVES = 5;
 
-	private final String id;
+	private final UUID id;
 	private final String content;
 	private final List<Alternative> alternatives;
 	private final Set<Collaborator> collaborators;
@@ -24,7 +24,7 @@ public class Choice {
 	}
 
 	private Choice(String content, List<Alternative> alts, int maxCollaborators) {
-		this.id = ""; // TODO: Random Choice ID generation (Mike's problem)
+		this.id = UUID.randomUUID();
 		this.content = content;
 		this.alternatives = alts;
 		this.collaborators = new HashSet<>();
@@ -37,13 +37,6 @@ public class Choice {
 	public boolean addCollaborator(Collaborator c) {
 		if(this.collaborators.size() < this.maxCollaborators && !this.collaborators.contains(c)) {
 			this.collaborators.add(c);
-			return true;
-		} else return false;
-	}
-
-	public boolean addAlternative(Alternative a) {
-		if(this.alternatives.size() < MAX_ALTERNATIVES) {
-			this.alternatives.add(a);
 			return true;
 		} else return false;
 	}

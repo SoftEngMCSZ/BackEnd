@@ -14,7 +14,7 @@ public class Collaborator {
 
 	// Guaranteed non-null
 	private final String name;
-	// May be null if Collaborator registered without password.
+	// May be null if Collaborator registered without password. Don't serialize this
 	private final String password;
 
 	public Collaborator(String name) {

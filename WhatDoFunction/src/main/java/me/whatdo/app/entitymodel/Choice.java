@@ -18,19 +18,16 @@ public class Choice {
 	public Choice(ChoiceRequest choiceRequest) {
 		this(
 				choiceRequest.content,
-				choiceRequest.creator,
-				choiceRequest.alt1,
-				choiceRequest.alt2,
+				choiceRequest.alts,
 				choiceRequest.maxCollaborators
 		);
 	}
 
-	private Choice(String content, Collaborator creator, Alternative alt1, Alternative alt2, int maxCollaborators) {
+	private Choice(String content, List<Alternative> alts, int maxCollaborators) {
 		this.id = ""; // TODO: Random Choice ID generation (Mike's problem)
 		this.content = content;
-		this.alternatives = Arrays.asList(alt1,alt2);
+		this.alternatives = alts;
 		this.collaborators = new HashSet<>();
-		this.collaborators.add(creator);
 		this.maxCollaborators = maxCollaborators;
 		this.creationTime = Date.from(Instant.now());
 		this.selectedAlternative = null;

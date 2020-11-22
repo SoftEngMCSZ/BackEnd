@@ -1,27 +1,40 @@
 package me.whatdo.app.entitymodel;
 
+import me.whatdo.app.db.Opinion;
+
 import java.util.*;
 
 public class Alternative {
 	private final UUID id;
 	private final String description;
-	private final HashMap<Collaborator,Opinion> opinions;
+	private final Set<Collaborator> approvals;
+	private final Set<Collaborator> disapprovals;
 	private final List<Feedback> feedback;
 
 	public Alternative(String description) {
 		this.id = UUID.randomUUID();
 		this.description = description;
-		this.opinions = new HashMap<>();
+		this.approvals = new HashSet<>();
+		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
 
-	public boolean addOpinion(Collaborator author, Opinion opinion) {
-		this.opinions.put(author,opinion);
+	public boolean addApproval(Collaborator author) {
+		this.approvals.add(author);
 		return true;
 	}
 
-	public boolean removeOpinion(Collaborator author) {
-		return this.opinions.remove(author) != null;
+	public boolean removeApproval(Collaborator author) {
+		return this.approvals.remove(author);
+	}
+
+	public boolean addDisapproval(Collaborator author) {
+		this.disapprovals.add(author);
+		return true;
+	}
+
+	public boolean removeDisapproval(Collaborator author) {
+		return this.disapprovals.remove(author);
 	}
 
 	public boolean addFeedback(Feedback feedback) {
@@ -39,11 +52,12 @@ public class Alternative {
 		Alternative that = (Alternative) o;
 		return this.id.equals(that.id) &&
 					   this.description.equals(that.description) &&
-					   this.opinions.equals(that.opinions) &&
+					   this.approvals.equals(that.approvals) &&
+					   this.disapprovals.equals(that.approvals) &&
 					   this.feedback.equals(that.feedback);
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, description, opinions, feedback);
+		return Objects.hash(id, description, approvals, disapprovals, feedback);
 	}
 }

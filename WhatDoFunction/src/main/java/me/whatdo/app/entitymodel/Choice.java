@@ -15,8 +15,18 @@ public class Choice {
 	private Date completionTime;
 	private final int maxCollaborators;
 
-	public Choice(String content, Collaborator creator, Alternative alt1, Alternative alt2, int maxCollaborators) {
-		this.id = ""; // TODO: Random Choice ID generation
+	public Choice(ChoiceRequest choiceRequest) {
+		this(
+				choiceRequest.content,
+				choiceRequest.creator,
+				choiceRequest.alt1,
+				choiceRequest.alt2,
+				choiceRequest.maxCollaborators
+		);
+	}
+
+	private Choice(String content, Collaborator creator, Alternative alt1, Alternative alt2, int maxCollaborators) {
+		this.id = ""; // TODO: Random Choice ID generation (Mike's problem)
 		this.content = content;
 		this.alternatives = Arrays.asList(alt1,alt2);
 		this.collaborators = new HashSet<>();

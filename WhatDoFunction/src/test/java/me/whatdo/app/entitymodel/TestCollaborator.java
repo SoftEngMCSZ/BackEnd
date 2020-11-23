@@ -10,13 +10,10 @@ import org.junit.Test;
 
 public class TestCollaborator {
 
-    Gson gsonLog, gson;
     Collaborator collab = null;
 
     @Before
     public void setupTests(){
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-        gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
     }
 
@@ -29,12 +26,12 @@ public class TestCollaborator {
     @Test
     public void testSerialize(){
         String testStr = "{\"name\":\"Maxy\"}";
-        Assert.assertEquals(gson.toJson(collab),testStr);
+        Assert.assertEquals(collab.toJson(),testStr);
     }
 
     @Test
     public void testDeserialize(){
-        Collaborator max = gson.fromJson("{\"name\":\"Maxy\",\"password\":\"Baboo\"}", Collaborator.class);
+        Collaborator max = Collaborator.fromJson("{\"name\":\"Maxy\",\"password\":\"Baboo\"}");
         Assert.assertTrue(max.verifyPassword("Baboo"));
     }
 

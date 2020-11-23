@@ -1,5 +1,8 @@
 package me.whatdo.app.entitymodel;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
@@ -11,6 +14,7 @@ public class Collaborator {
 	private static final int HASH_ITERATION_COUNT = 4;
 	private static final int HASH_MEM = 1024 * 1024;
 	private static final int HASH_DEG_PARALLELISM = 8;
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	// Guaranteed non-null
 	private final String name;
@@ -38,6 +42,18 @@ public class Collaborator {
 				Charset.defaultCharset()
 		);
 	}
+
+    public String toJson(){
+        return gson.toJson(this);
+    }
+
+    public JsonObject toJsonObject(){
+        return gson.fromJson(this.toJson(),JsonObject.class);
+    }
+
+    public static Collaborator fromJson(String json){
+        return gson.fromJson(json, Collaborator.class);
+    }
 
 	public boolean verifyPassword(String pwd) {
 		if(this.password == null) return true;

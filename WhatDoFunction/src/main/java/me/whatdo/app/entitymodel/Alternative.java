@@ -1,5 +1,11 @@
 package me.whatdo.app.entitymodel;
 
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import me.whatdo.app.db.Opinion;
+
 import java.util.*;
 
 public class Alternative {
@@ -8,6 +14,7 @@ public class Alternative {
 	private final Set<Collaborator> approvals;
 	private final Set<Collaborator> disapprovals;
 	private final List<Feedback> feedback;
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Alternative(String description) {
 		this.id = UUID.randomUUID();
@@ -24,6 +31,19 @@ public class Alternative {
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
+  
+	public String toJson(){
+	    return gson.toJson(this);
+    }
+
+    public JsonObject toJsonObject(){
+	    return gson.fromJson(this.toJson(),JsonObject.class);
+    }
+
+    public static Alternative fromJson(String json){
+	    return gson.fromJson(json, Alternative.class);
+    }
+
 
 	public boolean addApproval(Collaborator author) {
 		this.disapprovals.remove(author);
@@ -54,6 +74,10 @@ public class Alternative {
 	public String getDescription() {
 		return description;
 	}
+
+	public UUID getID(){
+	    return this.id;
+    }
 
 	public boolean equals(Object o) {
 		Alternative that = (Alternative) o;

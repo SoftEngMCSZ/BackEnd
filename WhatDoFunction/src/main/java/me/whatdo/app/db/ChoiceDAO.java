@@ -98,10 +98,6 @@ public class ChoiceDAO {
 			CollaboratorDAO collabDao = new CollaboratorDAO();
 			AlternativeDAO altDao = new AlternativeDAO();
 
-			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
-			queryDelete.setObject(1,c.getId());
-			int numAffected = queryDelete.executeUpdate();
-
 			for(Collaborator collab: c.getCollaborators()) {
 				collabDao.deleteCollaborator(c.getId(),collab);
 			}
@@ -109,6 +105,10 @@ public class ChoiceDAO {
 			for(Alternative alt: c.getAlternatives()) {
 				altDao.deleteAlternative(alt);
 			}
+
+			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
+			queryDelete.setObject(1,c.getId());
+			int numAffected = queryDelete.executeUpdate();
 
 			queryDelete.close();
 			return numAffected == 1;

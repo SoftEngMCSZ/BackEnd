@@ -28,16 +28,13 @@ public class FeedbackDAO {
 
     public boolean addFeedback(Collaborator author, UUID alternativeID, Date timestamp, String content) throws Exception {
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ?;");
-            ps.setObject(1, alternativeID);
-            ResultSet resultSet = ps.executeQuery();
+            PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (author, alternative, timestamp, content) values(?,?,?,?);");
+            queryAdd.setString(1, author.getName());
+            queryAdd.setObject(2, alternativeID);
+            queryAdd.setObject(3, new Timestamp(timestamp.getTime()));
+            queryAdd.setString(4, content);
+            queryAdd.execute();
 
-            ps = conn.prepareStatement("INSERT INTO " + tblName + " (author, alternative, timestamp, content) values(?,?,?,?);");
-            ps.setString(1, author.getName());
-            ps.setObject(2, alternativeID);
-            ps.setObject(3, new Timestamp(timestamp.getTime()));
-            ps.setString(4, content);
-            ps.execute();
             return true;
         } catch (Exception e) {
             throw new Exception("Failed to insert feedback: " + e.getMessage());
@@ -46,12 +43,12 @@ public class FeedbackDAO {
 
     public boolean deleteFeedback(Collaborator author, UUID alternativeID, Date timestamp) throws Exception {
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ? AND altenative = ? AND timestamp = ?;");
-            ps.setString(1, author.getName());
-            ps.setObject(2, alternativeID);
-            ps.setObject(3, new Timestamp(timestamp.getTime()));
-            int numAffected = ps.executeUpdate();
-            ps.close();
+            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ? AND altenative = ? AND timestamp = ?;");
+            queryDelete.setString(1, author.getName());
+            queryDelete.setObject(2, alternativeID);
+            queryDelete.setObject(3, new Timestamp(timestamp.getTime()));
+            int numAffected = queryDelete.executeUpdate();
+            queryDelete.close();
 
             return (numAffected == 1);
 
@@ -63,9 +60,9 @@ public class FeedbackDAO {
     public List<Feedback> getAllFeedback(UUID alternativeID) throws Exception {
         try {
             ArrayList<Feedback> feedbackList = new ArrayList<Feedback>();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ?;");
-            ps.setObject(1, alternativeID);
-            ResultSet resultSet = ps.executeQuery();
+            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ?;");
+            queryFind.setObject(1, alternativeID);
+            ResultSet resultSet = queryFind.executeQuery();
 
             while(resultSet.next()) {
                 Feedback feedback = generateFeedback(resultSet);
@@ -88,7 +85,6 @@ public class FeedbackDAO {
             }
 
             resultSet.close();
-            ps.close();
 
             return feedbackList;
         } catch (Exception e) {

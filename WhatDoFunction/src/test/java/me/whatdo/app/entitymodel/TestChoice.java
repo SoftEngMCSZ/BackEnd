@@ -12,7 +12,6 @@ import java.util.List;
 
 public class TestChoice {
 
-    Gson gsonLog, gson;
     Alternative alt1, alt2 = null;
     Collaborator collab = null;
     ChoiceRequest request = null;
@@ -20,8 +19,6 @@ public class TestChoice {
 
     @Before
     public void setupTests() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-        gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("Pet fish");
         alt2 = new Alternative("Pet Dog");
@@ -39,18 +36,17 @@ public class TestChoice {
 
     @Test
     public void testSerialize(){
-        String jsonStr = gson.toJson(choice);
-        JsonObject obj = gson.fromJson(jsonStr, JsonObject.class);
+        JsonObject obj = choice.toJsonObject();
         Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
-        Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), gson.toJson(alt1));
+        Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),1);
     }
 
     @Test
     public void testDeserialize(){
         choice.addCollaborator(collab);
-        String jsonStr = gson.toJson(choice);
-        Choice choice2 = gson.fromJson(jsonStr, Choice.class);
+        String jsonStr = choice.toJson();
+        Choice choice2 = Choice.fromJson(jsonStr);
         Assert.assertTrue(choice2.hasCollaborator(collab));
     }
 

@@ -14,15 +14,12 @@ import java.util.List;
 
 public class TestChoiceRequest {
 
-    Gson gsonLog, gson;
     Collaborator collab = null;
     ChoiceRequest request = null;
     Alternative alt1, alt2 = null;
 
     @Before
     public void setupTests() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-        gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("Pet fish");
         alt2 = new Alternative("Pet Dog");
@@ -39,10 +36,9 @@ public class TestChoiceRequest {
 
     @Test
     public void testSerialize(){
-        String jsonStr = gson.toJson(request);
-        JsonObject obj = gson.fromJson(jsonStr, JsonObject.class);
+        JsonObject obj = request.toJsonObject();
         Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
-        Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), gson.toJson(alt1));
+        Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),2);
     }
 }

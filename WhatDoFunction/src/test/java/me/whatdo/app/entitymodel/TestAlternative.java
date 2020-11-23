@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.util.Date;
 
 public class TestAlternative {
-    Gson gsonLog, gson;
     Collaborator collab = null;
     Alternative alt1,alt2 = null;
     Feedback feedback = null;
@@ -19,11 +18,9 @@ public class TestAlternative {
 
     @Before
     public void setupTests() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-        gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("We eat pizza?");
-        feedback = new Feedback(collab, Date.from(Instant.now()), "But I don't like pizza :(");
+        feedback = new Feedback(alt1.getID(), collab, Date.from(Instant.now()), "But I don't like pizza :(");
     }
 
     @Test
@@ -34,15 +31,14 @@ public class TestAlternative {
 
     @Test
     public void testSerialize(){
-        String str = gson.toJson(alt1);
-        JsonObject obj = gson.fromJson(str,JsonObject.class);
+        JsonObject obj = alt1.toJsonObject();
         Assert.assertEquals(obj.get("description").toString(), "\"We eat pizza?\"");
     }
 
     @Test
     public void testDeserialize(){
-        String jsonStr = gson.toJson(alt1);
-        alt2 = gson.fromJson(jsonStr,Alternative.class);
+        String jsonStr = alt1.toJson();
+        alt2 = Alternative.fromJson(jsonStr);
         Assert.assertNotNull(alt2);
         Assert.assertEquals(alt1.hashCode(), alt2.hashCode());
     }

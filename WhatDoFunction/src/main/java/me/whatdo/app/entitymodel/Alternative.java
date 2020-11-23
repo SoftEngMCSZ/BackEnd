@@ -20,8 +20,8 @@ public class Alternative {
 	}
 
 	public boolean addApproval(Collaborator author) {
-		this.approvals.add(author);
-		return true;
+		this.disapprovals.remove(author);
+		return this.approvals.add(author);
 	}
 
 	public boolean removeApproval(Collaborator author) {
@@ -29,8 +29,8 @@ public class Alternative {
 	}
 
 	public boolean addDisapproval(Collaborator author) {
-		this.disapprovals.add(author);
-		return true;
+		this.approvals.remove(author);
+		return this.disapprovals.add(author);
 	}
 
 	public boolean removeDisapproval(Collaborator author) {
@@ -38,8 +38,7 @@ public class Alternative {
 	}
 
 	public boolean addFeedback(Feedback feedback) {
-		this.feedback.add(feedback);
-		return true;
+		return this.feedback.add(feedback);
 	}
 
 	public String getDescription() {
@@ -47,14 +46,8 @@ public class Alternative {
 	}
 
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
 		Alternative that = (Alternative) o;
-		return this.id.equals(that.id) &&
-					   this.description.equals(that.description) &&
-					   this.approvals.equals(that.approvals) &&
-					   this.disapprovals.equals(that.approvals) &&
-					   this.feedback.equals(that.feedback);
+		return this.id.equals(that.id);
 	}
 
 	public int hashCode() {

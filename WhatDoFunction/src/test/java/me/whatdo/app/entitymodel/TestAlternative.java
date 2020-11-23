@@ -6,11 +6,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Instant;
+import java.util.Date;
+
 public class TestAlternative {
     Gson gsonLog, gson;
     Collaborator collab = null;
     Alternative alt1;
-    Alternative alt2;
+    Feedback feedback;
     ChoiceRequest request;
     Choice choice;
 
@@ -22,6 +25,7 @@ public class TestAlternative {
         gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("We eat pizza?");
+        feedback = new Feedback(collab, Date.from(Instant.now()), "But I don't like pizza :(");
     }
 
     @Test
@@ -38,7 +42,28 @@ public class TestAlternative {
     }
 
     @Test
-    public void testDeserialize(){
+    public void testApproval(){
+        Assert.assertFalse(alt1.removeApproval(collab));
+        Assert.assertTrue(alt1.addApproval(collab));
+        Assert.assertTrue(alt1.removeApproval(collab));
+    }
 
+    @Test
+    public void testDisapproval(){
+        Assert.assertFalse(alt1.removeDisapproval(collab));
+        Assert.assertTrue(alt1.addDisapproval(collab));
+        Assert.assertTrue(alt1.removeDisapproval(collab));
+    }
+
+    @Test
+    public void testExclusivity(){
+        Assert.assertTrue(alt1.addApproval(collab));
+        Assert.assertTrue(alt1.addDisapproval(collab));
+        Assert.assertFalse(alt1.removeApproval(collab));
+    }
+
+    @Test
+    public void testFeedback(){
+        Assert.assertTrue(alt1.addFeedback(feedback));
     }
 }

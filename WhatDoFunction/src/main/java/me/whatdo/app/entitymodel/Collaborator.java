@@ -45,6 +45,10 @@ public class Collaborator {
 		return hasher.verify(this.password,pwd.toCharArray());
 	}
 
+	public String getPassword() {
+		return this.password;
+	}
+
 	public int hashCode() {
 		return Objects.hash(this.name);
 	}

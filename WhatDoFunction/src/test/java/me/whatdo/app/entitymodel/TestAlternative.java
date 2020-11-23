@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.util.Date;
 
 public class TestAlternative {
-    Gson gson;
     Collaborator collab = null;
     Alternative alt1,alt2 = null;
     Feedback feedback = null;
@@ -19,7 +18,6 @@ public class TestAlternative {
 
     @Before
     public void setupTests() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("We eat pizza?");
         feedback = new Feedback(collab, Date.from(Instant.now()), "But I don't like pizza :(");

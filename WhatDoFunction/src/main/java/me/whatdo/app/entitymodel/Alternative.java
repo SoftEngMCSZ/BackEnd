@@ -4,7 +4,6 @@ package me.whatdo.app.entitymodel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import me.whatdo.app.db.Opinion;
 
 import java.util.*;
 

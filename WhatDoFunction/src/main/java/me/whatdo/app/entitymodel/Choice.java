@@ -11,7 +11,7 @@ public class Choice {
 	private static final int MAX_ALTERNATIVES = 5;
 
 	private final UUID id;
-	private final String content;
+	private final String question;
 	private final List<Alternative> alternatives;
 	private final Set<Collaborator> collaborators;
 	private Alternative selectedAlternative;
@@ -22,21 +22,60 @@ public class Choice {
 
 	public Choice(ChoiceRequest choiceRequest) {
 		this(
-				choiceRequest.content,
+				choiceRequest.question,
 				choiceRequest.alternatives,
 				choiceRequest.maxCollaborators
 		);
 	}
 
-	private Choice(String content, List<Alternative> alts, int maxCollaborators) {
+	private Choice(String question, List<Alternative> alts, int maxCollaborators) {
 		this.id = UUID.randomUUID();
-		this.content = content;
+		this.question = question;
 		this.alternatives = alts;
 		this.collaborators = new HashSet<>();
 		this.maxCollaborators = maxCollaborators;
 		this.creationTime = Date.from(Instant.now());
 		this.selectedAlternative = null;
 		this.completionTime = null;
+	}
+
+	public Choice(
+			UUID id,
+			String question,
+			List<Alternative> alternatives,
+			Set<Collaborator> collaborators,
+			Optional<Alternative> selectedAlternative,
+			Date creationTime,
+			Optional<Date> completionTime,
+			int maxCollaborators) {
+		this.id = id;
+		this.question = question;
+		this.alternatives = alternatives;
+		this.collaborators = collaborators;
+		this.selectedAlternative = selectedAlternative.orElse(null);
+		this.creationTime = creationTime;
+		this.completionTime = completionTime.orElse(null);
+		this.maxCollaborators = maxCollaborators;
+	}
+
+	public UUID getId() {
+		return this.id;
+	}
+
+	public Date getCreationTime() {
+		return this.creationTime;
+	}
+
+	public String getQuestion() {
+		return this.question;
+	}
+
+	public List<Alternative> getAlternatives() {
+		return this.alternatives;
+	}
+
+	public Set<Collaborator> getCollaborators() {
+		return this.collaborators;
 	}
 
 	public String toJson(){

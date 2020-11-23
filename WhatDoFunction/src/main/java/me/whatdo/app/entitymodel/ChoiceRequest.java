@@ -7,13 +7,13 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 public class ChoiceRequest {
-	protected final String content;
+	protected final String question;
 	protected final List<Alternative> alternatives;
 	protected final int maxCollaborators;
 	protected static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public ChoiceRequest(String content, List<Alternative> alts, int maxCollaborators) {
-		this.content = content;
+	public ChoiceRequest(String question, List<Alternative> alts, int maxCollaborators) {
+		this.question = question;
 		this.alternatives = alts;
 		this.maxCollaborators = maxCollaborators;
 	}

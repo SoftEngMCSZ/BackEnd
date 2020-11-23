@@ -1,7 +1,5 @@
 package me.whatdo.app.entitymodel;
 
-import me.whatdo.app.db.Opinion;
-
 import java.util.*;
 
 public class Alternative {
@@ -13,6 +11,14 @@ public class Alternative {
 
 	public Alternative(String description) {
 		this.id = UUID.randomUUID();
+		this.description = description;
+		this.approvals = new HashSet<>();
+		this.disapprovals = new HashSet<>();
+		this.feedback = new ArrayList<>();
+	}
+
+	public Alternative(UUID id, String description) {
+		this.id = id;
 		this.description = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
@@ -41,6 +47,10 @@ public class Alternative {
 		return this.feedback.add(feedback);
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -51,6 +61,6 @@ public class Alternative {
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, description, approvals, disapprovals, feedback);
+		return Objects.hash(id);
 	}
 }

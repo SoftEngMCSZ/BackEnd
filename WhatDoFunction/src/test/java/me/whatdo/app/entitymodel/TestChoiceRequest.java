@@ -41,4 +41,13 @@ public class TestChoiceRequest {
         Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),2);
     }
+
+    @Test
+    public void testDeserialize(){
+        ChoiceRequest request2 = ChoiceRequest.fromJson(request.toJson());
+        JsonObject obj = request2.toJsonObject();
+        Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
+        Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
+        Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),2);
+    }
 }

@@ -1,4 +1,4 @@
-package me.whatdo.app.handlers.user;
+package me.whatdo.app.handlers.choice;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class VerifyUserHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         Map<String, String> headers = new HashMap<>();
@@ -18,7 +18,6 @@ public class VerifyUserHandler implements RequestHandler<APIGatewayProxyRequestE
         headers.put("X-Custom-Header", "application/json");
 
         Map<String, String> pathParam = input.getPathParameters();
-        UUID choiceID = UUID.fromString(pathParam.get("choiceID"));
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);

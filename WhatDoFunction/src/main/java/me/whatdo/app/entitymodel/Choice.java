@@ -1,5 +1,8 @@
 package me.whatdo.app.entitymodel;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.time.Instant;
 import java.util.*;
 
@@ -14,6 +17,7 @@ public class Choice {
 	private final Date creationTime;
 	private Date completionTime;
 	private final int maxCollaborators;
+	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Choice(ChoiceRequest choiceRequest) {
 		this(
@@ -32,6 +36,14 @@ public class Choice {
 		this.creationTime = Date.from(Instant.now());
 		this.selectedAlternative = null;
 		this.completionTime = null;
+	}
+
+	public String toJson(){
+		return gson.toJson(this);
+	}
+
+	public static Choice fromJson(String json){
+		return gson.fromJson(json, Choice.class);
 	}
 
 	public boolean addCollaborator(Collaborator c) {

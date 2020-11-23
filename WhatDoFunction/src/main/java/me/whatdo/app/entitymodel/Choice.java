@@ -2,6 +2,7 @@ package me.whatdo.app.entitymodel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import java.time.Instant;
 import java.util.*;
@@ -40,6 +41,10 @@ public class Choice {
 
 	public String toJson(){
 		return gson.toJson(this);
+	}
+
+	public JsonObject toJsonObject(){
+		return gson.fromJson(this.toJson(),JsonObject.class);
 	}
 
 	public static Choice fromJson(String json){

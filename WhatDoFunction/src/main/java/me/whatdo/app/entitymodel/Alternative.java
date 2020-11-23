@@ -2,6 +2,7 @@ package me.whatdo.app.entitymodel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import me.whatdo.app.db.Opinion;
 
 import java.util.*;
@@ -24,6 +25,10 @@ public class Alternative {
 
 	public String toJson(){
 	    return gson.toJson(this);
+    }
+
+    public JsonObject toJsonObject(){
+	    return gson.fromJson(this.toJson(),JsonObject.class);
     }
 
     public static Alternative fromJson(String json){

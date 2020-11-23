@@ -2,6 +2,7 @@ package me.whatdo.app.entitymodel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
@@ -44,6 +45,10 @@ public class Collaborator {
 
     public String toJson(){
         return gson.toJson(this);
+    }
+
+    public JsonObject toJsonObject(){
+        return gson.fromJson(this.toJson(),JsonObject.class);
     }
 
     public static Collaborator fromJson(String json){

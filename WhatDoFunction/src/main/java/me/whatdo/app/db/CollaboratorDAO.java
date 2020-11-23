@@ -40,10 +40,11 @@ public class CollaboratorDAO {
 			queryAdd.setObject(2,choiceId);
 			queryAdd.setString(3,c.getPassword());
 
-			return queryAdd.execute();
+			queryAdd.execute();
+			return true;
 		}
 		catch (Exception e) {
-			throw e;
+			throw new Exception("Failed to add collaborator "+c.getName()+". Error: "+e.getMessage());
 		}
 	}
 
@@ -61,7 +62,7 @@ public class CollaboratorDAO {
 			}
 			return Optional.empty();
 		} catch (Exception e) {
-			throw new Exception("Failed to get collaborator " + name + " of choice " + choiceId);
+			throw new Exception("Failed to get collaborator " + name + " of choice " + choiceId + ". Error: "+e.getMessage());
 		}
 	}
 
@@ -80,13 +81,13 @@ public class CollaboratorDAO {
 			return out;
 		}
 		catch (Exception e) {
-			throw e;
+			throw new Exception("Failed to get collaborators from choice "+choiceId+". Error: " + e.getMessage());
 		}
 	}
 
 	public boolean deleteCollaborator(UUID choiceId, Collaborator c) throws Exception {
 		try {
-			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM" + tblName + " WHERE name = ? AND choice = ?;");
+			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ? AND choice = ?;");
 			queryDelete.setString(1,c.getName());
 			queryDelete.setObject(2,choiceId);
 			int numAffected = queryDelete.executeUpdate();
@@ -94,7 +95,7 @@ public class CollaboratorDAO {
 			return numAffected == 1;
 		}
 		catch (Exception e) {
-			throw e;
+			throw new Exception("Failed to delete collaborator " + c.getName() + ". Error: "+e.getMessage());
 		}
 	}
 

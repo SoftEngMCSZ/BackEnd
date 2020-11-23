@@ -12,10 +12,8 @@ import java.util.Date;
 public class TestAlternative {
     Gson gsonLog, gson;
     Collaborator collab = null;
-    Alternative alt1;
-    Feedback feedback;
-    ChoiceRequest request;
-    Choice choice;
+    Alternative alt1,alt2 = null;
+    Feedback feedback = null;
 
 
 
@@ -39,6 +37,14 @@ public class TestAlternative {
         String str = gson.toJson(alt1);
         JsonObject obj = gson.fromJson(str,JsonObject.class);
         Assert.assertEquals(obj.get("description").toString(), "\"We eat pizza?\"");
+    }
+
+    @Test
+    public void testDeserialize(){
+        String jsonStr = gson.toJson(alt1);
+        alt2 = gson.fromJson(jsonStr,Alternative.class);
+        Assert.assertNotNull(alt2);
+        Assert.assertEquals(alt1.hashCode(), alt2.hashCode());
     }
 
     @Test

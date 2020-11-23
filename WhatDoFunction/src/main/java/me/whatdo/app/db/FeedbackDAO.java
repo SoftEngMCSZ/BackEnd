@@ -43,7 +43,7 @@ public class FeedbackDAO {
 
     public boolean deleteFeedback(Collaborator author, UUID alternativeID, Date timestamp) throws Exception {
         try {
-            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ? AND altenative = ? AND timestamp = ?;");
+            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE author = ? AND alternative = ? AND timestamp = ?;");
             queryDelete.setString(1, author.getName());
             queryDelete.setObject(2, alternativeID);
             queryDelete.setObject(3, new Timestamp(timestamp.getTime()));

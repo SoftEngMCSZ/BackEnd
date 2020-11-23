@@ -69,7 +69,7 @@ public class CollaboratorDAO {
 		ArrayList<Collaborator> out = new ArrayList<>();
 
 		try {
-			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE name = ? AND choice = ?;");
+			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE choice = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice

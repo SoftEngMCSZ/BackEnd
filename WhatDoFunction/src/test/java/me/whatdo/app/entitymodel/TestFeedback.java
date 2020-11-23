@@ -16,11 +16,13 @@ public class TestFeedback {
 
     Collaborator collab = null;
     Feedback feedback = null;
+    Alternative alt1;
 
     @Before
     public void setupTests() {
         collab = new Collaborator("Maxy", "Baboo");
-        feedback = new Feedback(collab, Date.from(Instant.now()), "But I don't like pizza :(");
+        alt1 = new Alternative("We could order dominos.");
+        feedback = new Feedback(alt1.getID(), collab, Date.from(Instant.now()), "But I don't like pizza :(");
     }
 
     @Test
@@ -31,9 +33,10 @@ public class TestFeedback {
     @Test
     public void testSerialize(){
         JsonObject obj = feedback.toJsonObject();
+        Assert.assertEquals(obj.get("feedbackID").toString(),gson.toJson(feedback.getID()));
         Assert.assertEquals(obj.get("author").toString(),gson.toJson(feedback.getAuthor()));
         Assert.assertEquals(obj.get("timestamp").toString(),gson.toJson(feedback.getTimestamp()));
-        Assert.assertEquals(obj.get("content").toString(), gson.toJson(feedback.getContent()));
+        Assert.assertEquals(obj.get("contents").toString(), gson.toJson(feedback.getContent()));
     }
 
     @Test
@@ -43,7 +46,7 @@ public class TestFeedback {
         JsonObject obj2 = feedback2.toJsonObject();
         Assert.assertEquals(obj.get("author").toString(),obj2.get("author").toString());
         Assert.assertEquals(obj.get("timestamp").toString(),obj2.get("timestamp").toString());
-        Assert.assertEquals(obj.get("content").toString(),obj2.get("content").toString());
+        Assert.assertEquals(obj.get("contents").toString(),obj2.get("contents").toString());
 
     }
 }

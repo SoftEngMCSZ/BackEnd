@@ -61,6 +61,10 @@ public class Alternative {
 		return description;
 	}
 
+	public UUID getID(){
+	    return this.id;
+    }
+
 	public boolean equals(Object o) {
 		Alternative that = (Alternative) o;
 		return this.id.equals(that.id);

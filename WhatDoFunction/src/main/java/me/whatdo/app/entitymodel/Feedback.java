@@ -5,17 +5,22 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Feedback {
+	private final UUID feedbackID;
+	private final UUID alternativeID;
 	private final Collaborator author;
 	private final Date timestamp;
-	private final String content;
+	private final String contents;
 	private static final  Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public Feedback(Collaborator author, Date timestamp, String content) {
+	public Feedback(UUID parentID, Collaborator author, Date timestamp, String content) {
+		this.feedbackID = UUID.randomUUID();
+		this.alternativeID = parentID;
 		this.author = author;
 		this.timestamp = timestamp;
-		this.content = content;
+		this.contents = content;
 	}
 
 	public String toJson(){
@@ -30,6 +35,8 @@ public class Feedback {
 		return gson.fromJson(json, Feedback.class);
 	}
 
+	public UUID getFeedbackID() { return feedbackID;}
+
 	public Collaborator getAuthor() {
 		return author;
 	}
@@ -39,7 +46,7 @@ public class Feedback {
 	}
 
 	public String getContent() {
-		return content;
+		return contents;
 	}
 }
 

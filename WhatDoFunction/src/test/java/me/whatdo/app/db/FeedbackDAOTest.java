@@ -1,4 +1,4 @@
-package me.whatdo.app;
+package me.whatdo.app.db;
 
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.db.FeedbackDAO;

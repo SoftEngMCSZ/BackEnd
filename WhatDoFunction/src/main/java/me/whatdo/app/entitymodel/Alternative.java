@@ -12,7 +12,7 @@ public class Alternative {
 	private final Set<Collaborator> approvals;
 	private final Set<Collaborator> disapprovals;
 	private final List<Feedback> feedback;
-    private static Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Alternative(String description) {
 		this.id = UUID.randomUUID();

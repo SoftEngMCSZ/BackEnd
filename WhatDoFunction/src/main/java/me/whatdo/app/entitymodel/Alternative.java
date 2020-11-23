@@ -1,5 +1,6 @@
 package me.whatdo.app.entitymodel;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -23,6 +24,14 @@ public class Alternative {
 		this.feedback = new ArrayList<>();
 	}
 
+	public Alternative(UUID id, String description) {
+		this.id = id;
+		this.description = description;
+		this.approvals = new HashSet<>();
+		this.disapprovals = new HashSet<>();
+		this.feedback = new ArrayList<>();
+	}
+  
 	public String toJson(){
 	    return gson.toJson(this);
     }
@@ -34,6 +43,7 @@ public class Alternative {
     public static Alternative fromJson(String json){
 	    return gson.fromJson(json, Alternative.class);
     }
+
 
 	public boolean addApproval(Collaborator author) {
 		this.disapprovals.remove(author);
@@ -57,6 +67,10 @@ public class Alternative {
 		return this.feedback.add(feedback);
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -71,6 +85,6 @@ public class Alternative {
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, description, approvals, disapprovals, feedback);
+		return Objects.hash(id);
 	}
 }

@@ -50,4 +50,19 @@ public class CollaboratorDAOTests {
 			Assert.assertTrue(dao.deleteCollaborator(mockChoice,c));
 		}
 	}
+
+	@Test
+	public void getNonExistentCollaborator() throws Exception {
+		UUID mockChoice = UUID.randomUUID();
+		Assert.assertFalse(dao.getCollaborator(mockChoice,"Bob the Builder").isPresent());
+	}
+
+	@Test
+	public void attemptDoubleInsert() throws Exception {
+		UUID mockChoice = UUID.randomUUID();
+		Collaborator testCollab = new Collaborator("Bob the Builder");
+		Assert.assertTrue(dao.addCollaborator(mockChoice,testCollab));
+		Assert.assertFalse(dao.addCollaborator(mockChoice,testCollab));
+		Assert.assertTrue(dao.deleteCollaborator(mockChoice,testCollab));
+	}
 }

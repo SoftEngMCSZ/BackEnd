@@ -12,14 +12,13 @@ import java.util.Date;
 
 public class TestFeedback {
 
-    Gson gsonLog, gson;
+    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
     Collaborator collab = null;
     Feedback feedback = null;
 
     @Before
     public void setupTests() {
-        gson = new GsonBuilder().disableHtmlEscaping().create();
-        gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         feedback = new Feedback(collab, Date.from(Instant.now()), "But I don't like pizza :(");
     }
@@ -31,9 +30,7 @@ public class TestFeedback {
 
     @Test
     public void testSerialize(){
-        System.out.println(gsonLog.toJson(feedback));
-        String jsonStr = gson.toJson(feedback);
-        JsonObject obj = gson.fromJson(jsonStr, JsonObject.class);
+        JsonObject obj = feedback.toJsonObject();
         Assert.assertEquals(obj.get("author").toString(),gson.toJson(feedback.getAuthor()));
         Assert.assertEquals(obj.get("timestamp").toString(),gson.toJson(feedback.getTimestamp()));
         Assert.assertEquals(obj.get("content").toString(), gson.toJson(feedback.getContent()));

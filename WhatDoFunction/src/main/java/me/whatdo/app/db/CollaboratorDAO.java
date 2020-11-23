@@ -35,9 +35,10 @@ public class CollaboratorDAO {
 				return false;
 			}
 
-			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (name,password) values(?,?);");
+			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (name,choice,password) values(?,?,?);");
 			queryAdd.setString(1,c.getName());
-			queryAdd.setString(2,c.getPassword());
+			queryAdd.setObject(2,choiceId);
+			queryAdd.setString(3,c.getPassword());
 
 			return queryAdd.execute();
 		}

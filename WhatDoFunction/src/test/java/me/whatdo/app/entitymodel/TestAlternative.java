@@ -33,8 +33,7 @@ public class TestAlternative {
 
     @Test
     public void testSerialize(){
-        String str = alt1.toJson();
-        JsonObject obj = gson.fromJson(str,JsonObject.class);
+        JsonObject obj = alt1.toJsonObject();
         Assert.assertEquals(obj.get("description").toString(), "\"We eat pizza?\"");
     }
 

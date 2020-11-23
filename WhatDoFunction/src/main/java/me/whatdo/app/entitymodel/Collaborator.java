@@ -15,7 +15,7 @@ public class Collaborator {
 	// Guaranteed non-null
 	private final String name;
 	// May be null if Collaborator registered without password. Don't serialize this
-	private final String password;
+	private transient final String password;
 
 	public Collaborator(String name) {
 		this.name = name;
@@ -46,13 +46,11 @@ public class Collaborator {
 	}
 
 	public int hashCode() {
-		return Objects.hash(this.name,this.password);
+		return Objects.hash(this.name);
 	}
 
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || this.getClass() != o.getClass()) return false;
 		Collaborator that = (Collaborator) o;
-		return this.name.equals(that.name) && Objects.equals(this.password, that.password);
+		return this.name.equals(that.name);
 	}
 }

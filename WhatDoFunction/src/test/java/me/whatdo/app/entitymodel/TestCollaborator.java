@@ -15,7 +15,7 @@ public class TestCollaborator {
 
     @Before
     public void setupTests(){
-        gson = new Gson();
+        gson = new GsonBuilder().disableHtmlEscaping().create();
         gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
     }

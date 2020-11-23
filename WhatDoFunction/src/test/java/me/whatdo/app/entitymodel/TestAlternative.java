@@ -21,7 +21,7 @@ public class TestAlternative {
 
     @Before
     public void setupTests() {
-        gson = new Gson();
+        gson = new GsonBuilder().disableHtmlEscaping().create();
         gsonLog = new GsonBuilder().setPrettyPrinting().create();
         collab = new Collaborator("Maxy", "Baboo");
         alt1 = new Alternative("We eat pizza?");

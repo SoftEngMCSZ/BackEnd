@@ -35,4 +35,15 @@ public class TestFeedback {
         Assert.assertEquals(obj.get("timestamp").toString(),gson.toJson(feedback.getTimestamp()));
         Assert.assertEquals(obj.get("content").toString(), gson.toJson(feedback.getContent()));
     }
+
+    @Test
+    public void testDeserialize(){
+        Feedback feedback2 = Feedback.fromJson(feedback.toJson());
+        JsonObject obj = feedback.toJsonObject();
+        JsonObject obj2 = feedback2.toJsonObject();
+        Assert.assertEquals(obj.get("author").toString(),obj2.get("author").toString());
+        Assert.assertEquals(obj.get("timestamp").toString(),obj2.get("timestamp").toString());
+        Assert.assertEquals(obj.get("content").toString(),obj2.get("content").toString());
+
+    }
 }

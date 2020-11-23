@@ -18,7 +18,7 @@ public class Choice {
 	public Choice(ChoiceRequest choiceRequest) {
 		this(
 				choiceRequest.content,
-				choiceRequest.alts,
+				choiceRequest.alternatives,
 				choiceRequest.maxCollaborators
 		);
 	}

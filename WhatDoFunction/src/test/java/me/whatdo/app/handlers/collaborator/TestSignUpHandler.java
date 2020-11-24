@@ -21,9 +21,9 @@ import java.util.Map;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
-public class TestSignInHandler {
+public class TestSignUpHandler {
 
-    SignOnCollaboratorHandler handler;
+    SignUpCollaboratorHandler handler;
     Alternative alt1, alt2;
     ChoiceRequest request;
     Choice choice;
@@ -44,7 +44,7 @@ public class TestSignInHandler {
         choice = new Choice(request);
 
         choiceDAO.addChoice(choice);
-        handler = new SignOnCollaboratorHandler();
+        handler = new SignUpCollaboratorHandler();
     }
 
     @Test
@@ -62,20 +62,19 @@ public class TestSignInHandler {
                         .withHeaders(headers)
                         .withPathParameters(pathParams)
                         .withQueryStringParameters(queryParams)
-                        .withHttpMethod("GET");
+                        .withHttpMethod("POST");
 
-        collaboratorDAO.addCollaborator(choice.getId(), new Collaborator("Max","pass"));
 
         APIGatewayProxyResponseEvent result = handler.handleRequest(event, null);
 
-        assertEquals(result.getStatusCode().intValue(), 200);
-        assertEquals(result.getHeaders().get("Content-Type"), "application/json");
         String content = result.getBody();
+        System.out.println(content);
+
+        assertEquals(result.getStatusCode().intValue(), 201);
+        assertEquals(result.getHeaders().get("Content-Type"), "application/json");
         assertNotNull(content);
         assertTrue(content.contains("\"auth-token\""));
         assertTrue(content.contains(UserAuthHandler.encode("Max:pass")));
         assertTrue(collaboratorDAO.deleteCollaborator(choice.getId(), new Collaborator("Max", "pass")));
-
-        collaboratorDAO.deleteCollaborator(choice.getId(), new Collaborator("Max","pass"));
     }
 }

@@ -35,7 +35,7 @@ public class TestViewChoice {
         choiceDAO = new ChoiceDAO();
         collaboratorDAO = new CollaboratorDAO();
 
-        collab = new Collaborator("Max", "pass").hash();
+        collab = Collaborator.fromPlaintextPassword("Max", "pass");
         alt1 = new Alternative("Feed the fish");
         alt2 = new Alternative("Feed the giraffe");
         List<Alternative> alts = Arrays.asList(alt1, alt2);
@@ -130,7 +130,7 @@ public class TestViewChoice {
         assertEquals(result.getHeaders().get("Content-Type"), "application/json");
         String content = result.getBody();
         assertNotNull(content);
-        assertTrue(content.contains("\"Message\":\"400 missing choiceID paramater\""));
+        assertTrue(content.contains("\"Message\":\"400 missing choiceID parameter\""));
     }
 
     @Test

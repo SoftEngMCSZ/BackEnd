@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Choice {
 	private static final int MAX_ALTERNATIVES = 5;
+	private static final int MIN_ALTERNATIVES = 2;
 
 	private final UUID id;
 	private final String question;
@@ -86,8 +87,17 @@ public class Choice {
 		return gson.fromJson(this.toJson(),JsonObject.class);
 	}
 
-	public static Choice fromJson(String json){
-		return gson.fromJson(json, Choice.class);
+	public static Optional<Choice> fromJson(String json){
+		Choice out = gson.fromJson(json, Choice.class);
+		if(
+				out.alternatives.size() < MIN_ALTERNATIVES ||
+				out.alternatives.size() > MAX_ALTERNATIVES ||
+				out.collaborators.size() > out.maxCollaborators
+		) {
+			return Optional.empty();
+		} else {
+			return Optional.of(out);
+		}
 	}
 
 	public boolean addCollaborator(Collaborator c) {

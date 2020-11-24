@@ -8,12 +8,9 @@ import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.ChoiceRequest;
-import me.whatdo.app.handlers.auth.UserAuthHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 

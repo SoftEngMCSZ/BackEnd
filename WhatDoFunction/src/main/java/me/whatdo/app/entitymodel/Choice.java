@@ -28,7 +28,7 @@ public class Choice {
 		);
 	}
 
-	private Choice(String question, List<Alternative> alts, int maxCollaborators) {
+	public Choice(String question, List<Alternative> alts, int maxCollaborators) {
 		this.id = UUID.randomUUID();
 		this.question = question;
 		this.alternatives = alts;
@@ -107,5 +107,16 @@ public class Choice {
 			this.completionTime = Date.from(Instant.now());
 			return true;
 		} else return false;
+	}
+
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Choice choice = (Choice) o;
+		return id.equals(choice.id);
+	}
+
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

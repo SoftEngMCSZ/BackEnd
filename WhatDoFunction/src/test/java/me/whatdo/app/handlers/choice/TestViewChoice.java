@@ -7,9 +7,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.entitymodel.Alternative;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.ChoiceRequest;
+import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.handlers.auth.UserAuthHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,30 +25,41 @@ public class TestViewChoice {
     Alternative alt1, alt2;
     ChoiceRequest request;
     Choice choice;
-    ChoiceDAO dao;
+    ChoiceDAO choiceDAO;
+    Collaborator collab;
+    CollaboratorDAO collaboratorDAO;
 
     @Before
     public void setupHandler() throws Exception {
-        handler = new ViewChoiceHandler();
+        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;TRUNCATE choices;").execute();
+        choiceDAO = new ChoiceDAO();
+        collaboratorDAO = new CollaboratorDAO();
 
+        collab = new Collaborator("Max", "pass").hash();
         alt1 = new Alternative("Feed the fish");
         alt2 = new Alternative("Feed the giraffe");
         List<Alternative> alts = Arrays.asList(alt1, alt2);
         request = new ChoiceRequest("Which zoo animal do we feed?",alts,1);
         choice = new Choice(request);
 
-        dao = new ChoiceDAO();
-        dao.addChoice(choice);
+        choiceDAO.addChoice(choice);
+
+        handler = new ViewChoiceHandler();
+        collaboratorDAO.addCollaborator(choice.getId(),collab);
+
     }
 
     @Test
     public void successfulResponse() {
         Map<String, String> pathParams;
+        Map<String, String > headers;
         pathParams = new HashMap<>();
+        headers = new HashMap<>();
         pathParams.put("choiceID",choice.getId().toString());
-
+        headers.put("Authentication", UserAuthHandler.encode("Max:pass"));
         APIGatewayProxyRequestEvent event =
                 new APIGatewayProxyRequestEvent()
+                        .withHeaders(headers)
                         .withPathParameters(pathParams)
                         .withHttpMethod("GET");
 
@@ -121,11 +136,14 @@ public class TestViewChoice {
     @Test
     public void nonexstantID() {
         Map<String, String> pathParams;
+        Map<String, String > headers;
         pathParams = new HashMap<>();
+        headers = new HashMap<>();
         pathParams.put("choiceID",UUID.randomUUID().toString());
-
+        headers.put("Authentication", UserAuthHandler.encode("Max:pass"));
         APIGatewayProxyRequestEvent event =
                 new APIGatewayProxyRequestEvent()
+                        .withHeaders(headers)
                         .withPathParameters(pathParams)
                         .withHttpMethod("GET");
 

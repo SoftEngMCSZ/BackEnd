@@ -60,12 +60,27 @@ public class ViewChoiceHandler implements RequestHandler<APIGatewayProxyRequestE
                 return response.withBody(body.toString()).withHeaders(headers).withStatusCode(400);
             }
 
+
             // Fourth Check: Choice presence in Database
             Optional<Choice> choice = dao.getChoice(choiceID);
             if (!choice.isPresent()) {
                 body.addProperty("Message", "404 Choice not found");
                 body.addProperty("Received", choiceID.toString());
                 return response.withBody(body.toString()).withHeaders(headers).withStatusCode(404);
+            }
+
+            // Fifth Check : Authentication Header
+            Map<String, String > requestHeader = input.getHeaders();
+            if(!requestHeader.containsKey("Authentication")){
+                body.addProperty("Message", "401 user not signed in to WhatDo");
+                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(401);
+            }
+
+            // Sixth Check: Choice Membership
+            if(!UserAuthHandler.isUserAuthenticated(requestHeader.get("Authentication"), choiceID)){
+                System.out.println(requestHeader.get("Authentication"));
+                body.addProperty("Message", "401 user not signed signed in to Choice");
+                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(401);
             }
 
             // Successfully handled and returned

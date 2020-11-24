@@ -18,6 +18,15 @@ public class Feedback {
 
 	public Feedback(UUID parentID, Collaborator author, Date timestamp, String content) {
         this.alternativeID = parentID;
+		this.feedbackID = UUID.randomUUID();
+		this.author = author;
+		this.timestamp = timestamp;
+		this.contents = content;
+	}
+
+	public Feedback(UUID parentID, UUID feedbackID, Collaborator author, Date timestamp, String content) {
+		this.alternativeID = parentID;
+		this.feedbackID = feedbackID;
 		this.author = author;
 		this.timestamp = timestamp;
 		this.contents = content;
@@ -36,6 +45,8 @@ public class Feedback {
 	}
 
 	public UUID getFeedbackID() { return feedbackID;}
+
+	public UUID getAlternativeID() { return alternativeID; }
 
 	public Collaborator getAuthor() {
 		return author;

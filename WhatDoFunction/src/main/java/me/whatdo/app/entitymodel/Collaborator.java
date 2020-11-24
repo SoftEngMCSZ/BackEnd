@@ -19,7 +19,7 @@ public class Collaborator {
 	// Guaranteed non-null
 	private final String name;
 	// May be null if Collaborator registered without password. Don't serialize this
-	private transient final String password;
+	private transient String password;
 
 	public Collaborator(String name) {
 		this.name = name;
@@ -32,15 +32,20 @@ public class Collaborator {
 
 	public Collaborator(String name, String pwd) {
 		this.name = name;
+		this.password = pwd;
 
+	}
+
+	public Collaborator hash(){
 		Argon2 hasher = Argon2Factory.create(Argon2Types.ARGON2id);
-		this.password = hasher.hash(
+		this .password = hasher.hash(
 				HASH_ITERATION_COUNT,
 				HASH_MEM,
 				HASH_DEG_PARALLELISM,
-				pwd.toCharArray(),
+				this.password.toCharArray(),
 				Charset.defaultCharset()
 		);
+		return this;
 	}
 
     public String toJson(){

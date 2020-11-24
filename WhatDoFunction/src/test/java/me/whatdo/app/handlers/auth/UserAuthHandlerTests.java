@@ -26,8 +26,9 @@ public class UserAuthHandlerTests {
 
 	@Test
 	public void successfulUserAuth() throws Exception {
-		Base64.Encoder encoder = Base64.getEncoder();
-		String mockAuthHeader = encoder.encodeToString("SpongeBob SquarePants:GaryIsMyBestFriend2".getBytes());
+		String mockAuthHeader = UserAuthHandler.encode("SpongeBob SquarePants:GaryIsMyBestFriend");
+		System.out.println("Encoded sent:"+mockAuthHeader);
+		Assert.assertTrue(collab.verifyPassword("GaryIsMyBestFriend"));
 		Assert.assertTrue(UserAuthHandler.isUserAuthenticated(mockAuthHeader,mockChoiceId));
 	}
 

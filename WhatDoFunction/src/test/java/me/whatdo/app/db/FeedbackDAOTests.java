@@ -38,6 +38,13 @@ public class FeedbackDAOTests {
     }
 
     @Test
+    public void testAddDupeFeedback() throws Exception {
+        dao.addFeedback(testFeedback);
+
+        Assert.assertEquals(false, dao.addFeedback(testFeedback));
+    }
+
+    @Test
     public void testFeedbackSort() throws Exception {
         dao.addFeedback(this.testFeedback);
 

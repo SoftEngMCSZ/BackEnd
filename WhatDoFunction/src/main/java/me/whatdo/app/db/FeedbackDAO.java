@@ -28,15 +28,28 @@ public class FeedbackDAO {
 
     public boolean addFeedback(Feedback feedback) throws Exception {
         try {
-            PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id, author, alternative, timestamp, content) values(?, ?,?,?,?);");
-            queryAdd.setObject(1, feedback.getFeedbackID());
-            queryAdd.setString(2, feedback.getAuthor().getName());
-            queryAdd.setObject(3, feedback.getAlternativeID());
-            queryAdd.setObject(4, new Timestamp(feedback.getTimestamp().getTime()));
-            queryAdd.setString(5, feedback.getContent());
-            queryAdd.execute();
+            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
+            queryFind.setObject(1, feedback.getFeedbackID());
+            ResultSet resultSet = queryFind.executeQuery();
 
-            return true;
+            // If the feedback ID already exists in the
+            if (resultSet.next()) {
+                resultSet.close();
+                return false;
+            }
+            else {
+                resultSet.close();
+                PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id, author, alternative, timestamp, content) values(?, ?,?,?,?);");
+                queryAdd.setObject(1, feedback.getFeedbackID());
+                queryAdd.setString(2, feedback.getAuthor().getName());
+                queryAdd.setObject(3, feedback.getAlternativeID());
+                queryAdd.setObject(4, new Timestamp(feedback.getTimestamp().getTime()));
+                queryAdd.setString(5, feedback.getContent());
+                queryAdd.execute();
+
+                return true;
+            }
+
         } catch (Exception e) {
             throw new Exception("Failed to insert feedback: " + e.getMessage());
         }

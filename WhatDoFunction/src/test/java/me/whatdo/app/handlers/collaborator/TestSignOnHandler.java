@@ -53,7 +53,7 @@ public class TestSignOnHandler {
         headers = new HashMap<>();
         pathParams = new HashMap<>();
         queryParams = new HashMap<>();
-        headers.put("Authentication", UserAuthHandler.encode("Max:pass"));
+        headers.put("authentication", UserAuthHandler.encode("Max:pass"));
         pathParams.put("choiceID", choice.getId().toString());
         queryParams.put("username", "Max");
         queryParams.put("password", "pass");
@@ -73,7 +73,7 @@ public class TestSignOnHandler {
         assertEquals(result.getStatusCode().intValue(), 200);
         assertEquals(result.getHeaders().get("Content-Type"), "application/json");
         assertNotNull(content);
-        assertTrue(content.contains("\"auth-token\""));
+        assertTrue(content.contains("\"authentication\""));
         assertTrue(content.contains(UserAuthHandler.encode("Max:pass")));
         assertTrue(collaboratorDAO.deleteCollaborator(choice.getId(), new Collaborator("Max", "pass")));
     }

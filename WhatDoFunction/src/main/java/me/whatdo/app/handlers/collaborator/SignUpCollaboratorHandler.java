@@ -74,12 +74,12 @@ public class SignUpCollaboratorHandler implements RequestHandler<APIGatewayProxy
 
             // * Check: Username presence
             queryParams = input.getQueryStringParameters();
-            if(!queryParams.containsKey("name")) {
+            if(!queryParams.containsKey("username")) {
                 body.addProperty("Message", "400 username not present");
                 return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(400);
             }
 
-            String name = queryParams.get("name");
+            String name = queryParams.get("username");
             String password = queryParams.get("password");
 
             if(password != null) {
@@ -94,7 +94,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<APIGatewayProxy
             }
 
             // Successfully handled and returned
-            body.addProperty("auth-token", UserAuthHandler.encode(name+":"+password));
+            body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
             return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(201);
 
             //Some other 500 server error arose

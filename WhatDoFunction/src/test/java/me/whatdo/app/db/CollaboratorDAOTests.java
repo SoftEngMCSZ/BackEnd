@@ -22,7 +22,7 @@ public class CollaboratorDAOTests {
 	@Test
 	public void addFetchDeleteSingle() throws Exception {
 		UUID mockChoice = UUID.randomUUID();
-		Collaborator testCollab = new Collaborator("Bob the Builder","CanWeFixIt?").hash();
+		Collaborator testCollab = Collaborator.fromPlaintextPassword("Bob the Builder","CanWeFixIt?");
 		Assert.assertTrue(dao.addCollaborator(mockChoice,testCollab));
 		Optional<Collaborator> testFetch = dao.getCollaborator(mockChoice,"Bob the Builder");
 		Assert.assertTrue(testFetch.isPresent());

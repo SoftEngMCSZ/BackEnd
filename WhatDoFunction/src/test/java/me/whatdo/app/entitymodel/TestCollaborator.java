@@ -11,7 +11,7 @@ public class TestCollaborator {
 
     @Before
     public void setupTests(){
-        collab = new Collaborator("Maxy", "Baboo").hash();
+        collab = Collaborator.fromPlaintextPassword("Maxy", "Baboo");
     }
 
     @Test

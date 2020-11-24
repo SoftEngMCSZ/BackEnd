@@ -7,10 +7,9 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.ChoiceRequest;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
+import me.whatdo.app.handlers.common.ChoiceIdExtractionHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,26 +41,20 @@ public class ViewChoiceHandler implements RequestHandler<APIGatewayProxyRequestE
                         .withHeaders(headers)
                         .withStatusCode(405);
             }
-            // Second Check: choiceID presence in path
-            Map<String, String> pathParams = input.getPathParameters();
-            if (!pathParams.containsKey("choiceID")) {
-                body.addProperty("Message", "400 missing choiceID paramater");
-                return response
-                        .withBody(body.toString())
-                        .withHeaders(headers)
-                        .withStatusCode(400);
-            }
-            // Third Check: Malformed ID
+
             try {
-                choiceID = UUID.fromString(pathParams.get("choiceID"));
+                Optional<UUID> maybe_choice_id = ChoiceIdExtractionHandler.extractUUIDFromPathParams(input.getPathParameters());
+                if(maybe_choice_id.isPresent()) {
+                    choiceID = maybe_choice_id.get();
+                } else {
+                    return ChoiceIdExtractionHandler.getMissingChoiceIdResponse(headers);
+                }
             } catch (IllegalArgumentException e) {
-                body.addProperty("Message", "400 malformed choiceID");
-                body.addProperty("Error", e.getMessage());
-                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(400);
+                return ChoiceIdExtractionHandler.getMalformedChoiceIdResponse(headers,e.getMessage());
             }
 
 
-            // Fourth Check: Choice presence in Database
+                // Fourth Check: Choice presence in Database
             Optional<Choice> choice = dao.getChoice(choiceID);
             if (!choice.isPresent()) {
                 body.addProperty("Message", "404 Choice not found");

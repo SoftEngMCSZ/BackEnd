@@ -16,11 +16,7 @@ public class UserAuthHandler {
 		String password = usernameAndPassword[1];
 
 		Optional<Collaborator> collab = dao.getCollaborator(choiceId,username);
-		if(collab.isPresent()) {
-			boolean out = collab.get().verifyPassword(password);
-			return out;
-		}
-		return false;
+		return collab.map(collaborator -> collaborator.verifyPassword(password)).orElse(false);
 	}
 
 	private static String decode(String encodedStr){

@@ -55,7 +55,7 @@ public class TestSignOnHandler {
         queryParams = new HashMap<>();
         headers.put("Authentication", UserAuthHandler.encode("Max:pass"));
         pathParams.put("choiceID", choice.getId().toString());
-        queryParams.put("name", "Max");
+        queryParams.put("username", "Max");
         queryParams.put("password", "pass");
         APIGatewayProxyRequestEvent event =
                 new APIGatewayProxyRequestEvent()
@@ -64,7 +64,7 @@ public class TestSignOnHandler {
                         .withQueryStringParameters(queryParams)
                         .withHttpMethod("GET");
 
-        collaboratorDAO.addCollaborator(choice.getId(), new Collaborator("Max", "pass").hash());
+        collaboratorDAO.addCollaborator(choice.getId(), Collaborator.fromPlaintextPassword("Max", "pass"));
 
         APIGatewayProxyResponseEvent result = handler.handleRequest(event, null);
 

@@ -83,7 +83,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<APIGatewayProxy
             String password = queryParams.get("password");
 
             if(password != null) {
-                collab = new Collaborator(name,password).hash();
+                collab = Collaborator.fromPlaintextPassword(name,password);
             } else {
                 collab = new Collaborator(name);
             }

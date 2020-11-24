@@ -10,6 +10,7 @@ import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
+import me.whatdo.app.handlers.common.ChoiceIdExtractionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,21 +47,15 @@ public class SignOnCollaboratorHandler implements RequestHandler<APIGatewayProxy
                         .withStatusCode(405);
             }
             // Second Check: choiceID presence in path
-            pathParams = input.getPathParameters();
-            if (!pathParams.containsKey("choiceID")) {
-                body.addProperty("Message", "400 missing choiceID paramater");
-                return response
-                        .withBody(body.toString())
-                        .withHeaders(responseHeaders)
-                        .withStatusCode(400);
-            }
-            // Third Check: Malformed ID
             try {
-                choiceID = UUID.fromString(pathParams.get("choiceID"));
+                Optional<UUID> maybe_choice_id = ChoiceIdExtractionHandler.extractUUIDFromPathParams(input.getPathParameters());
+                if(maybe_choice_id.isPresent()) {
+                    choiceID = maybe_choice_id.get();
+                } else {
+                    return ChoiceIdExtractionHandler.getMissingChoiceIdResponse(responseHeaders);
+                }
             } catch (IllegalArgumentException e) {
-                body.addProperty("Message", "400 malformed choiceID");
-                body.addProperty("Error", e.getMessage());
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(400);
+                return ChoiceIdExtractionHandler.getMalformedChoiceIdResponse(responseHeaders,e.getMessage());
             }
 
             // Fourth Check: Choice presence in Database

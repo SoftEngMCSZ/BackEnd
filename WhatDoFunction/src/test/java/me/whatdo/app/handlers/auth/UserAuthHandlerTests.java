@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Base64;
 import java.util.UUID;
 
 public class UserAuthHandlerTests {
@@ -20,15 +19,31 @@ public class UserAuthHandlerTests {
 		CollaboratorDAO dao = new CollaboratorDAO();
 		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
 		this.mockChoiceId = UUID.randomUUID();
-		this.collab = new Collaborator("SpongeBob SquarePants","GaryIsMyBestFriend").hash();
+		this.collab = Collaborator.fromPlaintextPassword("SpongeBob SquarePants","GaryIsMyBestFriend");
 		dao.addCollaborator(this.mockChoiceId,this.collab);
 	}
 
 	@Test
 	public void successfulUserAuth() throws Exception {
 		String mockAuthHeader = UserAuthHandler.encode("SpongeBob SquarePants:GaryIsMyBestFriend");
-		Assert.assertTrue(collab.verifyPassword("GaryIsMyBestFriend"));
 		Assert.assertTrue(UserAuthHandler.isUserAuthenticated(mockAuthHeader,mockChoiceId));
 	}
 
+	@Test
+	public void failedAuthBadPassword() throws Exception {
+		String mockAuthHeader = UserAuthHandler.encode("SpongeBob SquarePants:GaryIsMyWorstEnemy");
+		Assert.assertFalse(UserAuthHandler.isUserAuthenticated(mockAuthHeader,mockChoiceId));
+	}
+
+	@Test
+	public void failedAuthBadName() throws Exception {
+		String mockAuthHeader = UserAuthHandler.encode("Patrick Starr:GaryIsMyBestFriend");
+		Assert.assertFalse(UserAuthHandler.isUserAuthenticated(mockAuthHeader,mockChoiceId));
+	}
+
+	@Test
+	public void failedAuthBadChoice() throws Exception {
+		String mockAuthHeader = UserAuthHandler.encode("SpongeBob SquarePants:GaryIsMyBestFriend");
+		Assert.assertFalse(UserAuthHandler.isUserAuthenticated(mockAuthHeader,UUID.randomUUID()));
+	}
 }

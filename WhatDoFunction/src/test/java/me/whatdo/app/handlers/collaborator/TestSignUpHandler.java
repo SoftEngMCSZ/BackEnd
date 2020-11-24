@@ -55,7 +55,7 @@ public class TestSignUpHandler {
         queryParams = new HashMap<>();
         headers.put("Authentication", UserAuthHandler.encode("Max:pass"));
         pathParams.put("choiceID", choice.getId().toString());
-        queryParams.put("name", "Max");
+        queryParams.put("username", "Max");
         queryParams.put("password", "pass");
         APIGatewayProxyRequestEvent event =
                 new APIGatewayProxyRequestEvent()

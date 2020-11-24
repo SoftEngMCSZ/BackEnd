@@ -44,7 +44,7 @@ public class TestChoice {
     public void testDeserialize(){
         choice.addCollaborator(collab);
         String jsonStr = choice.toJson();
-        Choice choice2 = Choice.fromJson(jsonStr);
+        Choice choice2 = Choice.fromJson(jsonStr).get();
         Assert.assertTrue(choice2.hasCollaborator(collab));
     }
 

@@ -1,7 +1,5 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.db.DatabaseUtil;
-import me.whatdo.app.db.FeedbackDAO;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.entitymodel.Feedback;
 import org.junit.Assert;
@@ -41,7 +39,7 @@ public class FeedbackDAOTests {
     public void testAddDupeFeedback() throws Exception {
         dao.addFeedback(testFeedback);
 
-        Assert.assertEquals(false, dao.addFeedback(testFeedback));
+        Assert.assertFalse(dao.addFeedback(testFeedback));
     }
 
     @Test
@@ -66,7 +64,7 @@ public class FeedbackDAOTests {
     public void testDeleteFeedback() throws Exception {
         dao.addFeedback(testFeedback);
 
-        dao.deleteFeedback(testFeedback.getFeedbackID());
+        Assert.assertTrue(dao.deleteFeedback(testFeedback.getFeedbackID()));
         List<Feedback> allFeedback = dao.getAllFeedback(testFeedback.getAlternativeID());
         Assert.assertEquals(0, allFeedback.size());
     }
@@ -76,7 +74,13 @@ public class FeedbackDAOTests {
         dao.addFeedback(testFeedback);
 
         Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getFeedbackID());
+        Assert.assertTrue(returnedFeedback.isPresent());
         Assert.assertEquals(testFeedback, returnedFeedback.get());
     }
 
+    @Test
+    public void testGetMissingFeedback() throws Exception {
+        Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getFeedbackID());
+        Assert.assertFalse(returnedFeedback.isPresent());
+    }
 }

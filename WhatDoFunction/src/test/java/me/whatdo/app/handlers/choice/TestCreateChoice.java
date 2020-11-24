@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.entitymodel.Alternative;
 import me.whatdo.app.entitymodel.ChoiceRequest;
 import org.junit.Before;
@@ -21,12 +22,13 @@ public class TestCreateChoice {
     ChoiceRequest request;
 
     @Before
-    public void setupHandler() {
+    public void setupHandler() throws Exception {
         handler = new CreateChoiceHandler();
         alt1 = new Alternative("Feed the fish");
         alt2 = new Alternative("Feed the giraffe");
         List<Alternative> alts = Arrays.asList(alt1, alt2);
         request = new ChoiceRequest("Which zoo animal do we feed?", alts, 1);
+        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
     }
 
     @Test

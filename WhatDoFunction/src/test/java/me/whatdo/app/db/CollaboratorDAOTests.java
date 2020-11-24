@@ -27,6 +27,7 @@ public class CollaboratorDAOTests {
 		Optional<Collaborator> testFetch = dao.getCollaborator(mockChoice,"Bob the Builder");
 		Assert.assertTrue(testFetch.isPresent());
 		Assert.assertEquals(testCollab.getName(),testFetch.get().getName());
+		Assert.assertTrue(testFetch.get().verifyPassword("CanWeFixIt?")); // FAILS
 		Assert.assertTrue(dao.deleteCollaborator(mockChoice,testCollab));
 	}
 

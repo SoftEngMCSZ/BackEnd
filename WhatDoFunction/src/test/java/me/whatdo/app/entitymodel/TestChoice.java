@@ -37,7 +37,7 @@ public class TestChoice {
     @Test
     public void testSerialize(){
         JsonObject obj = choice.toJsonObject();
-        Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
+        Assert.assertEquals(obj.get("contents").toString(), "\"What pet for the kids?\"");
         Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),1);
     }

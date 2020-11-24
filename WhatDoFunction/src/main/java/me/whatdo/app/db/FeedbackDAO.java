@@ -42,11 +42,10 @@ public class FeedbackDAO {
         }
     }
 
-    public boolean deleteFeedback(UUID alternativeID, UUID feedbackID) throws Exception {
+    public boolean deleteFeedback(UUID feedbackID) throws Exception {
         try {
-            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE alternative = ? AND id = ?;");
-            queryDelete.setObject(1, alternativeID);
-            queryDelete.setObject(2, feedbackID);
+            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
+            queryDelete.setObject(1, feedbackID);
             int numAffected = queryDelete.executeUpdate();
             queryDelete.close();
 
@@ -92,11 +91,10 @@ public class FeedbackDAO {
         }
     }
 
-    public Optional<Feedback> getFeedback(UUID alternativeID, UUID feedbackID) throws Exception {
+    public Optional<Feedback> getFeedback(UUID feedbackID) throws Exception {
         try {
-            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ? AND id = ?;");
-            queryFind.setObject(1, alternativeID);
-            queryFind.setObject(2, feedbackID);
+            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
+            queryFind.setObject(1, feedbackID);
             ResultSet resultSet = queryFind.executeQuery();
 
             if(resultSet.next()) {

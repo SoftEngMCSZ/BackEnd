@@ -59,7 +59,7 @@ public class FeedbackDAOTests {
     public void testDeleteFeedback() throws Exception {
         dao.addFeedback(testFeedback);
 
-        dao.deleteFeedback(testFeedback.getAlternativeID(), testFeedback.getFeedbackID());
+        dao.deleteFeedback(testFeedback.getFeedbackID());
         List<Feedback> allFeedback = dao.getAllFeedback(testFeedback.getAlternativeID());
         Assert.assertEquals(0, allFeedback.size());
     }
@@ -68,7 +68,7 @@ public class FeedbackDAOTests {
     public void testGetFeedback() throws Exception {
         dao.addFeedback(testFeedback);
 
-        Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getAlternativeID(), testFeedback.getFeedbackID());
+        Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getFeedbackID());
         Assert.assertEquals(testFeedback, returnedFeedback.get());
     }
 

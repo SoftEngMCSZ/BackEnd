@@ -68,7 +68,7 @@ public class Feedback {
 	@Override
 	public boolean equals(Object o) {
 		Feedback otherFeedback = (Feedback) o;
-		return this.feedbackID.equals(otherFeedback.getFeedbackID()) && this.alternativeID.equals(otherFeedback.getAlternativeID());
+		return this.feedbackID.equals(otherFeedback.getFeedbackID());
 	}
 }
 

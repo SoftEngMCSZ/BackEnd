@@ -29,7 +29,7 @@ public class ChoiceDAO {
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFindExisting.setObject(1,c.getId());
 			ResultSet results = queryFindExisting.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
+			// Check if a choice with the same id is already added
 			if(results.next()) {
 				results.close();
 				return false;
@@ -54,7 +54,7 @@ public class ChoiceDAO {
 			return true;
 		}
 		catch (Exception e) {
-			throw new Exception("Failed to add alternative "+c.getId()+". Error: "+e.getMessage());
+			throw new Exception("Failed to add choice "+c.getId()+". Error: "+e.getMessage());
 		}
 	}
 
@@ -71,7 +71,28 @@ public class ChoiceDAO {
 			}
 			return Optional.empty();
 		} catch (Exception e) {
-			throw new Exception("Failed to get alternative " + choiceId + ". Error: "+e.getMessage());
+			throw new Exception("Failed to get choice " + choiceId + ". Error: "+e.getMessage());
+		}
+	}
+
+	public boolean finalizeChoice(UUID choiceId, UUID altId) throws Exception {
+		try {
+
+			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
+			queryFindExisting.setObject(1,choiceId);
+			ResultSet results = queryFindExisting.executeQuery();
+			if(results.next()) {
+				if(results.getObject("selected_alternative",UUID.class)!=null) return false;
+
+				PreparedStatement queryFinalize = conn.prepareStatement("UPDATE " + tblName + " SET selected_alternative = ? where id = ?");
+				queryFinalize.setObject(1,altId);
+				queryFinalize.setObject(2,choiceId);
+			}
+
+			return false;
+
+		} catch (Exception e) {
+			throw new Exception("Failed to finalize choice " + choiceId + ". Error: "+e.getMessage());
 		}
 	}
 
@@ -114,7 +135,7 @@ public class ChoiceDAO {
 			return numAffected == 1;
 		}
 		catch (Exception e) {
-			throw new Exception("Failed to delete alternative " + c.getId() + ". Error: "+e.getMessage());
+			throw new Exception("Failed to delete choice " + c.getId() + ". Error: "+e.getMessage());
 		}
 	}
 

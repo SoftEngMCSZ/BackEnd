@@ -13,18 +13,7 @@ import java.util.UUID;
 public class FinalizeChoiceHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("X-Custom-Header", "application/json");
-
-        Map<String, String> pathParam = input.getPathParameters();
-
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-                .withHeaders(headers);
-
-        return response
-                .withBody("{}")
-                .withStatusCode(404);
+        return null;
     }
 }
 

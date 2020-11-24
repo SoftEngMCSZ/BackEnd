@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.Alternative;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.ChoiceRequest;
@@ -20,23 +21,24 @@ public class TestViewChoice {
     Alternative alt1, alt2;
     ChoiceRequest request;
     Choice choice;
-    UUID choiceID;
+    ChoiceDAO dao;
 
     @Before
-    public void setupHandler() {
+    public void setupHandler() throws Exception {
         handler = new ViewChoiceHandler();
+
         alt1 = new Alternative("Feed the fish");
         alt2 = new Alternative("Feed the giraffe");
         List<Alternative> alts = Arrays.asList(alt1, alt2);
         request = new ChoiceRequest("Which zoo animal do we feed?",alts,1);
         choice = new Choice(request);
-        choiceID = choice.getId();
+
+        dao = new ChoiceDAO();
+        dao.addChoice(choice);
     }
 
     @Test
     public void successfulResponse() {
-        System.out.println(choice.toJson());
-        System.out.println(choice.getId());
         Map<String, String> pathParams;
         pathParams = new HashMap<>();
         pathParams.put("choiceID",choice.getId().toString());
@@ -55,14 +57,13 @@ public class TestViewChoice {
         assertTrue(content.contains("\"id\""));
         assertTrue(content.contains("\"alternatives\""));
         assertTrue(content.contains("\"collaborators\""));
-        System.out.println(content);
     }
 
     @Test
     public void badHTTPMethod() {
         Map<String, String> pathParams;
         pathParams = new HashMap<>();
-        pathParams.put("choiceID",choiceID.toString());
+        pathParams.put("choiceID",choice.getId().toString());
 
         APIGatewayProxyRequestEvent event =
                 new APIGatewayProxyRequestEvent()

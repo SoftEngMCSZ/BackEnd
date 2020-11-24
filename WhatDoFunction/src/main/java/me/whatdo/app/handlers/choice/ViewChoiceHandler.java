@@ -62,6 +62,7 @@ public class ViewChoiceHandler implements RequestHandler<APIGatewayProxyRequestE
             }
         } catch (Exception e) {
             body.addProperty("Message", "500 server error");
+            body.addProperty("Error", e.getMessage());
             return response
                     .withBody(body.toString())
                     .withHeaders(headers)

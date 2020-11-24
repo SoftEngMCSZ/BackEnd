@@ -39,8 +39,8 @@ public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyReques
                             return response.withBody(body.toString()).withHeaders(headers).withStatusCode(400);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
                         body.addProperty("Message", "500 server error");
+                        body.addProperty("Error", e.getMessage());
                         return response.withBody(body.toString()).withHeaders(headers).withStatusCode(500);
                     }
                 } else {
@@ -53,6 +53,7 @@ public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyReques
             }
         } catch (Exception e){
             body.addProperty("Message", "500 server error");
+            body.addProperty("Error", e.getMessage());
             return response
                     .withBody(body.toString())
                     .withStatusCode(500);

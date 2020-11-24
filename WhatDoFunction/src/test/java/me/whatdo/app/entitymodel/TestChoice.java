@@ -1,7 +1,5 @@
 package me.whatdo.app.entitymodel;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,15 +1,12 @@
 package me.whatdo.app.entitymodel;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TestChoiceRequest {
@@ -37,7 +34,7 @@ public class TestChoiceRequest {
     @Test
     public void testSerialize(){
         JsonObject obj = request.toJsonObject();
-        Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
+        Assert.assertEquals(obj.get("question").toString(), "\"What pet for the kids?\"");
         Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),2);
     }
@@ -46,7 +43,7 @@ public class TestChoiceRequest {
     public void testDeserialize(){
         ChoiceRequest request2 = ChoiceRequest.fromJson(request.toJson());
         JsonObject obj = request2.toJsonObject();
-        Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
+        Assert.assertEquals(obj.get("question").toString(), "\"What pet for the kids?\"");
         Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),2);
     }

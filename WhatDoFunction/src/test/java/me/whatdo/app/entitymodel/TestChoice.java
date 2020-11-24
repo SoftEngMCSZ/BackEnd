@@ -1,7 +1,5 @@
 package me.whatdo.app.entitymodel;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,7 +35,7 @@ public class TestChoice {
     @Test
     public void testSerialize(){
         JsonObject obj = choice.toJsonObject();
-        Assert.assertEquals(obj.get("content").toString(), "\"What pet for the kids?\"");
+        Assert.assertEquals(obj.get("question").toString(), "\"What pet for the kids?\"");
         Assert.assertEquals(obj.getAsJsonArray("alternatives").get(0).toString(), alt1.toJson());
         Assert.assertEquals(obj.get("maxCollaborators").getAsInt(),1);
     }

@@ -9,20 +9,15 @@ import java.util.UUID;
 
 public class UserAuthHandler {
 	public static boolean isUserAuthenticated(String authHeader, UUID choiceId) throws Exception {
-		System.out.println("Received:"+authHeader);
-
 		CollaboratorDAO dao = new CollaboratorDAO();
 
 		String[] usernameAndPassword = decode(authHeader).split(":");
 		String username = usernameAndPassword[0];
 		String password = usernameAndPassword[1];
 
-		System.out.println(username+" : "+password);
-
 		Optional<Collaborator> collab = dao.getCollaborator(choiceId,username);
 
 		if(collab.isPresent()) {
-			System.out.println("Present");
 			boolean out = collab.get().verifyPassword(password);
 			return out;
 		}

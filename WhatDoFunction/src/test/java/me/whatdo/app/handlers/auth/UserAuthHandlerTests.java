@@ -20,14 +20,13 @@ public class UserAuthHandlerTests {
 		CollaboratorDAO dao = new CollaboratorDAO();
 		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
 		this.mockChoiceId = UUID.randomUUID();
-		this.collab = new Collaborator("SpongeBob SquarePants","GaryIsMyBestFriend");
+		this.collab = new Collaborator("SpongeBob SquarePants","GaryIsMyBestFriend").hash();
 		dao.addCollaborator(this.mockChoiceId,this.collab);
 	}
 
 	@Test
 	public void successfulUserAuth() throws Exception {
 		String mockAuthHeader = UserAuthHandler.encode("SpongeBob SquarePants:GaryIsMyBestFriend");
-		System.out.println("Encoded sent:"+mockAuthHeader);
 		Assert.assertTrue(collab.verifyPassword("GaryIsMyBestFriend"));
 		Assert.assertTrue(UserAuthHandler.isUserAuthenticated(mockAuthHeader,mockChoiceId));
 	}

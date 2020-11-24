@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Feedback {
@@ -16,8 +17,16 @@ public class Feedback {
 	private static final  Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Feedback(UUID parentID, Collaborator author, Date timestamp, String content) {
-		this.feedbackID = UUID.randomUUID();
         this.alternativeID = parentID;
+		this.feedbackID = UUID.randomUUID();
+		this.author = author;
+		this.timestamp = timestamp;
+		this.contents = content;
+	}
+
+	public Feedback(UUID parentID, UUID feedbackID, Collaborator author, Date timestamp, String content) {
+		this.alternativeID = parentID;
+		this.feedbackID = feedbackID;
 		this.author = author;
 		this.timestamp = timestamp;
 		this.contents = content;
@@ -37,6 +46,8 @@ public class Feedback {
 
 	public UUID getFeedbackID() { return feedbackID;}
 
+	public UUID getAlternativeID() { return alternativeID; }
+
 	public Collaborator getAuthor() {
 		return author;
 	}
@@ -47,6 +58,17 @@ public class Feedback {
 
 	public String getContent() {
 		return contents;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.feedbackID, this.alternativeID);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Feedback otherFeedback = (Feedback) o;
+		return this.feedbackID.equals(otherFeedback.getFeedbackID());
 	}
 }
 

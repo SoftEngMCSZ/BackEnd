@@ -35,6 +35,7 @@ public class ViewChoiceHandler implements RequestHandler<APIGatewayProxyRequestE
                         choiceID = UUID.fromString(pathParams.get("choiceID"));
                     } catch (IllegalArgumentException e) {
                         body.addProperty("Message","400 malformed choiceID");
+                        body.addProperty("Error", e.getMessage());
                         return response.withBody(body.toString()).withHeaders(headers).withStatusCode(400);
                     }
                     ChoiceDAO dao = new ChoiceDAO();

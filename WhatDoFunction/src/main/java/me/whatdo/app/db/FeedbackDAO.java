@@ -71,28 +71,14 @@ public class FeedbackDAO {
     public List<Feedback> getAllFeedback(UUID alternativeID) throws Exception {
         try {
             ArrayList<Feedback> feedbackList = new ArrayList<Feedback>();
-            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ?;");
+            PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ? ORDER BY timestamp;");
             queryFind.setObject(1, alternativeID);
             ResultSet resultSet = queryFind.executeQuery();
 
             while(resultSet.next()) {
                 Feedback feedback = generateFeedback(resultSet);
 
-                // Order feedback by timestamp (most recent to least recent)
-                for(int i = 0; i <= resultSet.getFetchSize(); i++) {
-
-                    // If we have reached the end of the list
-                    if (i == feedbackList.size()) {
-                        feedbackList.add(feedback);
-                        break;
-                    }
-
-                    // If timestamp is after, insert before
-                    if (feedback.getTimestamp().compareTo(feedbackList.get(i).getTimestamp()) < 0) {
-                        feedbackList.add(i, feedback);
-                    }
-
-                }
+                feedbackList.add(feedback);
             }
 
             resultSet.close();

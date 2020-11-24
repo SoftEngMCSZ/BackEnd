@@ -51,7 +51,7 @@ public class ViewChoiceHandler implements RequestHandler<APIGatewayProxyRequestE
                     return response
                             .withBody(body.toString())
                             .withHeaders(headers)
-                            .withStatusCode(500);
+                            .withStatusCode(400);
                 }
             } else {
                 body.addProperty("Message", "405 method not allowed");

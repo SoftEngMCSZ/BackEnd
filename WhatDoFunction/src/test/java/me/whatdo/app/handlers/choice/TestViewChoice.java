@@ -98,4 +98,43 @@ public class TestViewChoice {
         assertNotNull(content);
         assertTrue(content.contains("\"Message\":\"400 malformed choiceID\""));
     }
+
+    @Test
+    public void missingParam() {
+        Map<String, String> pathParams;
+        pathParams = new HashMap<>();
+
+        APIGatewayProxyRequestEvent event =
+                new APIGatewayProxyRequestEvent()
+                        .withPathParameters(pathParams)
+                        .withHttpMethod("GET");
+
+        APIGatewayProxyResponseEvent result = handler.handleRequest(event, null);
+
+        assertEquals(result.getStatusCode().intValue(), 400);
+        assertEquals(result.getHeaders().get("Content-Type"), "application/json");
+        String content = result.getBody();
+        assertNotNull(content);
+        assertTrue(content.contains("\"Message\":\"400 missing choiceID paramater\""));
+    }
+
+    @Test
+    public void nonexstantID() {
+        Map<String, String> pathParams;
+        pathParams = new HashMap<>();
+        pathParams.put("choiceID",UUID.randomUUID().toString());
+
+        APIGatewayProxyRequestEvent event =
+                new APIGatewayProxyRequestEvent()
+                        .withPathParameters(pathParams)
+                        .withHttpMethod("GET");
+
+        APIGatewayProxyResponseEvent result = handler.handleRequest(event, null);
+
+        assertEquals(result.getStatusCode().intValue(), 404);
+        assertEquals(result.getHeaders().get("Content-Type"), "application/json");
+        String content = result.getBody();
+        assertNotNull(content);
+        assertTrue(content.contains("\"Message\":\"404 Choice not found\""));
+    }
 }

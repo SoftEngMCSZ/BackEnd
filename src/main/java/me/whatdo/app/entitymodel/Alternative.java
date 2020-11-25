@@ -8,16 +8,16 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 public class Alternative {
-	private UUID id;
-	private String description;
+	private UUID alternativeID;
+	private String contents;
 	private Set<Collaborator> approvals;
 	private Set<Collaborator> disapprovals;
 	private List<Feedback> feedback;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Alternative(String description) {
-		this.id = UUID.randomUUID();
-		this.description = description;
+		this.alternativeID = UUID.randomUUID();
+		this.contents = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
@@ -28,8 +28,8 @@ public class Alternative {
 	}
 
 	public Alternative(UUID id, String description) {
-		this.id = id;
-		this.description = description;
+		this.alternativeID = id;
+		this.contents = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
@@ -43,16 +43,16 @@ public class Alternative {
 		this.disapprovals = disapprovals;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setContents(String description) {
+		this.contents = description;
 	}
 
 	public void setFeedback(List<Feedback> feedback) {
 		this.feedback = feedback;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setAlternativeID(UUID id) {
+		this.alternativeID = id;
 	}
 
 	public String toJson(){
@@ -91,23 +91,19 @@ public class Alternative {
 	}
 
 	public UUID getId() {
-		return id;
+		return alternativeID;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getContents() {
+		return contents;
 	}
-
-	public UUID getID(){
-	    return this.id;
-    }
 
 	public boolean equals(Object o) {
 		Alternative that = (Alternative) o;
-		return this.id.equals(that.id);
+		return this.alternativeID.equals(that.alternativeID);
 	}
 
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(alternativeID);
 	}
 }

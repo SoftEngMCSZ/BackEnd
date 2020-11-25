@@ -21,7 +21,7 @@ public class Choice {
 	private final int maxCollaborators;
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public Choice(ChoiceRequest choiceRequest) {
+	public Choice(CreateChoiceRequest choiceRequest) {
 		this(
 				choiceRequest.question,
 				choiceRequest.alternatives,

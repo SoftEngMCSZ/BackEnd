@@ -8,29 +8,53 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 public class Alternative {
-	private final UUID alternativeId;
-	private final String contents;
-	private final Set<Collaborator> approvals;
-	private final Set<Collaborator> disapprovals;
-	private final List<Feedback> feedback;
+	private UUID alternativeID;
+	private String contents;
+	private Set<Collaborator> approvals;
+	private Set<Collaborator> disapprovals;
+	private List<Feedback> feedback;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public Alternative(String contents) {
-		this.alternativeId = UUID.randomUUID();
-		this.contents = contents;
+	public Alternative(String description) {
+		this.alternativeID = UUID.randomUUID();
+		this.contents = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
 
-	public Alternative(UUID id, String contents) {
-		this.alternativeId = id;
-		this.contents = contents;
+	public Alternative(){
+
+	}
+
+	public Alternative(UUID id, String description) {
+		this.alternativeID = id;
+		this.contents = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
-  
+
+	public void setApprovals(Set<Collaborator> approvals) {
+		this.approvals = approvals;
+	}
+
+	public void setDisapprovals(Set<Collaborator> disapprovals) {
+		this.disapprovals = disapprovals;
+	}
+
+	public void setContents(String description) {
+		this.contents = description;
+	}
+
+	public void setFeedback(List<Feedback> feedback) {
+		this.feedback = feedback;
+	}
+
+	public void setAlternativeID(UUID id) {
+		this.alternativeID = id;
+	}
+
 	public String toJson(){
 	    return gson.toJson(this);
     }
@@ -67,23 +91,19 @@ public class Alternative {
 	}
 
 	public UUID getId() {
-		return alternativeId;
+		return alternativeID;
 	}
 
 	public String getContents() {
 		return contents;
 	}
 
-	public UUID getID(){
-	    return this.alternativeId;
-    }
-
 	public boolean equals(Object o) {
 		Alternative that = (Alternative) o;
-		return this.alternativeId.equals(that.alternativeId);
+		return this.alternativeID.equals(that.alternativeID);
 	}
 
 	public int hashCode() {
-		return Objects.hash(alternativeId);
+		return Objects.hash(alternativeID);
 	}
 }

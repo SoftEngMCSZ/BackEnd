@@ -1,4 +1,4 @@
-package me.whatdo.app.handlers.collaborator;
+package me.whatdo.app;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -9,6 +9,7 @@ import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.entitymodel.CollaboratorRequest;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
 import me.whatdo.app.handlers.common.ChoiceIdExtractionHandler;
 
@@ -17,9 +18,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SignOnCollaboratorHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorRequest, APIGatewayProxyResponseEvent> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(final CollaboratorRequest input, final Context context) {
         Map<String,String>  responseHeaders, pathParams, queryParams;
 
         // Response related instantiation
@@ -38,26 +39,7 @@ public class SignOnCollaboratorHandler implements RequestHandler<APIGatewayProxy
 
         // Catch any unexpected errors
         try {
-            // First Check: HTTP Method
-            if (!input.getHttpMethod().equals("GET")) {
-                body.addProperty("Message", "405 method not allowed");
-                return response
-                        .withBody(body.toString())
-                        .withHeaders(responseHeaders)
-                        .withStatusCode(405);
-            }
-            // Second Check: choiceID presence in path
-            try {
-                Optional<UUID> maybe_choice_id = ChoiceIdExtractionHandler.extractUUIDFromPathParams(input.getPathParameters());
-                if(maybe_choice_id.isPresent()) {
-                    choiceID = maybe_choice_id.get();
-                } else {
-                    return ChoiceIdExtractionHandler.getMissingChoiceIdResponse(responseHeaders);
-                }
-            } catch (IllegalArgumentException e) {
-                return ChoiceIdExtractionHandler.getMalformedChoiceIdResponse(responseHeaders,e.getMessage());
-            }
-
+            choiceID = UUID.fromString(input.getChoiceID());
             // Fourth Check: Choice presence in Database
             Optional<Choice> choice = choiceDAO.getChoice(choiceID);
             if (!choice.isPresent()) {
@@ -66,15 +48,8 @@ public class SignOnCollaboratorHandler implements RequestHandler<APIGatewayProxy
                 return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(404);
             }
 
-            // * Check: Username presence in request
-            queryParams = input.getQueryStringParameters();
-            if(!queryParams.containsKey("username")) {
-                body.addProperty("Message", "400 username not present");
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(400);
-            }
-
-            String name = queryParams.get("username");
-            String password = queryParams.get("password");
+            String name = input.getUsername();
+            String password = input.getPassword();
 
             Optional<Collaborator> collab = colllabDAO.getCollaborator(choiceID,name);
 

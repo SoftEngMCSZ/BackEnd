@@ -6,19 +6,19 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-public class ChoiceRequest {
+public class CreateChoiceRequest {
 	protected String question;
 	protected List<Alternative> alternatives;
 	protected int maxCollaborators;
 	protected static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public ChoiceRequest(String question, List<Alternative> alts, int maxCollaborators) {
+	public CreateChoiceRequest(String question, List<Alternative> alts, int maxCollaborators) {
 		this.question = question;
 		this.alternatives = alts;
 		this.maxCollaborators = maxCollaborators;
 	}
 
-	public ChoiceRequest(){
+	public CreateChoiceRequest(){
 
 	}
 
@@ -42,7 +42,7 @@ public class ChoiceRequest {
 		return gson.fromJson(this.toJson(),JsonObject.class);
 	}
 
-	public static ChoiceRequest fromJson(String json){
-		return gson.fromJson(json, ChoiceRequest.class);
+	public static CreateChoiceRequest fromJson(String json){
+		return gson.fromJson(json, CreateChoiceRequest.class);
 	}
 }

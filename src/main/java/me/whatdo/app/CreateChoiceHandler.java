@@ -3,20 +3,19 @@ package me.whatdo.app;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.ChoiceRequest;
+import me.whatdo.app.entitymodel.CreateChoiceRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateChoiceHandler implements RequestHandler<ChoiceRequest, APIGatewayProxyResponseEvent> {
+public class CreateChoiceHandler implements RequestHandler<CreateChoiceRequest, APIGatewayProxyResponseEvent> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final ChoiceRequest input, final Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(final CreateChoiceRequest input, final Context context) {
 
         LambdaLogger logger = context.getLogger();
         Gson gson = new Gson();
@@ -33,7 +32,7 @@ public class CreateChoiceHandler implements RequestHandler<ChoiceRequest, APIGat
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
-        ChoiceRequest request;
+        CreateChoiceRequest request;
         Choice choice;
         ChoiceDAO dao;
 
@@ -64,7 +63,7 @@ public class CreateChoiceHandler implements RequestHandler<ChoiceRequest, APIGat
         }
     }
     // Used to validate all required fields present
-    private static boolean validateRequest(ChoiceRequest req){
+    private static boolean validateRequest(CreateChoiceRequest req){
         JsonObject object = req.toJsonObject();
         return object.has("question") &&
             object.has("alternatives") &&

@@ -17,7 +17,7 @@ public class Collaborator {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	// Guaranteed non-null
-	private final String name;
+	private String name;
 	// May be null if Collaborator registered without password. Don't serialize this
 	private final transient String password;
 

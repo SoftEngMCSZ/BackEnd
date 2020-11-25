@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WhatDoFunction/WhatDo.iml" filepath="$PROJECT_DIR$/WhatDoFunction/WhatDo.iml" />
       <module fileurl="file://$PROJECT_DIR$/cs3733_gp.iml" filepath="$PROJECT_DIR$/cs3733_gp.iml" />
     </modules>
   </component>

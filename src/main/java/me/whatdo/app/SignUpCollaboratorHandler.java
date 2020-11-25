@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.entitymodel.CollaboratorRequest;
@@ -19,23 +20,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorRequest, APIGatewayProxyResponseEvent> {
+public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorRequest, ApiResponse> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final CollaboratorRequest input, final Context context) {
-        Map<String,String>  responseHeaders, pathParams, queryParams;
+    public ApiResponse handleRequest(final CollaboratorRequest input, final Context context) {
 
         LambdaLogger logger = context.getLogger();
         Gson gson = new Gson();
         logger.log(gson.toJson(context));
         logger.log(gson.toJson(input));
 
-        // Response related instantiation
-        // Map<String,String>  responseHeaders = new HashMap<>();
-        responseHeaders = new HashMap<>();
-        responseHeaders.put("Content-Type", "application/json");
-        responseHeaders.put("X-Custom-Header", "application/json");
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-                .withHeaders(responseHeaders);
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
@@ -53,7 +46,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
             } catch (IllegalArgumentException e) {
                 body.addProperty("Message", "400 malformed choiceID");
                 body.addProperty("Error", e.getMessage());
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(400);
+                return new ApiResponse(400, body.toString());
             }
 
             // Fourth Check: Choice presence in Database
@@ -61,7 +54,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
             if (!choice.isPresent()) {
                 body.addProperty("Message", "404 Choice not found");
                 body.addProperty("Received", choiceID.toString());
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(404);
+                return new ApiResponse(404, body.toString());
             }
 
 
@@ -69,7 +62,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
             String password = input.getPassword();
             if(name.isEmpty()){
                 body.addProperty("Message","400 username not present");
-                return response.withHeaders(responseHeaders).withBody(body.toString()).withStatusCode(400);
+                return new ApiResponse(400, body.toString());
             }
             if(password.isEmpty()) {
                 collab = new Collaborator(name);
@@ -79,21 +72,18 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
 
             if(!colllabDAO.addCollaborator(choiceID,collab)) {
                 body.addProperty("Message", "400 unable to add Collaborator to DB");
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(400);
+                return new ApiResponse(400, body.toString());
             }
 
             // Successfully handled and returned
             body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-            return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(201);
+            return new ApiResponse(200, body.toString());
 
             //Some other 500 server error arose
         } catch (Exception e) {
             body.addProperty("Message", "500 server error");
             body.addProperty("Error", e.getMessage());
-            return response
-                    .withBody(body.toString())
-                    .withHeaders(responseHeaders)
-                    .withStatusCode(500);
+            return new ApiResponse(500, body.toString());
         }
     }
 }

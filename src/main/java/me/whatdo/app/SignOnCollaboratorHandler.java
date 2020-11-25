@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.entitymodel.CollaboratorRequest;
@@ -18,18 +19,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorRequest, APIGatewayProxyResponseEvent> {
+public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorRequest, ApiResponse> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final CollaboratorRequest input, final Context context) {
-        Map<String,String>  responseHeaders, pathParams, queryParams;
+    public ApiResponse handleRequest(final CollaboratorRequest input, final Context context) {
 
-        // Response related instantiation
-        // Map<String,String>  responseHeaders = new HashMap<>();
-        responseHeaders = new HashMap<>();
-        responseHeaders.put("Content-Type", "application/json");
-        responseHeaders.put("X-Custom-Header", "application/json");
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-                .withHeaders(responseHeaders);
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
@@ -45,7 +38,7 @@ public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorReq
             if (!choice.isPresent()) {
                 body.addProperty("Message", "404 Choice not found");
                 body.addProperty("Received", choiceID.toString());
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(404);
+                return new ApiResponse(404, body.toString());
             }
 
             String name = input.getUsername();
@@ -56,27 +49,24 @@ public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorReq
             // * Check: User presence in Choice
             if(!collab.isPresent()){
                 body.addProperty("Message", "404 no Collaborator of that name present in Choice");
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(404);
+                return new ApiResponse(404, body.toString());
             }
 
             // * Check: Password verification
             if(!collab.get().verifyPassword(password)){
                 body.addProperty("Message", "401 credential mismatch");
-                return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(401);
+                return new ApiResponse(401, body.toString());
             }
 
             // Successfully handled and returned
             body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-            return response.withBody(body.toString()).withHeaders(responseHeaders).withStatusCode(200);
+            return new ApiResponse(200, body.toString());
 
             //Some other 500 server error arose
         } catch (Exception e) {
             body.addProperty("Message", "500 server error");
             body.addProperty("Error", e.getMessage());
-            return response
-                    .withBody(body.toString())
-                    .withHeaders(responseHeaders)
-                    .withStatusCode(500);
+            return new ApiResponse(500, body.toString());
         }
     }
 }

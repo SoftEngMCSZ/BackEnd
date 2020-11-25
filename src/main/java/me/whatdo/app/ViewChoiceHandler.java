@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.ViewChoiceRequest;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
@@ -16,16 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ViewChoiceHandler implements RequestHandler<ViewChoiceRequest, APIGatewayProxyResponseEvent> {
+public class ViewChoiceHandler implements RequestHandler<ViewChoiceRequest, ApiResponse> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final ViewChoiceRequest input, final Context context) {
+    public ApiResponse handleRequest(final ViewChoiceRequest input, final Context context) {
 
-        // Response related instantiation
-        Map<String,String>  headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("X-Custom-Header", "application/json");
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-                .withHeaders(headers);
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
@@ -42,26 +37,24 @@ public class ViewChoiceHandler implements RequestHandler<ViewChoiceRequest, APIG
             if (!choice.isPresent()) {
                 body.addProperty("Message", "404 Choice not found");
                 body.addProperty("Received", choiceID.toString());
-                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(404);
+                return new ApiResponse(404, body.toString());
             }
 
             // Sixth Check: Choice Membership
             if(!UserAuthHandler.isUserAuthenticated(input.getAuthentication(), choiceID)){
                 body.addProperty("Message", "401 user not signed signed in to Choice");
-                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(401);
+                return new ApiResponse(401, body.toString());
             }
 
             // Successfully handled and returned
-            return response.withBody(choice.get().toJson()).withHeaders(headers).withStatusCode(200);
+            return new ApiResponse(200, choice.get().toJson());
 
             //Some other 500 server error arose
         } catch (Exception e) {
             body.addProperty("Message", "500 server error");
             body.addProperty("Error", e.getMessage());
-            return response
-                    .withBody(body.toString())
-                    .withHeaders(headers)
-                    .withStatusCode(500);
+            return new ApiResponse(500, body.toString());
+
         }
     }
 }

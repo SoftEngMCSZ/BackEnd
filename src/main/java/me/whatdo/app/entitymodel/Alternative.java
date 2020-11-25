@@ -8,24 +8,24 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 public class Alternative {
-	private final UUID id;
-	private final String description;
+	private final UUID alternativeId;
+	private final String contents;
 	private final Set<Collaborator> approvals;
 	private final Set<Collaborator> disapprovals;
 	private final List<Feedback> feedback;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public Alternative(String description) {
-		this.id = UUID.randomUUID();
-		this.description = description;
+	public Alternative(String contents) {
+		this.alternativeId = UUID.randomUUID();
+		this.contents = contents;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
 
-	public Alternative(UUID id, String description) {
-		this.id = id;
-		this.description = description;
+	public Alternative(UUID id, String contents) {
+		this.alternativeId = id;
+		this.contents = contents;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
@@ -67,23 +67,23 @@ public class Alternative {
 	}
 
 	public UUID getId() {
-		return id;
+		return alternativeId;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getContents() {
+		return contents;
 	}
 
 	public UUID getID(){
-	    return this.id;
+	    return this.alternativeId;
     }
 
 	public boolean equals(Object o) {
 		Alternative that = (Alternative) o;
-		return this.id.equals(that.id);
+		return this.alternativeId.equals(that.alternativeId);
 	}
 
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(alternativeId);
 	}
 }

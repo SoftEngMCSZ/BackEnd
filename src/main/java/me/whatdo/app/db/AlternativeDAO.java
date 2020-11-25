@@ -37,7 +37,7 @@ public class AlternativeDAO {
 
 			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,description,choice) values(?,?,?);");
 			queryAdd.setObject(1,alt.getId());
-			queryAdd.setString(2,alt.getDescription());
+			queryAdd.setString(2,alt.getContents());
 			queryAdd.setObject(3,choiceId);
 
 			// TODO: Insert any associated feedback & opinions

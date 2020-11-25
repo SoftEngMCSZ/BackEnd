@@ -26,7 +26,7 @@ public class TestAlternative {
     @Test
     public void testConstructor(){
         Assert.assertNotNull(alt1);
-        Assert.assertEquals(alt1.getDescription(), "We eat pizza?");
+        Assert.assertEquals(alt1.getContents(), "We eat pizza?");
     }
 
     @Test

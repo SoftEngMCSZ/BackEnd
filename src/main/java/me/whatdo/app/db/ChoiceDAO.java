@@ -40,6 +40,8 @@ public class ChoiceDAO {
 			queryAdd.setString(2,c.getQuestion());
 			queryAdd.setObject(3, Timestamp.from(c.getCreationTime().toInstant()));
 
+			queryAdd.execute();
+
 			AlternativeDAO altDao = new AlternativeDAO();
 			for(Alternative alt: c.getAlternatives()) {
 				altDao.addAlternative(c.getId(),alt);
@@ -50,7 +52,7 @@ public class ChoiceDAO {
 				collabDao.addCollaborator(c.getId(),collab);
 			}
 
-			queryAdd.execute();
+
 			return true;
 		}
 		catch (Exception e) {

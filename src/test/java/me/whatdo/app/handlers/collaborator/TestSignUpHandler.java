@@ -2,6 +2,7 @@ package me.whatdo.app.handlers.collaborator;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import me.whatdo.app.SignUpCollaboratorHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.db.DatabaseUtil;

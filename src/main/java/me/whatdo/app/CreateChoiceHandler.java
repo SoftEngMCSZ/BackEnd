@@ -54,7 +54,7 @@ public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyReques
             // Catch unexpected server errors
         } catch (Exception e){
             body.addProperty("Message", "500 server error");
-            body.addProperty("Error", e.getMessage());
+            body.addProperty("Error:::", e.getMessage() +""+ e.getLocalizedMessage() +""+ e.toString());
             return response
                     .withBody(body.toString())
                     .withStatusCode(500);

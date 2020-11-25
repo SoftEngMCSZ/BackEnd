@@ -8,11 +8,11 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 public class Alternative {
-	private final UUID id;
-	private final String description;
-	private final Set<Collaborator> approvals;
-	private final Set<Collaborator> disapprovals;
-	private final List<Feedback> feedback;
+	private UUID id;
+	private String description;
+	private Set<Collaborator> approvals;
+	private Set<Collaborator> disapprovals;
+	private List<Feedback> feedback;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Alternative(String description) {
@@ -23,6 +23,10 @@ public class Alternative {
 		this.feedback = new ArrayList<>();
 	}
 
+	public Alternative(){
+
+	}
+
 	public Alternative(UUID id, String description) {
 		this.id = id;
 		this.description = description;
@@ -30,7 +34,27 @@ public class Alternative {
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
 	}
-  
+
+	public void setApprovals(Set<Collaborator> approvals) {
+		this.approvals = approvals;
+	}
+
+	public void setDisapprovals(Set<Collaborator> disapprovals) {
+		this.disapprovals = disapprovals;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setFeedback(List<Feedback> feedback) {
+		this.feedback = feedback;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
 	public String toJson(){
 	    return gson.toJson(this);
     }

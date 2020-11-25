@@ -1,9 +1,11 @@
 package me.whatdo.app;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.Choice;
@@ -12,9 +14,15 @@ import me.whatdo.app.entitymodel.ChoiceRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class CreateChoiceHandler implements RequestHandler<ChoiceRequest, APIGatewayProxyResponseEvent> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(final ChoiceRequest input, final Context context) {
+
+        LambdaLogger logger = context.getLogger();
+        Gson gson = new Gson();
+        logger.log(gson.toJson(context));
+        logger.log(gson.toJson(input));
+        logger.log(input.toJson());
 
         //Response related Instantiation
         Map<String, String> headers = new HashMap<>();
@@ -30,15 +38,10 @@ public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyReques
         ChoiceDAO dao;
 
         try {
-            // First Check: HTTP Method
-            if (!input.getHttpMethod().equals("POST")) {
-                body.addProperty("Message", "405 method not allowed");
-                return response.withBody(body.toString()).withHeaders(headers).withStatusCode(405);
-            }
-            // Second Check: Validate request schema
-            request = ChoiceRequest.fromJson(input.getBody());
+            request = input;
             if (!validateRequest(request)) {
                 body.addProperty("Message", "400 malformed ChoiceRequest");
+                body.addProperty("Input", input.toJson());
                 return response.withBody(body.toString()).withHeaders(headers).withStatusCode(400);
             }
             choice = new Choice(request);
@@ -54,7 +57,7 @@ public class CreateChoiceHandler implements RequestHandler<APIGatewayProxyReques
             // Catch unexpected server errors
         } catch (Exception e){
             body.addProperty("Message", "500 server error");
-            body.addProperty("Error:::", e.getMessage() +""+ e.getLocalizedMessage() +""+ e.toString());
+            body.addProperty("Error", e.getMessage());
             return response
                     .withBody(body.toString())
                     .withStatusCode(500);

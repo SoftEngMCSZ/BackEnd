@@ -60,7 +60,7 @@ public class SignOnCollaboratorHandler implements RequestHandler<CollaboratorReq
 
             // Successfully handled and returned
             body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-            return new ApiResponse(200, body.toString());
+            return new ApiResponse(200, UserAuthHandler.encode(name+":"+password));
 
             //Some other 500 server error arose
         } catch (Exception e) {

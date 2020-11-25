@@ -22,7 +22,7 @@ public class CreateChoiceRequest {
 
 	}
 
-	public void setQuestiom(String question) {
+	public void setQuestion(String question) {
 		this.question = question;
 	}
 

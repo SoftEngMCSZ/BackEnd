@@ -54,7 +54,8 @@ public class CreateChoiceHandler implements RequestHandler<CreateChoiceRequest, 
     private static boolean validateRequest(CreateChoiceRequest req){
         JsonObject object = req.toJsonObject();
         return object.has("question") &&
-            object.has("alternatives");
+            object.has("alternatives") &&
+            object.has("maxCollaborators");
     }
 }
 

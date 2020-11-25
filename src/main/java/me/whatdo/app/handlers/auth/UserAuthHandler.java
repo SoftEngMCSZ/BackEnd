@@ -13,7 +13,12 @@ public class UserAuthHandler {
 
 		String[] usernameAndPassword = decode(authHeader).split(":");
 		String username = usernameAndPassword[0];
-		String password = usernameAndPassword[1];
+		String password;
+		if(usernameAndPassword.length == 2) {
+			password = usernameAndPassword[1];
+		} else {
+			password = "";
+		}
 
 		Optional<Collaborator> collab = dao.getCollaborator(choiceId,username);
 		return collab.map(collaborator -> collaborator.verifyPassword(password)).orElse(false);

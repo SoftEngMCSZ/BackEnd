@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Collaborator {
 	private static final int HASH_ITERATION_COUNT = 4;
-	private static final int HASH_MEM = 1024 * 1024;
+	private static final int HASH_MEM = 512;
 	private static final int HASH_DEG_PARALLELISM = 8;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 

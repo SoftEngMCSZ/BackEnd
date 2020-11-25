@@ -74,7 +74,7 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
             if(password.isEmpty()) {
                 collab = new Collaborator(name);
             } else {
-                collab = new Collaborator(name,password);
+                collab = Collaborator.fromPlaintextPassword(name,password);
             }
 
             if(!colllabDAO.addCollaborator(choiceID,collab)) {

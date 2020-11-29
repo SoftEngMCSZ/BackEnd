@@ -1,14 +1,12 @@
 package me.whatdo.app.test.db;
 
 import me.whatdo.app.entitymodel.Alternative;
+import me.whatdo.app.entitymodel.Collaborator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class AlternativeDAO {
 	Connection conn;
@@ -25,6 +23,7 @@ public class AlternativeDAO {
 
 	public boolean addAlternative(UUID choiceId, Alternative alt) throws Exception {
 		try {
+			OpinionDAO opinionDao = new OpinionDAO();
 
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFindExisting.setObject(1,alt.getId());
@@ -40,9 +39,16 @@ public class AlternativeDAO {
 			queryAdd.setString(2,alt.getContents());
 			queryAdd.setObject(3,choiceId);
 
-			// TODO: Insert any associated feedback & opinions
+			// TODO: Insert any associated feedback
 
 			queryAdd.execute();
+
+			for(Collaborator collab: alt.getApprovals()) {
+				opinionDao.addOpinion(alt.getId(),collab,Opinion.APPROVAL);
+			}
+			for(Collaborator collab: alt.getDisapprovals()) {
+				opinionDao.addOpinion(alt.getId(),collab,Opinion.DISAPPROVAL);
+			}
 			return true;
 		}
 		catch (Exception e) {
@@ -58,7 +64,6 @@ public class AlternativeDAO {
 			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Alternative out = buildAlternative(results);
-				// TODO: Get any associated feedback & opinions
 				results.close();
 				return Optional.of(out);
 			}
@@ -77,7 +82,6 @@ public class AlternativeDAO {
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
-				// TODO: Find and add relevant feedback & opinions
 				out.add(buildAlternative(results));
 			}
 			results.close();
@@ -90,9 +94,11 @@ public class AlternativeDAO {
 
 	public boolean deleteAlternative(Alternative alt) throws Exception {
 		try {
+			OpinionDAO opinionDao = new OpinionDAO();
 			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
 			queryDelete.setObject(1,alt.getId());
-			// TODO: Cascade delete all associated feedback & opinions
+			// TODO: Cascade delete all associated feedback
+			opinionDao.deleteAllOpinionsForAlt(alt.getId());
 			int numAffected = queryDelete.executeUpdate();
 			queryDelete.close();
 			return numAffected == 1;
@@ -102,10 +108,33 @@ public class AlternativeDAO {
 		}
 	}
 
+	public int deleteAllAlternativesInChoice(UUID choiceId) throws Exception {
+		try {
+			OpinionDAO opinionDao = new OpinionDAO();
+			PreparedStatement queryCollectIds = conn.prepareStatement("SELECT id FROM " + tblName + " WHERE choice = ?;");
+			queryCollectIds.setObject(1,choiceId);
+			ResultSet results = queryCollectIds.executeQuery();
+
+			while(results.next()) {
+				// TODO: Cascade delete all associated feedback
+				opinionDao.deleteAllOpinionsForAlt(results.getObject("id",UUID.class));
+			}
+
+			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE choice = ?;");
+			queryDelete.setObject(1,choiceId);
+			return queryDelete.executeUpdate();
+		} catch (Exception e) {
+			throw new Exception("Failed to delete alternatives of choice " + choiceId + ". Error: "+e.getMessage());
+		}
+	}
+
 	private static Alternative buildAlternative(ResultSet results) throws Exception {
+		OpinionDAO opinionDao = new OpinionDAO();
 		UUID id = results.getObject("id",UUID.class);
 		String description = results.getString("description");
-
-		return new Alternative(id,description);
+		Set<Collaborator> approvals = new HashSet<>(opinionDao.getAllOpinionsForAlt(id,Opinion.APPROVAL));
+		Set<Collaborator> disapprovals = new HashSet<>(opinionDao.getAllOpinionsForAlt(id,Opinion.DISAPPROVAL));
+		// TODO: Add all associated feedback
+		return new Alternative(id,description,approvals,disapprovals,new ArrayList<>());
 	}
 }

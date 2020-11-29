@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 public class ChoiceDAO {
@@ -86,9 +87,12 @@ public class ChoiceDAO {
 			if(results.next()) {
 				if(results.getObject("selected_alternative",UUID.class)!=null) return false;
 
-				PreparedStatement queryFinalize = conn.prepareStatement("UPDATE " + tblName + " SET selected_alternative = ? where id = ?");
+				PreparedStatement queryFinalize = conn.prepareStatement("UPDATE " + tblName + " SET selected_alternative = ?, completion_time = ? where id = ?");
 				queryFinalize.setObject(1,altId);
-				queryFinalize.setObject(2,choiceId);
+				queryFinalize.setObject(2,Timestamp.from(Instant.now()));
+				queryFinalize.setObject(3,choiceId);
+				queryFinalize.execute();
+				return true;
 			}
 
 			return false;
@@ -121,13 +125,8 @@ public class ChoiceDAO {
 			CollaboratorDAO collabDao = new CollaboratorDAO();
 			AlternativeDAO altDao = new AlternativeDAO();
 
-			for(Collaborator collab: c.getCollaborators()) {
-				collabDao.deleteCollaborator(c.getId(),collab);
-			}
-
-			for(Alternative alt: c.getAlternatives()) {
-				altDao.deleteAlternative(alt);
-			}
+			collabDao.deleteAllCollaboratorsOfChoice(c.getId());
+			altDao.deleteAllAlternativesInChoice(c.getId());
 
 			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
 			queryDelete.setObject(1,c.getId());
@@ -138,6 +137,30 @@ public class ChoiceDAO {
 		}
 		catch (Exception e) {
 			throw new Exception("Failed to delete choice " + c.getId() + ". Error: "+e.getMessage());
+		}
+	}
+
+	public int deleteChoicesOlderThan(Date d) throws Exception {
+		try {
+			CollaboratorDAO collabDao = new CollaboratorDAO();
+			AlternativeDAO altDao = new AlternativeDAO();
+
+			PreparedStatement queryFindAll = conn.prepareStatement("SELECT id FROM " + tblName + " WHERE creation_time < ?;");
+			queryFindAll.setObject(1,new Timestamp(d.getTime()));
+			ResultSet results = queryFindAll.executeQuery();
+
+			while(results.next()) {
+				collabDao.deleteAllCollaboratorsOfChoice(results.getObject("id",UUID.class));
+				altDao.deleteAllAlternativesInChoice(results.getObject("id",UUID.class));
+			}
+			queryFindAll.close();
+
+			PreparedStatement queryDeleteAll = conn.prepareStatement("DELETE FROM " + tblName + " WHERE creation_time < ?;");
+			queryDeleteAll.setObject(1,new Timestamp(d.getTime()));
+			return queryDeleteAll.executeUpdate();
+
+		} catch (Exception e) {
+			throw new Exception("Failed to delete choices older than " + d + ". Error: "+e.getMessage());
 		}
 	}
 

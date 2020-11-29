@@ -6,11 +6,8 @@ import java.sql.DriverManager;
 public class DatabaseUtil {
 	public final static String jdbcTag = "jdbc:postgresql://";
 	public final static String dbPort = "5432";
-//	public final static String multiQueries = "?allowMultiQueries=true";
 
-	public final static String lambdaTesting = "lambdaTesting";
 	public final static String dbName = "whatdo";
-	public final static String testName = "test";
 
 	// pooled across all usages.
 	static Connection conn;
@@ -20,13 +17,6 @@ public class DatabaseUtil {
 	 */
 	public static Connection connect() throws Exception {
 		if (conn != null) { return conn; }
-
-		// this is resistant to any SQL-injection attack.
-		String schemaName = dbName;
-		String test = System.getenv("lambdaTesting");
-		if (test != null) {
-			schemaName = testName;
-		}
 
 		// These three environment variables must be set!
 		String dbUser = System.getenv("WHATDO_DB_USER");
@@ -44,12 +34,12 @@ public class DatabaseUtil {
 
 		try {
 			conn = DriverManager.getConnection(
-					jdbcTag + dbEndpoint + ":" + dbPort + "/" + schemaName /* + multiQueries */,
+					jdbcTag + dbEndpoint + ":" + dbPort + "/" + dbName,
 					dbUser,
 					dbPwd);
 			return conn;
 		} catch (Exception ex) {
-			System.err.println("DB-ERROR:" + schemaName + "," + dbUser + "," + dbPwd + "," + dbEndpoint);
+			System.err.println("DB-ERROR:" + dbName + "," + dbUser + "," + dbPwd + "," + dbEndpoint);
 			throw new Exception("Failed in database connection");
 		}
 	}

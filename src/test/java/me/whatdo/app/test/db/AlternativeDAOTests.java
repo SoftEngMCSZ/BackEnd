@@ -1,6 +1,7 @@
 package me.whatdo.app.test.db;
 
 import me.whatdo.app.entitymodel.Alternative;
+import me.whatdo.app.entitymodel.Collaborator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +18,23 @@ public class AlternativeDAOTests {
 	public void init() throws Exception {
 		this.dao = new AlternativeDAO();
 		DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
 	}
 
 	@Test
 	public void addFetchDeleteSingle() throws Exception {
+		CollaboratorDAO collabDao = new CollaboratorDAO();
 		UUID mockChoice = UUID.randomUUID();
 		Alternative testAlt = new Alternative("Steal the Krabby Patty secret formula!");
+		Collaborator approver = new Collaborator("Mr. Krabs");
+		Collaborator disapprover = new Collaborator("Squidward Tentacles");
+		collabDao.addCollaborator(mockChoice,approver);
+		collabDao.addCollaborator(mockChoice,disapprover);
+
+		testAlt.addApproval(approver);
+		testAlt.addDisapproval(disapprover);
+
 		Assert.assertTrue(dao.addAlternative(mockChoice,testAlt));
 		Optional<Alternative> testFetch = dao.getAlternative(testAlt.getId());
 		Assert.assertTrue(testFetch.isPresent());
@@ -46,14 +58,21 @@ public class AlternativeDAOTests {
 		List<Alternative> out = dao.getAllAlternativesInChoice(mockChoice);
 		Assert.assertEquals(alternatives.size(),out.size());
 
-		for(Alternative alt : out) {
-			Assert.assertTrue(dao.deleteAlternative(alt));
-		}
+		Assert.assertEquals(alternatives.size(),dao.deleteAllAlternativesInChoice(mockChoice));
 	}
 
 	@Test
 	public void tryFetchMissing() throws Exception {
 		UUID missingAltId = UUID.randomUUID();
 		Assert.assertFalse(dao.getAlternative(missingAltId).isPresent());
+	}
+
+	@Test
+	public void doubleInsert() throws Exception {
+		UUID mockChoice = UUID.randomUUID();
+		Alternative alt = new Alternative("Become the God-Emperor of Bikini Bottom");
+		Assert.assertTrue(dao.addAlternative(mockChoice,alt));
+		Assert.assertFalse(dao.addAlternative(mockChoice,alt));
+		Assert.assertTrue(dao.deleteAlternative(alt));
 	}
 }

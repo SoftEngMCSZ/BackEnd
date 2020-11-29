@@ -35,10 +35,11 @@ public class CollaboratorDAO {
 				return false;
 			}
 
-			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (name,choice,password) values(?,?,?);");
+			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (name,choice,password,id) values(?,?,?,?);");
 			queryAdd.setString(1,c.getName());
 			queryAdd.setObject(2,choiceId);
 			queryAdd.setString(3,c.getPassword());
+			queryAdd.setObject(4,c.getId());
 
 			queryAdd.execute();
 			return true;
@@ -48,11 +49,10 @@ public class CollaboratorDAO {
 		}
 	}
 
-	public Optional<Collaborator> getCollaborator(UUID choiceId, String name) throws Exception {
+	public Optional<Collaborator> getCollaborator(UUID collabId) throws Exception {
 		try {
-			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE name = ? AND choice = ?;");
-			queryFind.setString(1,name);
-			queryFind.setObject(2,choiceId);
+			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
+			queryFind.setObject(1,collabId);
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
@@ -62,7 +62,25 @@ public class CollaboratorDAO {
 			}
 			return Optional.empty();
 		} catch (Exception e) {
-			throw new Exception("Failed to get collaborator " + name + " of choice " + choiceId + ". Error: "+e.getMessage());
+			throw new Exception("Failed to get collaborator " + collabId + ". Error: "+e.getMessage());
+		}
+	}
+
+	public Optional<Collaborator> getCollaborator(UUID choiceId, String name) throws Exception {
+		try {
+			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE choice = ? AND name = ?;");
+			queryFind.setObject(1,choiceId);
+			queryFind.setString(2,name);
+			ResultSet results = queryFind.executeQuery();
+			// Check if a collaborator with the same name is already registered for that choice
+			if(results.next()) {
+				Collaborator out = buildCollaborator(results);
+				results.close();
+				return Optional.of(out);
+			}
+			return Optional.empty();
+		} catch (Exception e) {
+			throw new Exception("Failed to get collaborator " + name + " of " + choiceId.toString() + ". Error: "+e.getMessage());
 		}
 	}
 
@@ -85,27 +103,37 @@ public class CollaboratorDAO {
 		}
 	}
 
-	public boolean deleteCollaborator(UUID choiceId, Collaborator c) throws Exception {
+	public boolean deleteCollaborator(UUID collabId) throws Exception {
 		try {
-			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ? AND choice = ?;");
-			queryDelete.setString(1,c.getName());
-			queryDelete.setObject(2,choiceId);
+			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
+			queryDelete.setObject(1,collabId);
 			int numAffected = queryDelete.executeUpdate();
 			queryDelete.close();
 			return numAffected == 1;
 		}
 		catch (Exception e) {
-			throw new Exception("Failed to delete collaborator " + c.getName() + ". Error: "+e.getMessage());
+			throw new Exception("Failed to delete collaborator " + collabId + ". Error: "+e.getMessage());
+		}
+	}
+
+	public int deleteAllCollaboratorsOfChoice(UUID choiceId) throws Exception {
+		try {
+			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE choice = ?;");
+			queryDelete.setObject(1,choiceId);
+			return queryDelete.executeUpdate();
+		} catch (Exception e) {
+			throw new Exception("Failed to delete collaborators of choice " + choiceId + ". Error: "+e.getMessage());
 		}
 	}
 
 	private static Collaborator buildCollaborator(ResultSet results) throws Exception {
+		UUID id = results.getObject("id",UUID.class);
 		String name = results.getString("name");
 		String password = results.getString("password");
 		if(password != null) {
-			return new Collaborator(name,password);
+			return new Collaborator(id, name, password);
 		} else {
-			return new Collaborator(name);
+			return new Collaborator(id, name);
 		}
 	}
 }

@@ -36,7 +36,6 @@ public class TestFeedback {
     @Test
     public void testSerialize(){
         JsonObject obj = feedback.toJsonObject();
-        Assert.assertEquals(obj.get("feedbackID").toString(),gson.toJson(feedback.getFeedbackID()));
         Assert.assertEquals(obj.get("author").toString(),gson.toJson(feedback.getAuthor()));
         Assert.assertEquals(obj.get("timestamp").toString(),gson.toJson(feedback.getTimestamp()));
         Assert.assertEquals(obj.get("contents").toString(), gson.toJson(feedback.getContent()));

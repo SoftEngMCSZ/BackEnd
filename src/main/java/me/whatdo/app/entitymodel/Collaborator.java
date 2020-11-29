@@ -9,6 +9,7 @@ import de.mkammerer.argon2.Argon2Factory.Argon2Types;
 
 import java.nio.charset.Charset;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Collaborator {
 	private static final int HASH_ITERATION_COUNT = 4;
@@ -17,20 +18,32 @@ public class Collaborator {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	// Guaranteed non-null
+	private final UUID id;
 	private final String name;
 	// May be null if Collaborator registered without password. Don't serialize this
 	private final transient String password;
 
-	public Collaborator(String name) {
+	public Collaborator(UUID id, String name) {
+		this.id = id;
 		this.name = name;
 		this.password = null;
 	}
 
-	public String getName() {
-		return this.name;
+	public Collaborator(UUID id, String name, String pwd) {
+		this.id = id;
+		this.name = name;
+		this.password = pwd;
+
+	}
+
+	public Collaborator(String name) {
+		this.id = UUID.randomUUID();
+		this.name = name;
+		this.password = null;
 	}
 
 	public Collaborator(String name, String pwd) {
+		this.id = UUID.randomUUID();
 		this.name = name;
 		this.password = pwd;
 	}
@@ -47,6 +60,14 @@ public class Collaborator {
 						Charset.defaultCharset()
 				)
 		);
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public UUID getId() {
+		return id;
 	}
 
 	public String toJson(){
@@ -72,11 +93,13 @@ public class Collaborator {
 	}
 
 	public int hashCode() {
-		return Objects.hash(this.name);
+		return Objects.hash(this.id);
 	}
 
 	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || o.getClass() != this.getClass()) return false;
 		Collaborator that = (Collaborator) o;
-		return this.name.equals(that.name);
+		return this.id.equals(that.id);
 	}
 }

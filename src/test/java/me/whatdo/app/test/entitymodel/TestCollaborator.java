@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
+
 
 public class TestCollaborator {
 
@@ -23,19 +25,19 @@ public class TestCollaborator {
 
     @Test
     public void testSerialize(){
-        String testStr = "{\"name\":\"Maxy\"}";
+        String testStr = "{\"id\":\""+collab.getId()+"\",\"name\":\"Maxy\"}";
         Assert.assertEquals(collab.toJson(),testStr);
     }
 
     @Test
     public void testDeserialize(){
-        Collaborator max = Collaborator.fromJson("{\"name\":\"Maxy\",\"password\":\"Baboo\"}");
+        Collaborator max = Collaborator.fromJson("{\"id\":\""+UUID.randomUUID()+"\",\"name\":\"Maxy\",\"password\":\"Baboo\"}");
         Assert.assertTrue(max.verifyPassword("Baboo"));
     }
 
     @Test
     public void testEquality(){
-        Collaborator max = new Collaborator("Maxy");
+        Collaborator max = new Collaborator(collab.getId(),"Maxy");
         Assert.assertEquals(max,collab);
         Assert.assertEquals(max.hashCode(),collab.hashCode());
     }

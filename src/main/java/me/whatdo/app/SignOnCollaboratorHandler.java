@@ -2,20 +2,15 @@ package me.whatdo.app;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.JsonObject;
-import me.whatdo.app.db.ChoiceDAO;
-import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.test.db.ChoiceDAO;
+import me.whatdo.app.test.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.entitymodel.CollaboratorRequest;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
-import me.whatdo.app.handlers.common.ChoiceIdExtractionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 

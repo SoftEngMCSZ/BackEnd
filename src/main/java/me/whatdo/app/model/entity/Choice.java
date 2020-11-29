@@ -91,6 +91,7 @@ public class Choice {
 	public static Optional<Choice> fromJson(String json){
 		Choice out = gson.fromJson(json, Choice.class);
 		if(
+				out.alternatives == null ||
 				out.alternatives.size() < MIN_ALTERNATIVES ||
 				out.alternatives.size() > MAX_ALTERNATIVES ||
 				out.collaborators.size() > out.maxCollaborators
@@ -133,5 +134,9 @@ public class Choice {
 
 	public int hashCode() {
 		return Objects.hash(id);
+	}
+
+	public int getMaxCollaborators() {
+		return this.maxCollaborators;
 	}
 }

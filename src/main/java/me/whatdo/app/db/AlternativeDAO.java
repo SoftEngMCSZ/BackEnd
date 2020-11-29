@@ -44,10 +44,10 @@ public class AlternativeDAO {
 			queryAdd.execute();
 
 			for(Collaborator collab: alt.getApprovals()) {
-				opinionDao.addOpinion(alt.getId(),collab,Opinion.APPROVAL);
+				opinionDao.addOpinion(alt.getId(),collab.getId(),Opinion.APPROVAL);
 			}
 			for(Collaborator collab: alt.getDisapprovals()) {
-				opinionDao.addOpinion(alt.getId(),collab,Opinion.DISAPPROVAL);
+				opinionDao.addOpinion(alt.getId(),collab.getId(),Opinion.DISAPPROVAL);
 			}
 			return true;
 		}

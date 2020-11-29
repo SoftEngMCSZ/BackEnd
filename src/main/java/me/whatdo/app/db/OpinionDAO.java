@@ -23,11 +23,11 @@ public class OpinionDAO {
 		}
 	}
 
-	public boolean addOpinion(UUID altId, Collaborator c, Opinion opinion) throws Exception {
+	public boolean addOpinion(UUID altId, UUID authorId, Opinion opinion) throws Exception {
 		try {
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative_id = ? AND author = ?;");
 			queryFindExisting.setObject(1,altId);
-			queryFindExisting.setObject(2,c.getId());
+			queryFindExisting.setObject(2, authorId);
 			ResultSet results = queryFindExisting.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
@@ -36,7 +36,7 @@ public class OpinionDAO {
 			}
 
 			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (author, alternative_id, opinion) values(?,?,?::opinion);");
-			queryAdd.setObject(1,c.getId());
+			queryAdd.setObject(1, authorId);
 			queryAdd.setObject(2,altId);
 			queryAdd.setObject(3,opinion.toString());
 
@@ -44,15 +44,15 @@ public class OpinionDAO {
 			return true;
 		}
 		catch (Exception e) {
-			throw new Exception("Failed to add " + opinion.toString() + " of author "+c.getName()+" for alternative "+altId.toString()+". Error: "+e.getMessage());
+			throw new Exception("Failed to add " + opinion.toString() + " of author "+ authorId +" for alternative "+altId.toString()+". Error: "+e.getMessage());
 		}
 	}
 
-	public Optional<Opinion> getOpinion(UUID altId, Collaborator author) throws Exception {
+	public Optional<Opinion> getOpinion(UUID altId, UUID authorId) throws Exception {
 		try {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative_id = ? AND author = ?;");
 			queryFind.setObject(1,altId);
-			queryFind.setObject(2,author.getId());
+			queryFind.setObject(2, authorId);
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
@@ -62,7 +62,7 @@ public class OpinionDAO {
 			}
 			return Optional.empty();
 		} catch (Exception e) {
-			throw new Exception("Failed to get opinion of author " + author.getName() + " of alternative " + altId + ". Error: "+e.getMessage());
+			throw new Exception("Failed to get opinion of author " + authorId + " of alternative " + altId + ". Error: "+e.getMessage());
 		}
 	}
 
@@ -89,18 +89,18 @@ public class OpinionDAO {
 		}
 	}
 
-	public boolean deleteOpinion(UUID altId, Collaborator author, Opinion opinion) throws Exception {
+	public boolean deleteOpinion(UUID altId, UUID authorId, Opinion opinion) throws Exception {
 		try {
 			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE alternative_id = ? AND author = ? AND opinion = ?::opinion;");
 			queryDelete.setObject(1,altId);
-			queryDelete.setObject(2,author.getId());
+			queryDelete.setObject(2, authorId);
 			queryDelete.setString(3,opinion.toString());
 			int numAffected = queryDelete.executeUpdate();
 			queryDelete.close();
 			return numAffected == 1;
 		}
 		catch (Exception e) {
-			throw new Exception("Failed to delete " + opinion.toString().toLowerCase() + " by author " + author.getName() + " of alternative " + altId.toString() + ". Error: "+e.getMessage());
+			throw new Exception("Failed to delete " + opinion.toString().toLowerCase() + " by author " + authorId + " of alternative " + altId.toString() + ". Error: "+e.getMessage());
 		}
 	}
 

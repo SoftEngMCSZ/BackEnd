@@ -35,7 +35,7 @@ public class TestAlternative {
     @Test
     public void testSerialize(){
         JsonObject obj = alt1.toJsonObject();
-        Assert.assertEquals(obj.get("description").toString(), "\"We eat pizza?\"");
+        Assert.assertEquals(obj.get("contents").toString(), "\"We eat pizza?\"");
     }
 
     @Test

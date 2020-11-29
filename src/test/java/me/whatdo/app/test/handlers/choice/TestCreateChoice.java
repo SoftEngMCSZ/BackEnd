@@ -35,7 +35,7 @@ public class TestCreateChoice {
     public void successfulResponse() {
         ApiResponse result = handler.handleRequest(request, null);
 
-        assertEquals(result.getStatusCode(), 201);
+        assertEquals(200, result.getStatusCode());
         String content = result.getBody();
         assertNotNull(content);
         assertTrue(content.contains("\"id\""));
@@ -45,22 +45,11 @@ public class TestCreateChoice {
     }
 
     @Test
-    public void badHTTPMethod() {
-        ApiResponse result = handler.handleRequest(request, null);
-
-        assertEquals(result.getStatusCode(), 405);
-        String content = result.getBody();
-        assertNotNull(content);
-        assertTrue(content.contains("\"405 method not allowed\""));
-    }
-
-    @Test
     public void badRequest() {
-        ApiResponse result = handler.handleRequest(request, null);
+        ApiResponse result = handler.handleRequest(null, null);
 
-        assertEquals(result.getStatusCode(), 400);
+        assertEquals(500, result.getStatusCode() );
         String content = result.getBody();
         assertNotNull(content);
-        assertTrue(content.contains("\"400 malformed ChoiceRequest\""));
     }
 }

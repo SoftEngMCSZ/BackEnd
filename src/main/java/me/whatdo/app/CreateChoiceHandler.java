@@ -14,12 +14,6 @@ public class CreateChoiceHandler implements RequestHandler<CreateChoiceRequest, 
 
     public ApiResponse handleRequest(final CreateChoiceRequest input, final Context context) {
 
-        LambdaLogger logger = context.getLogger();
-        Gson gson = new Gson();
-        logger.log(gson.toJson(context));
-        logger.log(gson.toJson(input));
-        logger.log(input.toJson());
-
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation

@@ -26,10 +26,10 @@ public class FeedbackDAO {
         }
     }
 
-    public boolean addFeedback(Feedback feedback) throws Exception {
+    public boolean addFeedback(UUID altId, Feedback feedback) throws Exception {
         try {
             PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
-            queryFind.setObject(1, feedback.getFeedbackID());
+            queryFind.setObject(1, feedback.getId());
             ResultSet resultSet = queryFind.executeQuery();
 
             // If the feedback ID already exists in the
@@ -40,9 +40,9 @@ public class FeedbackDAO {
             else {
                 resultSet.close();
                 PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id, author, alternative, timestamp, content) values(?, ?,?,?,?);");
-                queryAdd.setObject(1, feedback.getFeedbackID());
-                queryAdd.setString(2, feedback.getAuthor().getName());
-                queryAdd.setObject(3, feedback.getAlternativeID());
+                queryAdd.setObject(1, feedback.getId());
+                queryAdd.setObject(2, feedback.getAuthor().getId());
+                queryAdd.setObject(3, altId);
                 queryAdd.setObject(4, new Timestamp(feedback.getTimestamp().getTime()));
                 queryAdd.setString(5, feedback.getContent());
                 queryAdd.execute();
@@ -70,7 +70,7 @@ public class FeedbackDAO {
 
     public List<Feedback> getAllFeedback(UUID alternativeID) throws Exception {
         try {
-            ArrayList<Feedback> feedbackList = new ArrayList<Feedback>();
+            ArrayList<Feedback> feedbackList = new ArrayList<>();
             PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ? ORDER BY timestamp;");
             queryFind.setObject(1, alternativeID);
             ResultSet resultSet = queryFind.executeQuery();
@@ -85,8 +85,7 @@ public class FeedbackDAO {
 
             return feedbackList;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Failed in getting feedback: " + e.getMessage());
+            throw new Exception("Failed getting all feedback on alternative " + alternativeID.toString() + "Error: " + e.getMessage());
         }
     }
 
@@ -108,13 +107,25 @@ public class FeedbackDAO {
         }
     }
 
+    public int deleteAllFeedbackForAlternative(UUID altId) throws Exception {
+        try {
+            PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE alternative = ?;");
+            queryDelete.setObject(1,altId);
+            return queryDelete.executeUpdate();
+        } catch (Exception e) {
+            throw new Exception("Failed to delete feedback of alternative " + altId + ". Error: "+e.getMessage());
+        }
+    }
+
     public Feedback generateFeedback(ResultSet resultSet) throws Exception {
-        UUID alternativeID = resultSet.getObject("alternative", UUID.class);
-        UUID feedbackID = resultSet.getObject("id", UUID.class);
-        Collaborator author = new Collaborator(resultSet.getString("author"));
+        UUID id = resultSet.getObject("id", UUID.class);
+        Optional<Collaborator> author = new CollaboratorDAO().getCollaborator(resultSet.getObject("author",UUID.class));
+        // If this assertion fails, then db foreign key constraints have been violated.
+        // The DB would throw an error on insertion, well before reaching here
+        assert author.isPresent();
         String content = resultSet.getString("content");
         Date timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 
-        return new Feedback(alternativeID, feedbackID, author, timestamp, content);
+        return new Feedback(id, author.get(), timestamp, content);
     }
 }

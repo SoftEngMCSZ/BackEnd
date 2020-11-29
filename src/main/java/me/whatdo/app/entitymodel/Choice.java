@@ -119,6 +119,10 @@ public class Choice {
 		} else return false;
 	}
 
+	public Optional<Alternative> getSelectedAlternative() {
+		return Optional.ofNullable(this.selectedAlternative);
+	}
+
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

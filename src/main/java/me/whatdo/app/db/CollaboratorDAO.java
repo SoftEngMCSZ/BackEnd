@@ -1,4 +1,4 @@
-package me.whatdo.app.test.db;
+package me.whatdo.app.db;
 
 import me.whatdo.app.entitymodel.Collaborator;
 

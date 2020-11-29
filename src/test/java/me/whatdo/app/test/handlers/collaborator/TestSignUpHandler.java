@@ -1,8 +1,8 @@
 package me.whatdo.app.test.handlers.collaborator;
 
 import me.whatdo.app.SignUpCollaboratorHandler;
-import me.whatdo.app.test.db.ChoiceDAO;
-import me.whatdo.app.test.db.CollaboratorDAO;
+import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.Alternative;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.Collaborator;

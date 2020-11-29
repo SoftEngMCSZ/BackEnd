@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import me.whatdo.app.CreateChoiceHandler;
-import me.whatdo.app.test.db.DatabaseUtil;
+import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.entitymodel.Alternative;
 import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.CreateChoiceRequest;

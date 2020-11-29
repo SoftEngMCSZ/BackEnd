@@ -1,4 +1,4 @@
-package me.whatdo.app.test.db;
+package me.whatdo.app.db;
 
 public enum Opinion {
 	APPROVAL,

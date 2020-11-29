@@ -1,5 +1,8 @@
 package me.whatdo.app.test.db;
 
+import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.db.DatabaseUtil;
+import me.whatdo.app.db.FeedbackDAO;
 import me.whatdo.app.entitymodel.Collaborator;
 import me.whatdo.app.entitymodel.Feedback;
 import org.junit.Assert;

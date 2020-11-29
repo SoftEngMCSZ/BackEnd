@@ -1,4 +1,4 @@
-package me.whatdo.app.test.db;
+package me.whatdo.app.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

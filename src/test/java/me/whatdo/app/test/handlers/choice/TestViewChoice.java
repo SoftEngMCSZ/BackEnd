@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import me.whatdo.app.ViewChoiceHandler;
-import me.whatdo.app.test.db.ChoiceDAO;
-import me.whatdo.app.test.db.CollaboratorDAO;
-import me.whatdo.app.test.db.DatabaseUtil;
+import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.entitymodel.*;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,5 +1,9 @@
 package me.whatdo.app.test.db;
 
+import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.db.DatabaseUtil;
+import me.whatdo.app.db.Opinion;
+import me.whatdo.app.db.OpinionDAO;
 import me.whatdo.app.entitymodel.Collaborator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,7 +32,7 @@ public class OpinionDAOTests {
 
 	@Test
 	public void addFetchDeleteSingle() throws Exception {
-		dao.addOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL);
+		dao.addOpinion(mockAltId,testOpinionAuthor, Opinion.APPROVAL);
 
 		Optional<Opinion> opinion = dao.getOpinion(mockAltId,testOpinionAuthor);
 		Assert.assertTrue(opinion.isPresent());

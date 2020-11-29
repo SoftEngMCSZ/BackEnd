@@ -1,4 +1,4 @@
-package me.whatdo.app.handlers.common;
+package me.whatdo.app.test.handlers.common;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.JsonObject;

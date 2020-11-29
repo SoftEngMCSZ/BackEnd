@@ -1,6 +1,6 @@
-package me.whatdo.app.handlers.auth;
+package me.whatdo.app.test.handlers.auth;
 
-import me.whatdo.app.db.CollaboratorDAO;
+import me.whatdo.app.test.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.Collaborator;
 
 import java.util.Base64;

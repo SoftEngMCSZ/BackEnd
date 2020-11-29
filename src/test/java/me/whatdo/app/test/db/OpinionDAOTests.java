@@ -1,4 +1,4 @@
-package me.whatdo.app.db;
+package me.whatdo.app.test.db;
 
 import me.whatdo.app.entitymodel.Collaborator;
 import org.junit.Assert;

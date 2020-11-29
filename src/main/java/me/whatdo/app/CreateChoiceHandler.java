@@ -1,11 +1,11 @@
-package me.whatdo.app.handlers.choice;
+package me.whatdo.app;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.test.db.ChoiceDAO;
 import me.whatdo.app.entitymodel.ApiResponse;
 import me.whatdo.app.entitymodel.Choice;
 import me.whatdo.app.entitymodel.CreateChoiceRequest;

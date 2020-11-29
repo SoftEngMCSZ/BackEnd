@@ -1,8 +1,9 @@
-package me.whatdo.app.entitymodel;
+package me.whatdo.app.model.request;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import me.whatdo.app.model.entity.Alternative;
 
 import java.util.List;
 

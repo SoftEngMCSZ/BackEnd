@@ -1,7 +1,7 @@
 package me.whatdo.app.handlers.auth;
 
 import me.whatdo.app.db.CollaboratorDAO;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.util.Base64;
 import java.util.Optional;

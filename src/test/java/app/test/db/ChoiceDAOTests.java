@@ -2,9 +2,9 @@ package app.test.db;
 
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

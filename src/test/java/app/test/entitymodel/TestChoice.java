@@ -1,10 +1,10 @@
 package app.test.entitymodel;
 
 import com.google.gson.JsonObject;
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.Collaborator;
-import me.whatdo.app.entitymodel.CreateChoiceRequest;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.request.CreateChoiceRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

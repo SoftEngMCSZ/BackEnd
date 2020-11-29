@@ -1,4 +1,4 @@
-package me.whatdo.app.entitymodel;
+package me.whatdo.app.model.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

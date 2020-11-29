@@ -1,7 +1,7 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Collaborator;
-import me.whatdo.app.entitymodel.Feedback;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.Feedback;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,8 +1,8 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

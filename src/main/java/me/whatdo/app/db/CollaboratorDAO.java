@@ -1,6 +1,6 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

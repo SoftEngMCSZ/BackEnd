@@ -1,6 +1,6 @@
 package app.test.entitymodel;
 
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Collaborator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -7,10 +7,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
-import me.whatdo.app.entitymodel.ApiResponse;
-import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.Collaborator;
-import me.whatdo.app.entitymodel.CollaboratorRequest;
+import me.whatdo.app.model.ApiResponse;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.request.CollaboratorRequest;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
 
 import java.util.Optional;

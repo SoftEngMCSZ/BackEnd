@@ -1,4 +1,4 @@
-package me.whatdo.app.entitymodel;
+package me.whatdo.app.model.request;
 
 public class ViewChoiceRequest {
 

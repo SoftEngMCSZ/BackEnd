@@ -2,9 +2,9 @@ package app.test.entitymodel;
 
 import com.google.gson.*;
 
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Collaborator;
-import me.whatdo.app.entitymodel.Feedback;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.Feedback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

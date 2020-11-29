@@ -2,7 +2,7 @@ package app.test.db;
 
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.db.DatabaseUtil;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Collaborator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -8,8 +8,13 @@ import me.whatdo.app.ViewChoiceHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.db.DatabaseUtil;
-import me.whatdo.app.entitymodel.*;
+import me.whatdo.app.model.*;
 import me.whatdo.app.handlers.auth.UserAuthHandler;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.request.CreateChoiceRequest;
+import me.whatdo.app.model.request.ViewChoiceRequest;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import me.whatdo.app.CreateChoiceHandler;
 import me.whatdo.app.db.DatabaseUtil;
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.ApiResponse;
-import me.whatdo.app.entitymodel.CreateChoiceRequest;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.ApiResponse;
+import me.whatdo.app.model.request.CreateChoiceRequest;
 import org.junit.Before;
 import org.junit.Test;
 

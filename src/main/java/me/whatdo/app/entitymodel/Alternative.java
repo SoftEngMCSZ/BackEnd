@@ -1,6 +1,5 @@
 package me.whatdo.app.entitymodel;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -23,14 +22,15 @@ public class Alternative {
 		this.feedback = new ArrayList<>();
 	}
 
-	public Alternative(UUID id, String description) {
+	public Alternative(UUID id, String description, Set<Collaborator> approvals,
+					   Set<Collaborator> disapprovals, List<Feedback> feedback) {
 		this.id = id;
 		this.description = description;
-		this.approvals = new HashSet<>();
-		this.disapprovals = new HashSet<>();
-		this.feedback = new ArrayList<>();
+		this.approvals = approvals;
+		this.disapprovals = disapprovals;
+		this.feedback = feedback;
 	}
-  
+
 	public String toJson(){
 	    return gson.toJson(this);
     }
@@ -42,7 +42,6 @@ public class Alternative {
     public static Alternative fromJson(String json){
 	    return gson.fromJson(json, Alternative.class);
     }
-
 
 	public boolean addApproval(Collaborator author) {
 		this.disapprovals.remove(author);
@@ -56,6 +55,18 @@ public class Alternative {
 	public boolean addDisapproval(Collaborator author) {
 		this.approvals.remove(author);
 		return this.disapprovals.add(author);
+	}
+
+	public Set<Collaborator> getApprovals() {
+		return approvals;
+	}
+
+	public Set<Collaborator> getDisapprovals() {
+		return disapprovals;
+	}
+
+	public List<Feedback> getFeedback() {
+		return feedback;
 	}
 
 	public boolean removeDisapproval(Collaborator author) {
@@ -74,11 +85,9 @@ public class Alternative {
 		return description;
 	}
 
-	public UUID getID(){
-	    return this.id;
-    }
-
 	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || o.getClass() != this.getClass()) return false;
 		Alternative that = (Alternative) o;
 		return this.id.equals(that.id);
 	}

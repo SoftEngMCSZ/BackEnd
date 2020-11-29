@@ -64,7 +64,9 @@ public class TestSignOnHandler {
                         .withQueryStringParameters(queryParams)
                         .withHttpMethod("GET");
 
-        collaboratorDAO.addCollaborator(choice.getId(), Collaborator.fromPlaintextPassword("Max", "pass"));
+        Collaborator collab = Collaborator.fromPlaintextPassword("Max", "pass");
+
+        collaboratorDAO.addCollaborator(choice.getId(), collab);
 
         APIGatewayProxyResponseEvent result = handler.handleRequest(event, null);
 
@@ -75,6 +77,6 @@ public class TestSignOnHandler {
         assertNotNull(content);
         assertTrue(content.contains("\"authentication\""));
         assertTrue(content.contains(UserAuthHandler.encode("Max:pass")));
-        assertTrue(collaboratorDAO.deleteCollaborator(choice.getId(), new Collaborator("Max", "pass")));
+        assertTrue(collaboratorDAO.deleteCollaborator(collab.getId()));
     }
 }

@@ -32,10 +32,12 @@ public class Alternative {
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
 		this.feedback = new ArrayList<>();
+	}
+
 	public Alternative(UUID id, String description, Set<Collaborator> approvals,
 					   Set<Collaborator> disapprovals, List<Feedback> feedback) {
-		this.id = id;
-		this.description = description;
+		this.alternativeID = id;
+		this.contents = description;
 		this.approvals = approvals;
 		this.disapprovals = disapprovals;
 		this.feedback = feedback;

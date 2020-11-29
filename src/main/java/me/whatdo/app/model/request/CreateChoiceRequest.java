@@ -11,7 +11,7 @@ public class CreateChoiceRequest {
 	public String question;
 	public List<Alternative> alternatives;
 	public int maxCollaborators;
-	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+	public static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public CreateChoiceRequest(String question, List<Alternative> alts, int maxCollaborators) {
 		this.question = question;

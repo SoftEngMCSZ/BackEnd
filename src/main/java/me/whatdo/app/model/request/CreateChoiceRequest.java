@@ -8,10 +8,10 @@ import me.whatdo.app.model.entity.Alternative;
 import java.util.List;
 
 public class CreateChoiceRequest {
-	protected String question;
-	protected List<Alternative> alternatives;
-	protected int maxCollaborators;
-	protected static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+	public String question;
+	public List<Alternative> alternatives;
+	public int maxCollaborators;
+	public static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public CreateChoiceRequest(String question, List<Alternative> alts, int maxCollaborators) {
 		this.question = question;

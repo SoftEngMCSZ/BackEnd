@@ -1,4 +1,4 @@
-package me.whatdo.app.test.db;
+package app.test.db;
 
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;

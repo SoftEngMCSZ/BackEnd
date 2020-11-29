@@ -1,4 +1,4 @@
-package me.whatdo.app.test.handlers.choice;
+package app.test.handlers.choice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -1,4 +1,4 @@
-package me.whatdo.app.test.handlers.auth;
+package app.test.handlers.auth;
 
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.db.DatabaseUtil;

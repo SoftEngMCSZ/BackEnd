@@ -1,4 +1,4 @@
-package me.whatdo.app.test.db;
+package app.test.db;
 
 import me.whatdo.app.db.AlternativeDAO;
 import me.whatdo.app.db.CollaboratorDAO;

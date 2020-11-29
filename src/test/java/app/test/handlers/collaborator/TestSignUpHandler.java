@@ -1,6 +1,6 @@
-package me.whatdo.app.test.handlers.collaborator;
+package app.test.handlers.collaborator;
 
-import me.whatdo.app.SignOnCollaboratorHandler;
+import me.whatdo.app.SignUpCollaboratorHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.entitymodel.Alternative;
@@ -12,11 +12,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class TestSignOnHandler {
+public class TestSignUpHandler {
 
-    SignOnCollaboratorHandler handler;
+    SignUpCollaboratorHandler handler;
     Alternative alt1, alt2;
-    CreateChoiceRequest cRequest;
+    CreateChoiceRequest request;
     Choice choice;
     ChoiceDAO choiceDAO;
     Collaborator collab;

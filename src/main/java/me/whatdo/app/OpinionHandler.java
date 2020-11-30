@@ -13,20 +13,18 @@ import java.util.UUID;
 
 public class OpinionHandler implements RequestHandler<OpinionRequest, ApiResponse> {
 
-    public ApiResponse handleRequest(final OpinionRequest input, final Context context) {
+    public ApiResponse handleRequest(final OpinionRequest request, final Context context) {
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
-        OpinionRequest request;
         Opinion opinion;
         OpinionDAO opinionDao = new OpinionDAO();
         ChoiceDAO choiceDAO = new ChoiceDAO();
 
         try {
-            request = input;
             if (!validateRequest(request)) {
                 body.addProperty("Message", "400 malformed OpinionRequest");
-                body.addProperty("Input", input.toJson());
+                body.addProperty("Input", request.toJson());
                 return new ApiResponse(400, body.toString());
             }
             UUID choiceId = UUID.fromString(request.getChoiceId());

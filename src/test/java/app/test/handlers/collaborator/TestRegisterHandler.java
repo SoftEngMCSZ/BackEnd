@@ -141,4 +141,20 @@ public class TestRegisterHandler {
         assertNotNull(content);
         assertEquals(404, result.getStatusCode());
     }
+
+    @Test
+    public void nullChoiceRequest(){
+        ApiResponse result = handler.handleRequest(null,null);
+        String content = result.getBody();
+        assertNotNull(content);
+        assertEquals(500, result.getStatusCode());
+    }
+
+    @Test
+    public void emptyChoiceRequest(){
+        ApiResponse result = handler.handleRequest(new CollaboratorRequest(),null);
+        String content = result.getBody();
+        assertNotNull(content);
+        assertEquals(500, result.getStatusCode());
+    }
 }

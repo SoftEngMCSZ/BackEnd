@@ -4,18 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import java.util.UUID;
-
 public class OpinionRequest {
-	private UUID collabId;
-	private UUID alternativeId;
-	private UUID choiceId;
+	private String collabId;
+	private String alternativeId;
+	private String choiceId;
 	private String opinionType;
 	private String actionType;
 
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	public OpinionRequest(UUID collabId, UUID alternativeId, UUID choiceId, String opinionType, String actionType) {
+	public OpinionRequest(String collabId, String alternativeId, String choiceId, String opinionType, String actionType) {
 		this.collabId = collabId;
 		this.alternativeId = alternativeId;
 		this.choiceId = choiceId;
@@ -26,15 +24,15 @@ public class OpinionRequest {
 	public OpinionRequest() {
 	}
 
-	public UUID getCollabId() {
+	public String getCollabId() {
 		return collabId;
 	}
 
-	public UUID getAlternativeId() {
+	public String getAlternativeId() {
 		return alternativeId;
 	}
 
-	public UUID getChoiceId() {
+	public String getChoiceId() {
 		return choiceId;
 	}
 
@@ -42,15 +40,15 @@ public class OpinionRequest {
 		return opinionType;
 	}
 
-	public void setCollabId(UUID collabId) {
+	public void setCollabId(String collabId) {
 		this.collabId = collabId;
 	}
 
-	public void setAlternativeId(UUID alternativeId) {
+	public void setAlternativeId(String alternativeId) {
 		this.alternativeId = alternativeId;
 	}
 
-	public void setChoiceId(UUID choiceId) {
+	public void setChoiceId(String choiceId) {
 		this.choiceId = choiceId;
 	}
 

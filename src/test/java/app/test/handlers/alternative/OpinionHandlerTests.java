@@ -48,9 +48,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void successfulResponseAddRemoveApproval() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.APPROVAL.toString(),
 				"add"
 		);
@@ -63,9 +63,9 @@ public class OpinionHandlerTests {
 		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(collab1));
 
 		req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.APPROVAL.toString(),
 				"remove"
 		);
@@ -81,9 +81,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void successfulResponseAddRemoveDisapproval() {
 		OpinionRequest req = new OpinionRequest(
-				collab2.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab2.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"add"
 		);
@@ -99,9 +99,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void successfulResponseSwitchOpinion() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.APPROVAL.toString(),
 				"add"
 		);
@@ -114,9 +114,9 @@ public class OpinionHandlerTests {
 		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(collab1));
 
 		req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"add"
 		);
@@ -132,9 +132,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidChoiceId() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				UUID.randomUUID(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				UUID.randomUUID().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"add"
 		);
@@ -149,9 +149,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidAltId() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				UUID.randomUUID(),
-				choice.getId(),
+				collab1.getId().toString(),
+				UUID.randomUUID().toString(),
+				choice.getId().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"add"
 		);
@@ -166,9 +166,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidCollabId() {
 		OpinionRequest req = new OpinionRequest(
-				UUID.randomUUID(),
-				alt1.getId(),
-				choice.getId(),
+				UUID.randomUUID().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"add"
 		);
@@ -183,9 +183,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidActionType() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				Opinion.DISAPPROVAL.toString(),
 				"breakme"
 		);
@@ -200,9 +200,9 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidOpinionType() {
 		OpinionRequest req = new OpinionRequest(
-				collab1.getId(),
-				alt1.getId(),
-				choice.getId(),
+				collab1.getId().toString(),
+				alt1.getId().toString(),
+				choice.getId().toString(),
 				"breakme",
 				"add"
 		);

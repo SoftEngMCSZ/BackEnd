@@ -9,6 +9,7 @@ import me.whatdo.app.model.entity.Choice;
 import me.whatdo.app.model.request.OpinionRequest;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class OpinionHandler implements RequestHandler<OpinionRequest, ApiResponse> {
 
@@ -28,8 +29,9 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 body.addProperty("Input", input.toJson());
                 return new ApiResponse(400, body.toString());
             }
+            UUID choiceId = UUID.fromString(request.getChoiceId());
 
-            Optional<Choice> maybeChoice = choiceDAO.getChoice(request.getChoiceId());
+            Optional<Choice> maybeChoice = choiceDAO.getChoice(choiceId);
             if(!maybeChoice.isPresent()) {
                 body.addProperty("Message","404 Choice not found");
                 body.addProperty("Collaborator",request.getChoiceId().toString());
@@ -37,16 +39,20 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
             }
 
             Choice choice = maybeChoice.get();
+            
+            UUID collabId = UUID.fromString(request.getCollabId());
 
             // Search through collaborators to make sure the id is present
-            if(choice.getCollaborators().stream().noneMatch(c->c.getId().equals(request.getCollabId()))) {
+            if(choice.getCollaborators().stream().noneMatch(c->c.getId().equals(collabId))) {
                 body.addProperty("Message","404 Collaborator not found");
                 body.addProperty("Collaborator",request.getCollabId().toString());
                 return new ApiResponse(404,body.toString());
             }
 
+            UUID altId = UUID.fromString(request.getAlternativeId());
+
             // Search through alternatives to make sure the id is present
-            if(choice.getAlternatives().stream().noneMatch(c->c.getId().equals(request.getAlternativeId()))) {
+            if(choice.getAlternatives().stream().noneMatch(c->c.getId().equals(altId))) {
                 body.addProperty("Message","404 Alternative not found");
                 body.addProperty("Collaborator",request.getAlternativeId().toString());
                 return new ApiResponse(404,body.toString());
@@ -57,11 +63,11 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
 
                 boolean worked;
                 if("add".equals(request.getActionType())) {
-                    opinionDao.deleteOpinion(request.getAlternativeId(),request.getCollabId(),opinion.invert());
-                    worked = opinionDao.addOpinion(request.getAlternativeId(),request.getCollabId(),opinion);
+                    opinionDao.deleteOpinion(altId,collabId,opinion.invert());
+                    worked = opinionDao.addOpinion(altId,collabId,opinion);
 
                 } else if ("remove".equals(request.getActionType())) {
-                    worked = opinionDao.deleteOpinion(request.getAlternativeId(),request.getCollabId(),opinion);
+                    worked = opinionDao.deleteOpinion(altId,collabId,opinion);
                 } else {
                     body.addProperty("Message","400 invalid action type type");
                     body.addProperty("ActionType",request.getActionType());
@@ -77,7 +83,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                     return new ApiResponse(400, body.toString());
                 }
 
-                maybeChoice = choiceDAO.getChoice(request.getChoiceId());
+                maybeChoice = choiceDAO.getChoice(choiceId);
                 // If there was a problem, the previous fetch would catch it
                 assert maybeChoice.isPresent();
 

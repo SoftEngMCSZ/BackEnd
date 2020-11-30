@@ -36,10 +36,11 @@ public class ChoiceDAO {
 				return false;
 			}
 
-			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,question,creation_time) values(?,?,?);");
+			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,question,creation_time,max_collaborators) values(?,?,?,?);");
 			queryAdd.setObject(1,c.getId());
 			queryAdd.setString(2,c.getQuestion());
 			queryAdd.setObject(3, Timestamp.from(c.getCreationTime().toInstant()));
+			queryAdd.setInt(4,c.getMaxCollaborators());
 
 			queryAdd.execute();
 

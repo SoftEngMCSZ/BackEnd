@@ -32,12 +32,12 @@ public class OpinionDAOTests {
 
 	@Test
 	public void addFetchDeleteSingle() throws Exception {
-		dao.addOpinion(mockAltId,testOpinionAuthor, Opinion.APPROVAL);
+		dao.addOpinion(mockAltId,testOpinionAuthor.getId(), Opinion.APPROVAL);
 
-		Optional<Opinion> opinion = dao.getOpinion(mockAltId,testOpinionAuthor);
+		Optional<Opinion> opinion = dao.getOpinion(mockAltId,testOpinionAuthor.getId());
 		Assert.assertTrue(opinion.isPresent());
 		Assert.assertEquals(Opinion.APPROVAL, opinion.get());
-		Assert.assertTrue(dao.deleteOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL));
+		Assert.assertTrue(dao.deleteOpinion(mockAltId,testOpinionAuthor.getId(),Opinion.APPROVAL));
 	}
 
 	@Test
@@ -45,8 +45,8 @@ public class OpinionDAOTests {
 		Collaborator testOpinionAuthor2 = new Collaborator("Squidward Tentacles","PleaseEndMe");
 		new CollaboratorDAO().addCollaborator(this.mockChoiceId,testOpinionAuthor2);
 
-		dao.addOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL);
-		dao.addOpinion(mockAltId,testOpinionAuthor2,Opinion.APPROVAL);
+		dao.addOpinion(mockAltId,testOpinionAuthor.getId(),Opinion.APPROVAL);
+		dao.addOpinion(mockAltId,testOpinionAuthor2.getId(),Opinion.APPROVAL);
 
 		List<Collaborator> allApprovals = dao.getAllOpinionsForAlt(mockAltId,Opinion.APPROVAL);
 		Assert.assertEquals(2, allApprovals.size());
@@ -57,14 +57,14 @@ public class OpinionDAOTests {
 
 	@Test
 	public void testAddDupeOpinion() throws Exception {
-		Assert.assertTrue(dao.addOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL));
-		Assert.assertFalse(dao.addOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL));
-		Assert.assertTrue(dao.deleteOpinion(mockAltId,testOpinionAuthor,Opinion.APPROVAL));
+		Assert.assertTrue(dao.addOpinion(mockAltId,testOpinionAuthor.getId(),Opinion.APPROVAL));
+		Assert.assertFalse(dao.addOpinion(mockAltId,testOpinionAuthor.getId(),Opinion.APPROVAL));
+		Assert.assertTrue(dao.deleteOpinion(mockAltId,testOpinionAuthor.getId(),Opinion.APPROVAL));
 	}
 
 	@Test
 	public void testGetMissingOpinion() throws Exception {
-		Optional<Opinion> returnedFeedback = dao.getOpinion(mockAltId,testOpinionAuthor);
+		Optional<Opinion> returnedFeedback = dao.getOpinion(mockAltId,testOpinionAuthor.getId());
 		Assert.assertFalse(returnedFeedback.isPresent());
 	}
 }

@@ -1,4 +1,4 @@
-package app.test.entitymodel;
+package app.test.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

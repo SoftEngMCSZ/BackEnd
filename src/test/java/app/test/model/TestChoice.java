@@ -1,4 +1,4 @@
-package app.test.entitymodel;
+package app.test.model;
 
 import com.google.gson.JsonObject;
 import me.whatdo.app.model.entity.Alternative;

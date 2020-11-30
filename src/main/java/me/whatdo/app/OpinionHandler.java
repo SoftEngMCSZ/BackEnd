@@ -45,7 +45,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 return new ApiResponse(404,body.toString());
             }
 
-            // Search through collaborators to make sure the id is present
+            // Search through alternatives to make sure the id is present
             if(choice.getAlternatives().stream().noneMatch(c->c.getId().equals(request.getAlternativeId()))) {
                 body.addProperty("Message","404 Alternative not found");
                 body.addProperty("Collaborator",request.getAlternativeId().toString());

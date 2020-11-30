@@ -1,7 +1,7 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Collaborator;
-import me.whatdo.app.entitymodel.Feedback;
+import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.Feedback;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +32,7 @@ public class FeedbackDAO {
             queryFind.setObject(1, feedback.getId());
             ResultSet resultSet = queryFind.executeQuery();
 
-            // If the feedback ID already exists in the
+            // Check if feedback with the same id already exists
             if (resultSet.next()) {
                 resultSet.close();
                 return false;

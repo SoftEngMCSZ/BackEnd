@@ -1,8 +1,8 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Choice;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,10 +36,13 @@ public class ChoiceDAO {
 				return false;
 			}
 
-			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,question,creation_time) values(?,?,?);");
+			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,question,creation_time,max_collaborators) values(?,?,?,?);");
 			queryAdd.setObject(1,c.getId());
 			queryAdd.setString(2,c.getQuestion());
 			queryAdd.setObject(3, Timestamp.from(c.getCreationTime().toInstant()));
+			queryAdd.setInt(4,c.getMaxCollaborators());
+
+			queryAdd.execute();
 
 			AlternativeDAO altDao = new AlternativeDAO();
 			for(Alternative alt: c.getAlternatives()) {
@@ -51,7 +54,7 @@ public class ChoiceDAO {
 				collabDao.addCollaborator(c.getId(),collab);
 			}
 
-			queryAdd.execute();
+
 			return true;
 		}
 		catch (Exception e) {
@@ -64,7 +67,6 @@ public class ChoiceDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Choice out = buildChoice(results);
 				results.close();

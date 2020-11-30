@@ -1,7 +1,7 @@
 package me.whatdo.app.handlers.auth;
 
 import me.whatdo.app.db.CollaboratorDAO;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -13,7 +13,12 @@ public class UserAuthHandler {
 
 		String[] usernameAndPassword = decode(authHeader).split(":");
 		String username = usernameAndPassword[0];
-		String password = usernameAndPassword[1];
+		String password;
+		if(usernameAndPassword.length == 2) {
+			password = usernameAndPassword[1];
+		} else {
+			password = "";
+		}
 
 		Optional<Collaborator> collab = dao.getCollaborator(choiceId,username);
 		return collab.map(collaborator -> collaborator.verifyPassword(password)).orElse(false);

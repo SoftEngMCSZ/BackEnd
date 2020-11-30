@@ -1,7 +1,7 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.entitymodel.Alternative;
-import me.whatdo.app.entitymodel.Collaborator;
+import me.whatdo.app.model.entity.Alternative;
+import me.whatdo.app.model.entity.Collaborator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class AlternativeDAO {
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFindExisting.setObject(1,alt.getId());
 			ResultSet results = queryFindExisting.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
+			// Check if an alternative with the same id is already registered for that choice
 			if(results.next()) {
 				results.close();
 				return false;
@@ -36,7 +36,7 @@ public class AlternativeDAO {
 
 			PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id,description,choice) values(?,?,?);");
 			queryAdd.setObject(1,alt.getId());
-			queryAdd.setString(2,alt.getDescription());
+			queryAdd.setString(2,alt.getContents());
 			queryAdd.setObject(3,choiceId);
 
 			// TODO: Insert any associated feedback
@@ -44,10 +44,10 @@ public class AlternativeDAO {
 			queryAdd.execute();
 
 			for(Collaborator collab: alt.getApprovals()) {
-				opinionDao.addOpinion(alt.getId(),collab,Opinion.APPROVAL);
+				opinionDao.addOpinion(alt.getId(),collab.getId(),Opinion.APPROVAL);
 			}
 			for(Collaborator collab: alt.getDisapprovals()) {
-				opinionDao.addOpinion(alt.getId(),collab,Opinion.DISAPPROVAL);
+				opinionDao.addOpinion(alt.getId(),collab.getId(),Opinion.DISAPPROVAL);
 			}
 			return true;
 		}
@@ -61,7 +61,6 @@ public class AlternativeDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFind.setObject(1,altId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Alternative out = buildAlternative(results);
 				results.close();
@@ -80,7 +79,6 @@ public class AlternativeDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE choice = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
 				out.add(buildAlternative(results));
 			}

@@ -22,8 +22,8 @@ public class OpinionHandlerTests {
 	private OpinionHandler handler;
 	Alternative alt1;
 	Alternative alt2;
-	Collaborator approver;
-	Collaborator disapprover;
+	Collaborator collab1;
+	Collaborator collab2;
 	Choice choice;
 
 	@Before
@@ -31,11 +31,11 @@ public class OpinionHandlerTests {
 		handler = new OpinionHandler();
 		alt1 = new Alternative("Option 1");
 		alt2 = new Alternative("Option 2");
-		approver = new Collaborator("I approve everything");
-		disapprover = new Collaborator("I disapprove everything");
+		collab1 = new Collaborator("I approve everything");
+		collab2 = new Collaborator("I disapprove everything");
 		choice = new Choice("Option 1 or Option 2?", Arrays.asList(alt1, alt2), 2);
-		choice.addCollaborator(approver);
-		choice.addCollaborator(disapprover);
+		choice.addCollaborator(collab1);
+		choice.addCollaborator(collab2);
 
 		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
 		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
@@ -48,7 +48,7 @@ public class OpinionHandlerTests {
 	@Test
 	public void successfulResponseAddRemoveApproval() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.APPROVAL.toString(),
@@ -60,10 +60,10 @@ public class OpinionHandlerTests {
 
 		Optional<Choice> maybeNewState = Choice.fromJson(response.getBody());
 		Assert.assertTrue(maybeNewState.isPresent());
-		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(approver));
+		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(collab1));
 
 		req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.APPROVAL.toString(),
@@ -75,13 +75,13 @@ public class OpinionHandlerTests {
 
 		maybeNewState = Choice.fromJson(response.getBody());
 		Assert.assertTrue(maybeNewState.isPresent());
-		Assert.assertFalse(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(approver));
+		Assert.assertFalse(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(collab1));
 	}
 
 	@Test
 	public void successfulResponseAddRemoveDisapproval() {
 		OpinionRequest req = new OpinionRequest(
-				disapprover.getId(),
+				collab2.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.DISAPPROVAL.toString(),
@@ -93,13 +93,13 @@ public class OpinionHandlerTests {
 
 		Optional<Choice> maybeNewState = Choice.fromJson(response.getBody());
 		Assert.assertTrue(maybeNewState.isPresent());
-		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getDisapprovals().contains(disapprover));
+		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getDisapprovals().contains(collab2));
 	}
 
 	@Test
-	public void failureResponseSameCollabApproveAndDisapprove() {
+	public void successfulResponseSwitchOpinion() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.APPROVAL.toString(),
@@ -111,10 +111,10 @@ public class OpinionHandlerTests {
 
 		Optional<Choice> maybeNewState = Choice.fromJson(response.getBody());
 		Assert.assertTrue(maybeNewState.isPresent());
-		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(approver));
+		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getApprovals().contains(collab1));
 
 		req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.DISAPPROVAL.toString(),
@@ -122,16 +122,17 @@ public class OpinionHandlerTests {
 		);
 
 		response = handler.handleRequest(req, null);
-		Assert.assertEquals(400, response.getStatusCode());
+		Assert.assertEquals(200, response.getStatusCode());
 
 		maybeNewState = Choice.fromJson(response.getBody());
-		Assert.assertFalse(maybeNewState.isPresent());
+		Assert.assertTrue(maybeNewState.isPresent());
+		Assert.assertTrue(maybeNewState.get().getAlternatives().get(0).getDisapprovals().contains(collab1));
 	}
 
 	@Test
 	public void failureResponseInvalidChoiceId() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				UUID.randomUUID(),
 				Opinion.DISAPPROVAL.toString(),
@@ -148,7 +149,7 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidAltId() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				UUID.randomUUID(),
 				choice.getId(),
 				Opinion.DISAPPROVAL.toString(),
@@ -182,7 +183,7 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidActionType() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				Opinion.DISAPPROVAL.toString(),
@@ -199,7 +200,7 @@ public class OpinionHandlerTests {
 	@Test
 	public void failureResponseInvalidOpinionType() {
 		OpinionRequest req = new OpinionRequest(
-				approver.getId(),
+				collab1.getId(),
 				alt1.getId(),
 				choice.getId(),
 				"breakme",

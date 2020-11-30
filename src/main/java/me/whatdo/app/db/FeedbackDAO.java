@@ -32,7 +32,7 @@ public class FeedbackDAO {
             queryFind.setObject(1, feedback.getId());
             ResultSet resultSet = queryFind.executeQuery();
 
-            // If the feedback ID already exists in the
+            // Check if feedback with the same id already exists
             if (resultSet.next()) {
                 resultSet.close();
                 return false;

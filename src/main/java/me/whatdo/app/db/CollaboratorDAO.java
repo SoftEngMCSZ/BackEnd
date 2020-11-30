@@ -54,7 +54,6 @@ public class CollaboratorDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFind.setObject(1,collabId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Collaborator out = buildCollaborator(results);
 				results.close();
@@ -72,7 +71,6 @@ public class CollaboratorDAO {
 			queryFind.setObject(1,choiceId);
 			queryFind.setString(2,name);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Collaborator out = buildCollaborator(results);
 				results.close();
@@ -91,7 +89,6 @@ public class CollaboratorDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE choice = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
 				out.add(buildCollaborator(results));
 			}

@@ -29,7 +29,7 @@ public class OpinionDAO {
 			queryFindExisting.setObject(1,altId);
 			queryFindExisting.setObject(2, authorId);
 			ResultSet results = queryFindExisting.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
+			// Check if an opinion with the same name is already registered for that choice
 			if(results.next()) {
 				results.close();
 				return false;
@@ -54,7 +54,6 @@ public class OpinionDAO {
 			queryFind.setObject(1,altId);
 			queryFind.setObject(2, authorId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Opinion out = Opinion.valueOf(results.getString("opinion"));
 				results.close();
@@ -75,7 +74,6 @@ public class OpinionDAO {
 			queryFind.setObject(1,altId);
 			queryFind.setString(2,opinion.toString());
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
 				Optional<Collaborator> author = collabDao.getCollaborator(results.getObject("author",UUID.class));
 				assert author.isPresent();

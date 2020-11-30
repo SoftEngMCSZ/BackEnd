@@ -67,7 +67,6 @@ public class ChoiceDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Choice out = buildChoice(results);
 				results.close();

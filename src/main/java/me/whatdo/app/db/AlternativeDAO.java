@@ -28,7 +28,7 @@ public class AlternativeDAO {
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFindExisting.setObject(1,alt.getId());
 			ResultSet results = queryFindExisting.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
+			// Check if an alternative with the same id is already registered for that choice
 			if(results.next()) {
 				results.close();
 				return false;
@@ -61,7 +61,6 @@ public class AlternativeDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFind.setObject(1,altId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			if(results.next()) {
 				Alternative out = buildAlternative(results);
 				results.close();
@@ -80,7 +79,6 @@ public class AlternativeDAO {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE choice = ?;");
 			queryFind.setObject(1,choiceId);
 			ResultSet results = queryFind.executeQuery();
-			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
 				out.add(buildAlternative(results));
 			}

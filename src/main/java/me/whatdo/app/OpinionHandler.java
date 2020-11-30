@@ -57,11 +57,11 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
 
                 boolean worked;
                 if("add".equals(request.getActionType())) {
+                    opinionDao.deleteOpinion(request.getAlternativeId(),request.getCollabId(),opinion.invert());
                     worked = opinionDao.addOpinion(request.getAlternativeId(),request.getCollabId(),opinion);
 
                 } else if ("remove".equals(request.getActionType())) {
                     worked = opinionDao.deleteOpinion(request.getAlternativeId(),request.getCollabId(),opinion);
-
                 } else {
                     body.addProperty("Message","400 invalid action type type");
                     body.addProperty("ActionType",request.getActionType());

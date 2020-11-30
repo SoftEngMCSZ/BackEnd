@@ -10,20 +10,18 @@ import me.whatdo.app.model.request.CreateChoiceRequest;
 
 public class CreateChoiceHandler implements RequestHandler<CreateChoiceRequest, ApiResponse> {
 
-    public ApiResponse handleRequest(final CreateChoiceRequest input, final Context context) {
+    public ApiResponse handleRequest(final CreateChoiceRequest request, final Context context) {
 
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
-        CreateChoiceRequest request;
         Choice choice;
         ChoiceDAO dao;
 
         try {
-            request = input;
             if (!validateRequest(request)) {
                 body.addProperty("Message", "400 malformed ChoiceRequest");
-                body.addProperty("Input", input.toJson());
+                body.addProperty("Input", request.toJson());
                 return new ApiResponse(400, body.toString());
             }
             choice = new Choice(request);

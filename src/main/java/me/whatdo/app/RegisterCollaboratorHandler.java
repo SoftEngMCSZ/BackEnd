@@ -16,15 +16,9 @@ import me.whatdo.app.handlers.auth.UserAuthHandler;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorRequest, ApiResponse> {
+public class RegisterCollaboratorHandler implements RequestHandler<CollaboratorRequest, ApiResponse> {
 
     public ApiResponse handleRequest(final CollaboratorRequest input, final Context context) {
-
-        LambdaLogger logger = context.getLogger();
-        Gson gson = new Gson();
-        logger.log(gson.toJson(context));
-        logger.log(gson.toJson(input));
-
         JsonObject body = new JsonObject();
 
         // Business Logic Instantiation
@@ -60,20 +54,35 @@ public class SignUpCollaboratorHandler implements RequestHandler<CollaboratorReq
                 body.addProperty("Message","400 username not present");
                 return new ApiResponse(400, body.toString());
             }
-            if(password == null || password.isEmpty()) {
-                collab = new Collaborator(name);
+            Optional<Collaborator> collabOpt = colllabDAO.getCollaborator(choiceID,name);
+            if(collabOpt.isPresent()){
+                if(!collabOpt.get().verifyPassword(password)){
+                    body.addProperty("Message", "401 credential mismatch");
+                    return new ApiResponse(401, body.toString());
+                }
+                // Successfully handled and returned
+                body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
+                return new ApiResponse(200, UserAuthHandler.encode(name+":"+password));
+
             } else {
-                collab = Collaborator.fromPlaintextPassword(name,password);
-            }
+                if(choice.get().getCollaborators().size() == choice.get().getMaxCollaborators()){
+                    body.addProperty("Message", "400 maximum collaborators reached");
+                    return new ApiResponse(400, body.toString());
+                }
+                if (password.isEmpty()) {
+                    collab = new Collaborator(name);
+                } else {
+                    collab = Collaborator.fromPlaintextPassword(name, password);
+                }
 
-            if(!colllabDAO.addCollaborator(choiceID,collab)) {
-                body.addProperty("Message", "400 unable to add Collaborator to DB");
-                return new ApiResponse(400, body.toString());
+                if (!colllabDAO.addCollaborator(choiceID, collab)) {
+                    body.addProperty("Message", "400 unable to add Collaborator to DB");
+                    return new ApiResponse(400, body.toString());
+                }
+                // Successfully handled and returned
+                body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
+                return new ApiResponse(201, UserAuthHandler.encode(name+":"+password));
             }
-
-            // Successfully handled and returned
-            body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-            return new ApiResponse(200, UserAuthHandler.encode(name+":"+password));
 
             //Some other 500 server error arose
         } catch (Exception e) {

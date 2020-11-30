@@ -33,7 +33,11 @@ public class TestViewChoice {
 
     @Before
     public void setupHandler() throws Exception {
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;TRUNCATE choices;").execute();
+        DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
+        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+        DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
+        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+
         choiceDAO = new ChoiceDAO();
         collaboratorDAO = new CollaboratorDAO();
         collab = Collaborator.fromPlaintextPassword("Max", "pass");
@@ -46,12 +50,13 @@ public class TestViewChoice {
         handler = new ViewChoiceHandler();
         collaboratorDAO.addCollaborator(choice.getId(),collab);
         request = new ViewChoiceRequest();
-        request.setChoiceID(choice.getId().toString());
-        request.setAuthentication(UserAuthHandler.encode("Max:pass"));
+
     }
 
     @Test
-    public void successfulResponse() {
+    public void successfulRequest() {
+        request.setChoiceID(choice.getId().toString());
+        request.setAuthentication(UserAuthHandler.encode("Max:pass"));
         ApiResponse result = handler.handleRequest(request, null);
 
         assertEquals(200, result.getStatusCode());
@@ -63,22 +68,64 @@ public class TestViewChoice {
     }
 
     @Test
-    public void badHTTPMethod() {
+    public void nullRequest() {
+        ApiResponse result = handler.handleRequest(null, null);
 
+        assertEquals(500, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
     }
 
     @Test
-    public void badRequest() {
+    public void emptyRequest() {
+        ApiResponse result = handler.handleRequest(new ViewChoiceRequest(), null);
 
+        assertEquals(400, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
     }
 
     @Test
-    public void missingParam() {
+    public void badAuthRequest(){
+        request.setChoiceID(choice.getId().toString());
+        request.setAuthentication(UserAuthHandler.encode("Max:@@@"));
+        ApiResponse result = handler.handleRequest(request,null);
 
+        assertEquals(401, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
     }
 
     @Test
-    public void nonexstantID() {
+    public void noAuthRequest(){
+        request.setChoiceID(choice.getId().toString());
+        ApiResponse result = handler.handleRequest(request,null);
 
+        assertEquals(400, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
     }
+
+    @Test
+    public void badChoiceRequest(){
+        request.setChoiceID("poggers");
+        request.setAuthentication(UserAuthHandler.encode("Max:pass"));
+        ApiResponse result = handler.handleRequest(request,null);
+
+        assertEquals(400, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
+    }
+
+    @Test
+    public void noChoiceRequest(){
+        request.setChoiceID(UUID.randomUUID().toString());
+        request.setAuthentication(UserAuthHandler.encode("Max:pass"));
+        ApiResponse result = handler.handleRequest(request,null);
+
+        assertEquals(404, result.getStatusCode());
+        String content = result.getBody();
+        assertNotNull(content);
+    }
+
 }

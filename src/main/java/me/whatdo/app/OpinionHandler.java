@@ -32,7 +32,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
             Optional<Choice> maybeChoice = choiceDAO.getChoice(choiceId);
             if(!maybeChoice.isPresent()) {
                 body.addProperty("Message","404 Choice not found");
-                body.addProperty("Collaborator",request.getChoiceId().toString());
+                body.addProperty("Collaborator", request.getChoiceId());
                 return new ApiResponse(404,body.toString());
             }
 
@@ -43,7 +43,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
             // Search through collaborators to make sure the id is present
             if(choice.getCollaborators().stream().noneMatch(c->c.getId().equals(collabId))) {
                 body.addProperty("Message","404 Collaborator not found");
-                body.addProperty("Collaborator",request.getCollabId().toString());
+                body.addProperty("Collaborator",request.getCollabId());
                 return new ApiResponse(404,body.toString());
             }
 
@@ -52,7 +52,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
             // Search through alternatives to make sure the id is present
             if(choice.getAlternatives().stream().noneMatch(c->c.getId().equals(altId))) {
                 body.addProperty("Message","404 Alternative not found");
-                body.addProperty("Collaborator",request.getAlternativeId().toString());
+                body.addProperty("Collaborator",request.getAlternativeId());
                 return new ApiResponse(404,body.toString());
             }
 
@@ -73,11 +73,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 }
 
                 if(!worked) {
-                    body.addProperty("Message", "400 unable to " +
-                                                        request.getActionType() + " " +
-                                                        opinion.toString().toLowerCase() +
-                                                        " by collaborator " + request.getCollabId() +
-                                                        " to alternative " + request.getAlternativeId());
+                    body.addProperty("Message", "400 unable to " + request.getActionType() + " " + opinion.toString().toLowerCase() + " by collaborator " + request.getCollabId() + " to alternative " + request.getAlternativeId());
                     return new ApiResponse(400, body.toString());
                 }
 
@@ -92,7 +88,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 body.addProperty("OpinionType",request.getOpinionType());
                 return new ApiResponse(400,body.toString());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             body.addProperty("Message", "500 server error");
             body.addProperty("Error", e.getMessage());
             return new ApiResponse(500, body.toString());

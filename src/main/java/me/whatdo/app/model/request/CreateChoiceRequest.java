@@ -19,9 +19,7 @@ public class CreateChoiceRequest {
 		this.maxCollaborators = maxCollaborators;
 	}
 
-	public CreateChoiceRequest(){
-
-	}
+	public CreateChoiceRequest() {}
 
 	public void setQuestion(String question) {
 		this.question = question;

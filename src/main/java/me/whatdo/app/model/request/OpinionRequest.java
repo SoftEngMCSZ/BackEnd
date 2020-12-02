@@ -21,8 +21,7 @@ public class OpinionRequest {
 		this.actionType = actionType;
 	}
 
-	public OpinionRequest() {
-	}
+	public OpinionRequest() {}
 
 	public String getCollabId() {
 		return collabId;
@@ -40,6 +39,10 @@ public class OpinionRequest {
 		return opinionType;
 	}
 
+	public String getActionType() {
+		return actionType;
+	}
+
 	public void setCollabId(String collabId) {
 		this.collabId = collabId;
 	}
@@ -54,10 +57,6 @@ public class OpinionRequest {
 
 	public void setOpinionType(String opinionType) {
 		this.opinionType = opinionType;
-	}
-
-	public String getActionType() {
-		return actionType;
 	}
 
 	public void setActionType(String actionType) {

@@ -5,9 +5,7 @@ public class ApiResponse {
     private int statusCode;
     private String body;
 
-    public ApiResponse(){
-
-    }
+    public ApiResponse() {}
 
     public ApiResponse(int statusCode, String body){
         this.statusCode = statusCode;

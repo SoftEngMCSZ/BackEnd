@@ -22,17 +22,7 @@ public class Alternative {
 		this.feedback = new ArrayList<>();
 	}
 
-	public Alternative(){
-
-	}
-
-	public Alternative(UUID id, String description) {
-		this.alternativeID = id;
-		this.contents = description;
-		this.approvals = new HashSet<>();
-		this.disapprovals = new HashSet<>();
-		this.feedback = new ArrayList<>();
-	}
+	public Alternative() {}
 
 	public Alternative(UUID id, String description, Set<Collaborator> approvals,
 					   Set<Collaborator> disapprovals, List<Feedback> feedback) {
@@ -42,27 +32,6 @@ public class Alternative {
 		this.disapprovals = disapprovals;
 		this.feedback = feedback;
 	}
-
-	public void setApprovals(Set<Collaborator> approvals) {
-		this.approvals = approvals;
-	}
-
-	public void setDisapprovals(Set<Collaborator> disapprovals) {
-		this.disapprovals = disapprovals;
-	}
-
-	public void setContents(String description) {
-		this.contents = description;
-	}
-
-	public void setFeedback(List<Feedback> feedback) {
-		this.feedback = feedback;
-	}
-
-	public void setAlternativeID(UUID id) {
-		this.alternativeID = id;
-	}
-
 
 	public String toJson(){
 	    return gson.toJson(this);

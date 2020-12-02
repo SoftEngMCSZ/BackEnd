@@ -3,14 +3,10 @@ package me.whatdo.app.model.request;
 public class CollaboratorRequest {
 
     private String username;
-
     private String password;
-
     private String choiceID;
 
-    public CollaboratorRequest(){
-
-    }
+    public CollaboratorRequest() {}
 
     public CollaboratorRequest(String ID, String name, String password){
         this.choiceID = ID;

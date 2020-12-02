@@ -10,9 +10,7 @@ public class ViewChoiceRequest {
     private String authentication;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-    public ViewChoiceRequest(){
-
-    }
+    public ViewChoiceRequest() {}
 
     public ViewChoiceRequest(String id, String auth){
         this.choiceID = id;

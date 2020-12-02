@@ -1,4 +1,4 @@
-package app.test.model;
+package app.test.model.entity;
 
 import com.google.gson.*;
 

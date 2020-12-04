@@ -62,7 +62,8 @@ public class RegisterCollaboratorHandler implements RequestHandler<CollaboratorR
                 }
                 // Successfully handled and returned
                 body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-                return new ApiResponse(200, UserAuthHandler.encode(name+":"+password));
+                body.addProperty("id", collabOpt.get().getId().toString());
+                return new ApiResponse(200, body.toString());
 
             } else {
                 if(choice.get().getCollaborators().size() == choice.get().getMaxCollaborators()){
@@ -81,7 +82,8 @@ public class RegisterCollaboratorHandler implements RequestHandler<CollaboratorR
                 }
                 // Successfully handled and returned
                 body.addProperty("authentication", UserAuthHandler.encode(name+":"+password));
-                return new ApiResponse(201, UserAuthHandler.encode(name+":"+password));
+                body.addProperty("id", collab.getId().toString());
+                return new ApiResponse(201, body.toString());
             }
 
             //Some other 500 server error arose

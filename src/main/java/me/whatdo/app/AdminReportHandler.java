@@ -25,16 +25,11 @@ public class AdminReportHandler implements RequestHandler<AdminRequest, ApiRespo
                 body.addProperty("Message", "400 malformed AdminRequest");
                 body.addProperty("Input", input.toJson());
 
-
-
                 return new ApiResponse(400, body.toString());
             }
 
             body.add("choices", gson.toJsonTree(dao.getAllChoices()));
-
             return new ApiResponse(200, body.toString());
-
-
 
         } catch (Exception e) {
             body.addProperty("Message", "500 server error");
@@ -42,7 +37,6 @@ public class AdminReportHandler implements RequestHandler<AdminRequest, ApiRespo
             return new ApiResponse(500, body.toString());
         }
     }
-
 
     private static boolean validateRequest(String req){
         return req.equals("{}");

@@ -7,6 +7,7 @@ import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
 import me.whatdo.app.model.request.AdminRequest;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.Assert;
@@ -64,7 +65,8 @@ public class TestAdminHandler {
         ApiResponse response = handler.handleRequest(req, null);
 
         JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
-        Assert.assertEquals("\"Second choice\"", object.getAsJsonArray("choices").getAsJsonArray().get(0).getAsJsonObject().get("question").toString());
+        JsonArray firstChoice = object.getAsJsonArray("choices").getAsJsonArray();
+        Assert.assertEquals("\"Second choice\"", firstChoice.get(0).getAsJsonObject().get("question").toString());
     }
 
     @Test

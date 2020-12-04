@@ -5,11 +5,9 @@ import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.model.ApiResponse;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
-import me.whatdo.app.model.entity.Collaborator;
 import me.whatdo.app.model.request.AdminRequest;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,7 +64,7 @@ public class TestAdminHandler {
         ApiResponse response = handler.handleRequest(req, null);
 
         JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
-        Assert.assertEquals(olderChoice.getQuestion(), object.getAsJsonArray("choices").get(0).getAsJsonObject().get("question").getAsString());
+        Assert.assertEquals("\"Second choice\"", object.getAsJsonArray("choices").getAsJsonArray().get(0).getAsJsonObject().get("question").toString());
     }
 
     @Test

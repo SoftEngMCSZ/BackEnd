@@ -2,63 +2,61 @@ package app.test.handlers.admin;
 
 import me.whatdo.app.AdminReportHandler;
 import me.whatdo.app.db.ChoiceDAO;
-import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
 import me.whatdo.app.model.entity.Collaborator;
 import me.whatdo.app.model.request.AdminRequest;
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class TestAdminHandler {
 
-
     AdminReportHandler handler;
-    Alternative alt1;
-    Alternative alt2;
-    Alternative alt3;
-    Alternative alt4;
-    Collaborator collaborator1;
-    Collaborator collaborator2;
-    Collaborator collaborator3;
-    Collaborator collaborator4;
-    Choice choice;
+    Choice newerChoice;
+    Choice olderChoice;
 
     @Before
     public void init() throws Exception {
         handler = new AdminReportHandler();
         ChoiceDAO dao = new ChoiceDAO();
 
+        newerChoice = new Choice(
+                UUID.randomUUID(),
+                "First choice",
+                Arrays.asList(
+                        new Alternative("Thing C"),
+                        new Alternative("Thing D")
+                ),
+                new HashSet<>(),
+                Optional.empty(),
+                new Date(0, Calendar.JANUARY, 1),
+                Optional.empty(),
+                1
+        );
+        olderChoice = new Choice(
+                UUID.randomUUID(),
+                "Second choice",
+                Arrays.asList(
+                        new Alternative("Thing C"),
+                        new Alternative("Thing D")
+                ),
+                new HashSet<>(),
+                Optional.empty(),
+                new Date(40, Calendar.JANUARY, 1),
+                Optional.empty(),
+                1
+        );
 
-        alt1 = new Alternative("Option 1");
-        alt2 = new Alternative("Option 2");
-        collaborator1 = new Collaborator("I approve everything");
-        collaborator2 = new Collaborator("I disapprove everything");
-        choice = new Choice("Option 1 or Option 2?", Arrays.asList(alt1, alt2), 2);
-        choice.addCollaborator(collaborator1);
-        choice.addCollaborator(collaborator2);
-
-        dao.addChoice(choice);
-
-        alt3 = new Alternative("Hawaiian Pizza");
-        alt4 = new Alternative("I disapprove everything");
-        collaborator3 = new Collaborator("Andy");
-        collaborator4 = new Collaborator("Chantal");
-        choice = new Choice("Second choice", Arrays.asList(alt3, alt4), 4);
-        choice.addCollaborator(collaborator3);
-        choice.addCollaborator(collaborator4);
-
-        dao.addChoice(choice);
-
-        DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
-
-
+        dao.addChoice(newerChoice);
+        dao.addChoice(olderChoice);
 
     }
 
@@ -66,5 +64,27 @@ public class TestAdminHandler {
     public void successfulResponseGetChoices() {
         AdminRequest req = new AdminRequest();
         ApiResponse response = handler.handleRequest(req, null);
+
+        JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
+        Assert.assertEquals(olderChoice.getQuestion(), object.getAsJsonArray("choices").get(0).getAsJsonObject().get("question").getAsString());
+    }
+
+    @Test
+    public void successfulMalformedRequestResponse() throws Exception {
+        List<Choice> choices = new ChoiceDAO().getAllChoices();
+        AdminRequest req = new AdminRequest(choices);
+        ApiResponse response = handler.handleRequest(req, null);
+
+        Assert.assertEquals(400, response.getStatusCode());
+    }
+
+    @After
+    public void cleanup() throws Exception {
+        ChoiceDAO dao = new ChoiceDAO();
+        List<Choice> out = dao.getAllChoices();
+
+        for (Choice choice: out) {
+            dao.deleteChoice(choice);
+        }
     }
 }

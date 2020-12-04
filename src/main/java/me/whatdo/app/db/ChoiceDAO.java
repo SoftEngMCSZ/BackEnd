@@ -106,7 +106,7 @@ public class ChoiceDAO {
 		ArrayList<Choice> out = new ArrayList<>();
 
 		try {
-			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + ";");
+			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " ORDER BY creation_time DESC;");
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {

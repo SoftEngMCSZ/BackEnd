@@ -160,4 +160,34 @@ public class ChoiceDAOTests {
 		Assert.assertEquals(1,dao.deleteChoicesOlderThan(new Date(0, Calendar.JANUARY, 2)));
 		Assert.assertEquals(1,dao.getAllChoices().size());
 	}
+
+	@Test
+	public void getAllChoicesSorted() throws Exception {
+		Choice newerChoice = new Choice(
+				"How should I do the thing?",
+				Arrays.asList(
+						new Alternative("Thing A"),
+						new Alternative("Thing B")
+				),
+				1
+		);
+		Choice olderChoice = new Choice(
+				UUID.randomUUID(),
+				"How should I do the other thing?",
+				Arrays.asList(
+						new Alternative("Thing C"),
+						new Alternative("Thing D")
+				),
+				new HashSet<>(),
+				Optional.empty(),
+				new Date(0, Calendar.JANUARY, 1),
+				Optional.empty(),
+				1
+		);
+
+		dao.addChoice(olderChoice);
+		dao.addChoice(newerChoice);
+
+		Assert.assertEquals(newerChoice, dao.getAllChoices().get(0));
+	}
 }

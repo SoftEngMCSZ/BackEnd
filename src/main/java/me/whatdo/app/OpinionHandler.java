@@ -27,7 +27,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 body.addProperty("Input", request.toJson());
                 return new ApiResponse(400, body.toString());
             }
-            UUID choiceId = UUID.fromString(request.getChoiceId());
+            UUID choiceId =UUID.fromString(request.getChoiceId());
 
             Optional<Choice> maybeChoice = choiceDAO.getChoice(choiceId);
             if(!maybeChoice.isPresent()) {
@@ -38,7 +38,14 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
 
             Choice choice = maybeChoice.get();
             
-            UUID collabId = UUID.fromString(request.getCollabId());
+            UUID collabId;
+            try {
+                collabId = UUID.fromString(request.getCollabId());
+            } catch(Exception e) {
+                body.addProperty("Message","400 malformed collaborator ID");
+                body.addProperty("ID",request.getCollabId());
+                return new ApiResponse(400,body.toString());
+            }
 
             // Search through collaborators to make sure the id is present
             if(choice.getCollaborators().stream().noneMatch(c->c.getId().equals(collabId))) {
@@ -47,7 +54,14 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
                 return new ApiResponse(404,body.toString());
             }
 
-            UUID altId = UUID.fromString(request.getAlternativeId());
+            UUID altId;
+            try {
+                altId = UUID.fromString(request.getAlternativeId());
+            } catch(Exception e) {
+                body.addProperty("Message","400 malformed alternative ID");
+                body.addProperty("ID",request.getCollabId());
+                return new ApiResponse(400,body.toString());
+            }
 
             // Search through alternatives to make sure the id is present
             if(choice.getAlternatives().stream().noneMatch(c->c.getId().equals(altId))) {

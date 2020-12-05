@@ -25,10 +25,7 @@ public class TestCreateChoice {
 
     @Before
     public void setupHandler() throws Exception {
-        DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+        DatabaseUtil.wipe();
 
         handler = new CreateChoiceHandler();
         alt1 = new Alternative("Feed the fish");

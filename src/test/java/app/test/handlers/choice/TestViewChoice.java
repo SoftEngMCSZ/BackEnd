@@ -33,10 +33,7 @@ public class TestViewChoice {
 
     @Before
     public void setupHandler() throws Exception {
-        DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+        DatabaseUtil.wipe();
 
         choiceDAO = new ChoiceDAO();
         collaboratorDAO = new CollaboratorDAO();

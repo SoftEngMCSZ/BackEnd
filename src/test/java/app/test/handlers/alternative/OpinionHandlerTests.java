@@ -37,10 +37,7 @@ public class OpinionHandlerTests {
 		choice.addCollaborator(collab1);
 		choice.addCollaborator(collab2);
 
-		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+		DatabaseUtil.wipe();
 
 		new ChoiceDAO().addChoice(choice);
 	}

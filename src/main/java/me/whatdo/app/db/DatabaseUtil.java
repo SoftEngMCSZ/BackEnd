@@ -43,4 +43,12 @@ public class DatabaseUtil {
 			throw new Exception("Failed in database connection");
 		}
 	}
+
+	public static void wipe() throws Exception {
+		DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives;").execute();
+		DatabaseUtil.connect().prepareStatement("TRUNCATE feedback;").execute();
+	}
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class TestCollaborator {
 
-    Collaborator collab = null;
+    Collaborator collab;
 
     @Before
     public void setupTests(){

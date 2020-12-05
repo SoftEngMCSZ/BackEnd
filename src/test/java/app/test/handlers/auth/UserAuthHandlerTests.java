@@ -18,7 +18,7 @@ public class UserAuthHandlerTests {
 	@Before
 	public void init() throws Exception {
 		CollaboratorDAO dao = new CollaboratorDAO();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+		DatabaseUtil.wipe();
 		this.mockChoiceId = UUID.randomUUID();
 		this.collab = Collaborator.fromPlaintextPassword("SpongeBob SquarePants","GaryIsMyBestFriend");
 		dao.addCollaborator(this.mockChoiceId,this.collab);

@@ -20,9 +20,7 @@ public class AlternativeDAOTests {
 	@Before
 	public void init() throws Exception {
 		this.dao = new AlternativeDAO();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives;").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
+		DatabaseUtil.wipe();
 	}
 
 	@Test

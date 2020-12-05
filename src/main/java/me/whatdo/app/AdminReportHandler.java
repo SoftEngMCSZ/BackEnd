@@ -5,10 +5,16 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.JsonObject;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.model.ApiResponse;
+import me.whatdo.app.model.entity.Choice;
+import me.whatdo.app.model.entity.CompactedChoice;
 import me.whatdo.app.model.request.AdminRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminReportHandler implements RequestHandler<AdminRequest, ApiResponse> {
 
@@ -28,7 +34,9 @@ public class AdminReportHandler implements RequestHandler<AdminRequest, ApiRespo
                 return new ApiResponse(400, body.toString());
             }
 
-            body.add("choices", gson.toJsonTree(dao.getAllChoices()));
+            List<CompactedChoice> choices = dao.getAllChoices();
+
+            body.add("choices", gson.toJsonTree(choices));
             return new ApiResponse(200, body.toString());
 
         } catch (Exception e) {

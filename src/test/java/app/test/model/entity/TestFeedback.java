@@ -17,8 +17,8 @@ public class TestFeedback {
 
     Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-    Collaborator collab = null;
-    Feedback feedback = null;
+    Collaborator collab;
+    Feedback feedback;
     Alternative alt1;
 
     @Before

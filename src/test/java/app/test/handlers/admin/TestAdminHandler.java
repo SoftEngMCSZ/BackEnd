@@ -2,6 +2,7 @@ package app.test.handlers.admin;
 
 import me.whatdo.app.AdminReportHandler;
 import me.whatdo.app.db.ChoiceDAO;
+import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
@@ -14,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.*;
 
 public class TestAdminHandler {
@@ -25,6 +27,7 @@ public class TestAdminHandler {
     @Before
     public void init() throws Exception {
         handler = new AdminReportHandler();
+        DatabaseUtil.wipe();
         ChoiceDAO dao = new ChoiceDAO();
 
         newerChoice = new Choice(
@@ -63,28 +66,11 @@ public class TestAdminHandler {
     public void successfulResponseGetChoices() {
         AdminRequest req = new AdminRequest();
         ApiResponse response = handler.handleRequest(req, null);
+        System.out.println(response.getBody());
 
         JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
-        JsonArray firstChoice = object.getAsJsonArray("choices").getAsJsonArray();
-        Assert.assertEquals("\"Second choice\"", firstChoice.get(0).getAsJsonObject().get("question").toString());
-    }
-
-    @Test
-    public void successfulMalformedRequestResponse() throws Exception {
-        List<Choice> choices = new ChoiceDAO().getAllChoices();
-        AdminRequest req = new AdminRequest(choices);
-        ApiResponse response = handler.handleRequest(req, null);
-
-        Assert.assertEquals(400, response.getStatusCode());
-    }
-
-    @After
-    public void cleanup() throws Exception {
-        ChoiceDAO dao = new ChoiceDAO();
-        List<Choice> out = dao.getAllChoices();
-
-        for (Choice choice: out) {
-            dao.deleteChoice(choice);
-        }
+        JsonArray choices = object.getAsJsonArray("choices").getAsJsonArray();
+        System.out.println(newerChoice.getId());
+        Assert.assertEquals(olderChoice.getId(), UUID.fromString(choices.get(0).getAsJsonObject().get("id").getAsString()));
     }
 }

@@ -27,10 +27,7 @@ public class TestRegisterHandler {
 
     @Before
     public void setupHandler() throws Exception {
-        DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE alternatives").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+        DatabaseUtil.wipe();
 
         Alternative alt1, alt2;
         alt1 = new Alternative("Bloo");

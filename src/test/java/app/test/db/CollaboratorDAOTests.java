@@ -18,7 +18,7 @@ public class CollaboratorDAOTests {
 	@Before
 	public void init() throws Exception {
 		this.dao = new CollaboratorDAO();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+		DatabaseUtil.wipe();
 	}
 
 	@Test

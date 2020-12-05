@@ -10,19 +10,10 @@ import java.util.List;
 
 public class AdminRequest {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-    List<Choice> choices;
 
-    public AdminRequest() {
-
-    }
-
-    public AdminRequest(List<Choice> choices) {
-
-        this.choices = choices;
-    }
-
+    public AdminRequest() { }
     public JsonObject toJsonObject() {
-        return new Gson().fromJson(gson.toJson(choices), JsonObject.class);
+        return new Gson().fromJson(gson.toJson(this), JsonObject.class);
     }
 
     public String toJson(){

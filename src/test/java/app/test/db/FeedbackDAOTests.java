@@ -24,8 +24,7 @@ public class FeedbackDAOTests {
     public void init() throws Exception {
         this.mockChoiceId = UUID.randomUUID();
         this.mockAltId = UUID.randomUUID();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE feedback;").execute();
-        DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+        DatabaseUtil.wipe();
         // The Feedback DAO asserts that the author is in the db, so we need a test one
         new CollaboratorDAO().addCollaborator(mockChoiceId,testFeedbackAuthor);
         this.dao = new FeedbackDAO();

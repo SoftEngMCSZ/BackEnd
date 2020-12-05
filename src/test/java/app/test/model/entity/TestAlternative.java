@@ -17,8 +17,6 @@ public class TestAlternative {
     Alternative alt1,alt2 = null;
     Feedback feedback = null;
 
-
-
     @Before
     public void setupTests() {
         collab = new Collaborator("Maxy", "Baboo");

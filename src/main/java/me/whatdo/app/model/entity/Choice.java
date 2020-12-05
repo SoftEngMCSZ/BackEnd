@@ -68,6 +68,10 @@ public class Choice {
 		return this.creationTime;
 	}
 
+	public Optional<Date> getCompletionTime() {
+		return Optional.ofNullable(this.completionTime);
+	}
+
 	public String getQuestion() {
 		return this.question;
 	}

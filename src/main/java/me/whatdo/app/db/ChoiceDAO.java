@@ -3,6 +3,7 @@ package me.whatdo.app.db;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
 import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.CompactedChoice;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -102,15 +103,15 @@ public class ChoiceDAO {
 		}
 	}
 
-	public List<Choice> getAllChoices() throws Exception {
-		ArrayList<Choice> out = new ArrayList<>();
+	public List<CompactedChoice> getAllChoices() throws Exception {
+		ArrayList<CompactedChoice> out = new ArrayList<>();
 
 		try {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " ORDER BY creation_time DESC;");
 			ResultSet results = queryFind.executeQuery();
 			// Check if a collaborator with the same name is already registered for that choice
 			while(results.next()) {
-				out.add(buildChoice(results));
+				out.add(buildCompactedChoice(results));
 			}
 			results.close();
 			return out;
@@ -193,5 +194,14 @@ public class ChoiceDAO {
 				completionTime,
 				maxCollaborators
 		);
+	}
+
+	private static CompactedChoice buildCompactedChoice(ResultSet results) throws Exception {
+		UUID id = results.getObject("id",UUID.class);
+		Date creationTime = Date.from(results.getObject("creation_time",Timestamp.class).toInstant());
+		Optional<Date> completionTime = Optional.ofNullable(results.getObject("completion_time",Timestamp.class))
+												.map(ts-> Date.from(ts.toInstant()));
+
+		return new CompactedChoice(id,creationTime,completionTime.isPresent());
 	}
 }

@@ -24,8 +24,7 @@ public class OpinionDAOTests {
 		this.mockAltId = UUID.randomUUID();
 		this.mockChoiceId = UUID.randomUUID();
 		// The Feedback DAO asserts that the author is in the db, so we need a test one
-		DatabaseUtil.connect().prepareStatement("TRUNCATE opinions;").execute();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE collaborators;").execute();
+		DatabaseUtil.wipe();
 		new CollaboratorDAO().addCollaborator(this.mockChoiceId,testOpinionAuthor);
 		this.dao = new OpinionDAO();
 	}

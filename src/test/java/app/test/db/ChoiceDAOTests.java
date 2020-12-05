@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChoiceDAOTests {
 	ChoiceDAO dao;
@@ -17,7 +18,7 @@ public class ChoiceDAOTests {
 	@Before
 	public void init() throws Exception {
 		this.dao = new ChoiceDAO();
-		DatabaseUtil.connect().prepareStatement("TRUNCATE choices;").execute();
+		DatabaseUtil.wipe();
 	}
 
 	@Test
@@ -74,7 +75,14 @@ public class ChoiceDAOTests {
 		for(Choice c : choices) {
 			Assert.assertTrue(dao.addChoice(c));
 		}
-		List<Choice> out = dao.getAllChoices();
+		List<Choice> out = dao.getAllChoices().stream().map(c-> {
+			try {
+				return dao.getChoice(c.getId()).get();
+			} catch (Exception e) {
+				e.printStackTrace(); // unreachable
+				return null;
+			}
+		}).collect(Collectors.toList());
 		Assert.assertEquals(choices,out);
 
 		for(Choice c : out) {
@@ -188,6 +196,6 @@ public class ChoiceDAOTests {
 		dao.addChoice(olderChoice);
 		dao.addChoice(newerChoice);
 
-		Assert.assertEquals(newerChoice, dao.getAllChoices().get(0));
+		Assert.assertEquals(newerChoice.getId(), dao.getAllChoices().get(0).getId());
 	}
 }

@@ -11,22 +11,22 @@ import java.util.*;
 public class Choice {
 	private static final int MAX_ALTERNATIVES = 5;
 	private static final int MIN_ALTERNATIVES = 2;
+	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	private final UUID id;
 	private final String question;
 	private final List<Alternative> alternatives;
 	private final Set<Collaborator> collaborators;
-	private Alternative selectedAlternative;
 	private final Date creationTime;
-	private Date completionTime;
 	private final int maxCollaborators;
-	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+	private Alternative selectedAlternative;
+	private Date completionTime;
 
 	public Choice(CreateChoiceRequest choiceRequest) {
 		this(
-				choiceRequest.question,
-				choiceRequest.alternatives,
-				choiceRequest.maxCollaborators
+				choiceRequest.getQuestion(),
+				choiceRequest.getAlternatives(),
+				choiceRequest.getMaxCollaborators()
 		);
 	}
 
@@ -60,6 +60,20 @@ public class Choice {
 		this.maxCollaborators = maxCollaborators;
 	}
 
+	public static Optional<Choice> fromJson(String json) {
+		Choice out = gson.fromJson(json, Choice.class);
+		if (
+				out.alternatives == null ||
+						out.alternatives.size() < MIN_ALTERNATIVES ||
+						out.alternatives.size() > MAX_ALTERNATIVES ||
+						out.collaborators.size() > out.maxCollaborators
+		) {
+			return Optional.empty();
+		} else {
+			return Optional.of(out);
+		}
+	}
+
 	public UUID getId() {
 		return this.id;
 	}
@@ -84,30 +98,16 @@ public class Choice {
 		return this.collaborators;
 	}
 
-	public String toJson(){
+	public String toJson() {
 		return gson.toJson(this);
 	}
 
-	public JsonObject toJsonObject(){
-		return gson.fromJson(this.toJson(),JsonObject.class);
-	}
-
-	public static Optional<Choice> fromJson(String json){
-		Choice out = gson.fromJson(json, Choice.class);
-		if(
-				out.alternatives == null ||
-				out.alternatives.size() < MIN_ALTERNATIVES ||
-				out.alternatives.size() > MAX_ALTERNATIVES ||
-				out.collaborators.size() > out.maxCollaborators
-		) {
-			return Optional.empty();
-		} else {
-			return Optional.of(out);
-		}
+	public JsonObject toJsonObject() {
+		return gson.fromJson(this.toJson(), JsonObject.class);
 	}
 
 	public boolean addCollaborator(Collaborator c) {
-		if(this.collaborators.size() < this.maxCollaborators && !this.collaborators.contains(c)) {
+		if (this.collaborators.size() < this.maxCollaborators && !this.collaborators.contains(c)) {
 			this.collaborators.add(c);
 			return true;
 		} else return false;
@@ -118,7 +118,7 @@ public class Choice {
 	}
 
 	public boolean selectAlternative(Alternative alt) {
-		if(this.alternatives.contains(alt)) {
+		if (this.alternatives.contains(alt)) {
 			this.selectedAlternative = alt;
 			this.completionTime = Date.from(Instant.now());
 			return true;

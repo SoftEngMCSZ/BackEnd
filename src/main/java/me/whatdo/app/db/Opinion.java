@@ -6,8 +6,10 @@ public enum Opinion {
 
 	public Opinion invert() {
 		switch (this) {
-			case APPROVAL: return DISAPPROVAL;
-			case DISAPPROVAL: return APPROVAL;
+			case APPROVAL:
+				return DISAPPROVAL;
+			case DISAPPROVAL:
+				return APPROVAL;
 		}
 		return null; // Unreachable
 	}

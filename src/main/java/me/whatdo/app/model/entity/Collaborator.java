@@ -11,41 +11,38 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * A Collaborator registered for a single choice
+ */
 public class Collaborator {
+	// Constants used in password hashing
 	private static final int HASH_ITERATION_COUNT = 4;
 	private static final int HASH_MEM = 512;
 	private static final int HASH_DEG_PARALLELISM = 8;
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	// Guaranteed non-null
+	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
 	private final UUID id;
 	private final String name;
 	// May be null if Collaborator registered without password. Don't serialize this
 	private final transient String password;
 
 	public Collaborator(UUID id, String name) {
-		this.id = id;
-		this.name = name;
-		this.password = null;
+		this(id, name, null);
 	}
 
 	public Collaborator(UUID id, String name, String pwd) {
 		this.id = id;
 		this.name = name;
 		this.password = pwd;
-
 	}
 
 	public Collaborator(String name) {
-		this.id = UUID.randomUUID();
-		this.name = name;
-		this.password = null;
+		this(UUID.randomUUID(), name, null);
 	}
 
 	public Collaborator(String name, String pwd) {
-		this.id = UUID.randomUUID();
-		this.name = name;
-		this.password = pwd;
+		this(UUID.randomUUID(), name, pwd);
 	}
 
 	public static Collaborator fromPlaintextPassword(String name, String pwd) {
@@ -62,6 +59,10 @@ public class Collaborator {
 		);
 	}
 
+	public static Collaborator fromJson(String json) {
+		return gson.fromJson(json, Collaborator.class);
+	}
+
 	public String getName() {
 		return this.name;
 	}
@@ -70,22 +71,18 @@ public class Collaborator {
 		return id;
 	}
 
-	public String toJson(){
-        return gson.toJson(this);
-    }
+	public String toJson() {
+		return gson.toJson(this);
+	}
 
-    public JsonObject toJsonObject(){
-        return gson.fromJson(this.toJson(),JsonObject.class);
-    }
-
-    public static Collaborator fromJson(String json){
-        return gson.fromJson(json, Collaborator.class);
-    }
+	public JsonObject toJsonObject() {
+		return gson.fromJson(this.toJson(), JsonObject.class);
+	}
 
 	public boolean verifyPassword(String pwd) {
-		if(this.password == null) return true;
+		if (this.password == null) return true;
 		Argon2 hasher = Argon2Factory.create(Argon2Types.ARGON2id);
-		return hasher.verify(this.password,pwd.toCharArray());
+		return hasher.verify(this.password, pwd.toCharArray());
 	}
 
 	public String getPassword() {
@@ -97,8 +94,8 @@ public class Collaborator {
 	}
 
 	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(o == null || o.getClass() != this.getClass()) return false;
+		if (this == o) return true;
+		if (o == null || o.getClass() != this.getClass()) return false;
 		Collaborator that = (Collaborator) o;
 		return this.id.equals(that.id);
 	}

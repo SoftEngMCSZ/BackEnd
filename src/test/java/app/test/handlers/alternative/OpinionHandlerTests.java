@@ -19,12 +19,12 @@ import java.util.UUID;
 
 public class OpinionHandlerTests {
 
-	private OpinionHandler handler;
 	Alternative alt1;
 	Alternative alt2;
 	Collaborator collab1;
 	Collaborator collab2;
 	Choice choice;
+	private OpinionHandler handler;
 
 	@Before
 	public void init() throws Exception {

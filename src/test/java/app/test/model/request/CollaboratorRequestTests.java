@@ -11,11 +11,11 @@ public class CollaboratorRequestTests {
 	@Test
 	public void allAttrsConstructor() {
 		UUID id = UUID.randomUUID();
-		CollaboratorRequest req = new CollaboratorRequest(id.toString(),"yeet","haw");
+		CollaboratorRequest req = new CollaboratorRequest(id.toString(), "yeet", "haw");
 
-		Assert.assertEquals(id.toString(),req.getChoiceID());
-		Assert.assertEquals("yeet",req.getUsername());
-		Assert.assertEquals("haw",req.getPassword());
+		Assert.assertEquals(id.toString(), req.getChoiceID());
+		Assert.assertEquals("yeet", req.getUsername());
+		Assert.assertEquals("haw", req.getPassword());
 	}
 
 	@Test
@@ -26,8 +26,8 @@ public class CollaboratorRequestTests {
 		req.setUsername("yeet");
 		req.setPassword("haw");
 
-		Assert.assertEquals(id.toString(),req.getChoiceID());
-		Assert.assertEquals("yeet",req.getUsername());
-		Assert.assertEquals("haw",req.getPassword());
+		Assert.assertEquals(id.toString(), req.getChoiceID());
+		Assert.assertEquals("yeet", req.getUsername());
+		Assert.assertEquals("haw", req.getPassword());
 	}
 }

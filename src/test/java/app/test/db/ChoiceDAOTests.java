@@ -5,12 +5,12 @@ import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;
 import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.CompactedChoice;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ChoiceDAOTests {
 	ChoiceDAO dao;
@@ -32,14 +32,14 @@ public class ChoiceDAOTests {
 				),
 				3
 		);
-		mockChoice.addCollaborator(new Collaborator("Plankton","I command you!"));
+		mockChoice.addCollaborator(new Collaborator("Plankton", "I command you!"));
 		mockChoice.addCollaborator(new Collaborator("Karen"));
 		Assert.assertTrue(dao.addChoice(mockChoice));
 		Optional<Choice> testFetch = dao.getChoice(mockChoice.getId());
 		Assert.assertTrue(testFetch.isPresent());
-		Assert.assertEquals(mockChoice,testFetch.get());
-		Assert.assertEquals(mockChoice.getAlternatives(),testFetch.get().getAlternatives());
-		Assert.assertEquals(mockChoice.getCollaborators(),testFetch.get().getCollaborators());
+		Assert.assertEquals(mockChoice, testFetch.get());
+		Assert.assertEquals(mockChoice.getAlternatives(), testFetch.get().getAlternatives());
+		Assert.assertEquals(mockChoice.getCollaborators(), testFetch.get().getCollaborators());
 		Assert.assertTrue(dao.deleteChoice(mockChoice));
 	}
 
@@ -66,26 +66,23 @@ public class ChoiceDAOTests {
 				)
 		);
 
-		choices.get(0).addCollaborator(new Collaborator("Plankton","KaReNtHeLoVeOfMyLiFe!!1!"));
+		choices.get(0).addCollaborator(new Collaborator("Plankton", "KaReNtHeLoVeOfMyLiFe!!1!"));
 		choices.get(0).addCollaborator(new Collaborator("Karen"));
 
-		choices.get(1).addCollaborator(new Collaborator("Mr. Krabs","IWantMoney$$$"));
+		choices.get(1).addCollaborator(new Collaborator("Mr. Krabs", "IWantMoney$$$"));
 		choices.get(1).addCollaborator(new Collaborator("King Neptune"));
 
-		for(Choice c : choices) {
+		for (Choice c : choices) {
 			Assert.assertTrue(dao.addChoice(c));
 		}
-		List<Choice> out = dao.getAllChoices().stream().map(c-> {
-			try {
-				return dao.getChoice(c.getId()).get();
-			} catch (Exception e) {
-				e.printStackTrace(); // unreachable
-				return null;
-			}
-		}).collect(Collectors.toList());
-		Assert.assertEquals(choices,out);
+		List<CompactedChoice> compactedChoices = dao.getAllChoices();
+		List<Choice> out = new ArrayList<>(compactedChoices.size());
+		for (CompactedChoice c : compactedChoices) {
+			out.add(dao.getChoice(c.getId()).orElseThrow(() -> new RuntimeException("Missing choice")));
+		}
+		Assert.assertTrue(out.containsAll(choices));
 
-		for(Choice c : out) {
+		for (Choice c : out) {
 			Assert.assertTrue(dao.deleteChoice(c));
 		}
 	}
@@ -127,15 +124,15 @@ public class ChoiceDAOTests {
 		);
 
 		Assert.assertTrue(dao.addChoice(mockChoice));
-		Assert.assertTrue(dao.finalizeChoice(mockChoice.getId(),finalAlt.getId()));
-		Assert.assertFalse(dao.finalizeChoice(mockChoice.getId(),mockChoice.getAlternatives().get(1).getId()));
+		Assert.assertTrue(dao.finalizeChoice(mockChoice.getId(), finalAlt.getId()));
+		Assert.assertFalse(dao.finalizeChoice(mockChoice.getId(), mockChoice.getAlternatives().get(1).getId()));
 		Assert.assertEquals(Optional.of(Optional.of(finalAlt)),
 				dao.getChoice(mockChoice.getId()).map(Choice::getSelectedAlternative));
 	}
 
 	@Test
 	public void finalizeMissingChoice() throws Exception {
-		Assert.assertFalse(dao.finalizeChoice(UUID.randomUUID(),UUID.randomUUID()));
+		Assert.assertFalse(dao.finalizeChoice(UUID.randomUUID(), UUID.randomUUID()));
 	}
 
 	@Test
@@ -165,8 +162,8 @@ public class ChoiceDAOTests {
 		Assert.assertTrue(dao.addChoice(olderChoice));
 		Assert.assertTrue(dao.addChoice(newerChoice));
 
-		Assert.assertEquals(1,dao.deleteChoicesOlderThan(new Date(0, Calendar.JANUARY, 2)));
-		Assert.assertEquals(1,dao.getAllChoices().size());
+		Assert.assertEquals(1, dao.deleteChoicesOlderThan(new Date(0, Calendar.JANUARY, 2)));
+		Assert.assertEquals(1, dao.getAllChoices().size());
 	}
 
 	@Test

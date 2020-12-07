@@ -16,7 +16,9 @@ public class DatabaseUtil {
 	 * Singleton access to DB connection to share resources effectively across multiple accesses.
 	 */
 	public static Connection connect() throws Exception {
-		if (conn != null) { return conn; }
+		if (conn != null) {
+			return conn;
+		}
 
 		// These three environment variables must be set!
 		String dbUser = System.getenv("WHATDO_DB_USER");

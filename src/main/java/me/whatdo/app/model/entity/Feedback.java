@@ -9,11 +9,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Feedback {
+	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
 	private final UUID id;
 	private final Collaborator author;
 	private final Date timestamp;
 	private final String contents;
-	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Feedback(Collaborator author, Date timestamp, String content) {
 		this.id = UUID.randomUUID();
@@ -29,19 +30,21 @@ public class Feedback {
 		this.contents = content;
 	}
 
-	public String toJson(){
-		return gson.toJson(this);
-	}
-
-	public JsonObject toJsonObject(){
-		return gson.fromJson(this.toJson(),JsonObject.class);
-	}
-
-	public static Feedback fromJson(String json){
+	public static Feedback fromJson(String json) {
 		return gson.fromJson(json, Feedback.class);
 	}
 
-	public UUID getId() { return id;}
+	public String toJson() {
+		return gson.toJson(this);
+	}
+
+	public JsonObject toJsonObject() {
+		return gson.fromJson(this.toJson(), JsonObject.class);
+	}
+
+	public UUID getId() {
+		return id;
+	}
 
 	public Collaborator getAuthor() {
 		return author;
@@ -62,8 +65,8 @@ public class Feedback {
 
 	@Override
 	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(o == null || o.getClass() != this.getClass()) return false;
+		if (this == o) return true;
+		if (o == null || o.getClass() != this.getClass()) return false;
 		Feedback otherFeedback = (Feedback) o;
 		return this.id.equals(otherFeedback.getId());
 	}

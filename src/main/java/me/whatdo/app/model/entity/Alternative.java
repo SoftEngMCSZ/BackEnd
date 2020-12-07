@@ -7,12 +7,12 @@ import com.google.gson.JsonObject;
 import java.util.*;
 
 public class Alternative {
+	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 	private UUID alternativeID;
 	private String contents;
 	private Set<Collaborator> approvals;
 	private Set<Collaborator> disapprovals;
 	private List<Feedback> feedback;
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	public Alternative(String description) {
 		this.alternativeID = UUID.randomUUID();
@@ -22,7 +22,8 @@ public class Alternative {
 		this.feedback = new ArrayList<>();
 	}
 
-	public Alternative() {}
+	public Alternative() {
+	}
 
 	public Alternative(UUID id, String description, Set<Collaborator> approvals,
 					   Set<Collaborator> disapprovals, List<Feedback> feedback) {
@@ -33,17 +34,17 @@ public class Alternative {
 		this.feedback = feedback;
 	}
 
-	public String toJson(){
-	    return gson.toJson(this);
-    }
+	public static Alternative fromJson(String json) {
+		return gson.fromJson(json, Alternative.class);
+	}
 
-    public JsonObject toJsonObject(){
-	    return gson.fromJson(this.toJson(),JsonObject.class);
-    }
+	public String toJson() {
+		return gson.toJson(this);
+	}
 
-    public static Alternative fromJson(String json){
-	    return gson.fromJson(json, Alternative.class);
-    }
+	public JsonObject toJsonObject() {
+		return gson.fromJson(this.toJson(), JsonObject.class);
+	}
 
 	public boolean addApproval(Collaborator author) {
 		this.disapprovals.remove(author);
@@ -88,6 +89,8 @@ public class Alternative {
 	}
 
 	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		Alternative that = (Alternative) o;
 		return this.alternativeID.equals(that.alternativeID);
 	}

@@ -3,7 +3,7 @@ package app.test.handlers.admin;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import me.whatdo.app.AdminReportHandler;
+import me.whatdo.app.AdminDeleteHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;
@@ -14,17 +14,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.*;
 
-public class TestAdminHandler {
+public class AdminDeleteHandlerTests {
 
-	AdminReportHandler handler;
+	AdminDeleteHandler handler;
 	Choice newerChoice;
 	Choice olderChoice;
 
 	@Before
 	public void init() throws Exception {
-		handler = new AdminReportHandler();
+		handler = new AdminDeleteHandler();
 		DatabaseUtil.wipe();
 		ChoiceDAO dao = new ChoiceDAO();
 
@@ -37,7 +38,7 @@ public class TestAdminHandler {
 				),
 				new HashSet<>(),
 				Optional.empty(),
-				new Date(0, Calendar.JANUARY, 1),
+				Date.from(Instant.now().minusSeconds(24 * 60 * 60)),
 				Optional.empty(),
 				1
 		);
@@ -50,38 +51,61 @@ public class TestAdminHandler {
 				),
 				new HashSet<>(),
 				Optional.empty(),
-				new Date(40, Calendar.JANUARY, 1),
+				Date.from(Instant.now().minusSeconds(2 * 24 * 60 * 60)),
 				Optional.empty(),
 				1
 		);
 
 		dao.addChoice(newerChoice);
 		dao.addChoice(olderChoice);
-
 	}
 
 	@Test
-	public void successfulResponseGetChoices() {
-		AdminRequest req = new AdminRequest();
+	public void successfulResponseDeleteOneChoice() {
+		AdminRequest req = new AdminRequest(1.5);
 		ApiResponse response = handler.handleRequest(req, null);
 
 		Assert.assertEquals(200, response.getStatusCode());
 
 		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
 		JsonArray choices = object.getAsJsonArray("choices").getAsJsonArray();
-		Assert.assertEquals(olderChoice.getId(), UUID.fromString(choices.get(0).getAsJsonObject().get("id").getAsString()));
+
+		Assert.assertEquals(1, choices.size());
+		Assert.assertEquals(newerChoice.getId(), UUID.fromString(choices.get(0).getAsJsonObject().get("id").getAsString()));
 	}
 
 	@Test
-	public void failedResponseMalformedRequest() {
-		AdminRequest req = new AdminRequest(2.0);
+	public void successfulResponseDeleteTwoChoices() {
+		AdminRequest req = new AdminRequest(0.25);
+		ApiResponse response = handler.handleRequest(req, null);
+
+		Assert.assertEquals(200, response.getStatusCode());
+
+		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
+		JsonArray choices = object.getAsJsonArray("choices").getAsJsonArray();
+
+		Assert.assertEquals(0, choices.size());
+	}
+
+	@Test
+	public void failureResponseMalformedRequest() {
+		AdminRequest req = new AdminRequest();
 		ApiResponse response = handler.handleRequest(req, null);
 
 		Assert.assertEquals(400, response.getStatusCode());
-
 		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
 		Assert.assertTrue(object.has("Message"));
 		Assert.assertEquals("400 malformed AdminRequest", object.get("Message").getAsString());
+	}
 
+	@Test
+	public void failureResponseNoChoicesOldEnough() {
+		AdminRequest req = new AdminRequest(3);
+		ApiResponse response = handler.handleRequest(req, null);
+
+		Assert.assertEquals(400, response.getStatusCode());
+		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
+		Assert.assertTrue(object.has("Message"));
+		Assert.assertNotEquals("400 malformed AdminRequest", object.get("Message").getAsString());
 	}
 }

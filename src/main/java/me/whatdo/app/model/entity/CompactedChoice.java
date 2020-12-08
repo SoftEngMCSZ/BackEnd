@@ -11,11 +11,13 @@ public class CompactedChoice {
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	UUID id;
+	String question;
 	Date creationTime;
 	boolean isCompleted;
 
-	public CompactedChoice(UUID id, Date creationTime, boolean isCompleted) {
+	public CompactedChoice(UUID id, String question, Date creationTime, boolean isCompleted) {
 		this.id = id;
+		this.question = question;
 		this.creationTime = creationTime;
 		this.isCompleted = isCompleted;
 	}

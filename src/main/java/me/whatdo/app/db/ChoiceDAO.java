@@ -194,10 +194,11 @@ public class ChoiceDAO {
 
 	private static CompactedChoice buildCompactedChoice(ResultSet results) throws Exception {
 		UUID id = results.getObject("id", UUID.class);
+		String question = results.getString("question");
 		Date creationTime = Date.from(results.getObject("creation_time", Timestamp.class).toInstant());
 		Optional<Date> completionTime = Optional.ofNullable(results.getObject("completion_time", Timestamp.class))
 												.map(ts -> Date.from(ts.toInstant()));
 
-		return new CompactedChoice(id, creationTime, completionTime.isPresent());
+		return new CompactedChoice(id, question, creationTime, completionTime.isPresent());
 	}
 }

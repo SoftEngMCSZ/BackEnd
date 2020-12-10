@@ -1,6 +1,6 @@
 package app.test.handlers.choice;
 
-import me.whatdo.app.handlers.choice.ViewChoiceHandler;
+import me.whatdo.app.ViewChoiceHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.CollaboratorDAO;
 import me.whatdo.app.db.DatabaseUtil;

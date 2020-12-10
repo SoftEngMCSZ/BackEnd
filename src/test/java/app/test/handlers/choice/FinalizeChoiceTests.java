@@ -2,7 +2,7 @@ package app.test.handlers.choice;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import me.whatdo.app.handlers.choice.FinalizeChoiceHandler;
+import me.whatdo.app.FinalizeChoiceHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;

@@ -12,10 +12,16 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * A Database Access Object used for manipulating Choices
+ */
 public class ChoiceDAO {
 	private static final String tblName = "choices";
 	Connection conn;
 
+	/**
+	 * Constructs a new ChoiceDAO
+	 */
 	public ChoiceDAO() {
 		try {
 			conn = DatabaseUtil.connect();
@@ -24,6 +30,15 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Adds a new Choice to the database
+	 *
+	 * @param c The Choice to be added
+	 * @return true if the Choice was added successfully, false if the choice is already
+	 * in the database
+	 * @throws Exception If the database is inaccessible for any reason, or if the Choice data
+	 *                   is incomplete
+	 */
 	public boolean addChoice(Choice c) throws Exception {
 		try {
 
@@ -61,6 +76,14 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Attempts to get an Choice from the database
+	 *
+	 * @param choiceId the ID of the Choice to retrieve
+	 * @return Either the requested Choice, or Optional.empty() if the Choice could not be
+	 * found
+	 * @throws Exception If the database is inaccessible
+	 */
 	public Optional<Choice> getChoice(UUID choiceId) throws Exception {
 		try {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
@@ -77,6 +100,14 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Finalize a choice by choosing a selected alternative
+	 *
+	 * @param choiceId The ID of the choice to finalize
+	 * @param altId    The ID of the selected alternative
+	 * @return true if the choice could be finalized, false if it is already finalized
+	 * @throws Exception If the database is inaccessible
+	 */
 	public boolean finalizeChoice(UUID choiceId, UUID altId) throws Exception {
 		try {
 
@@ -101,6 +132,12 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Retrieves a compacted report of all Choices in the database
+	 *
+	 * @return A List of all Choices in compacted form (containing ID, question, creation timestamp, and completion status)
+	 * @throws Exception If the database is inaccessible
+	 */
 	public List<CompactedChoice> getAllChoices() throws Exception {
 		ArrayList<CompactedChoice> out = new ArrayList<>();
 
@@ -118,6 +155,13 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Deletes a given Choice from the database
+	 *
+	 * @param c the Choice to be deleted
+	 * @return true if the Choice was deleted, false otherwise
+	 * @throws Exception If the database is inaccessible
+	 */
 	public boolean deleteChoice(Choice c) throws Exception {
 		try {
 			CollaboratorDAO collabDao = new CollaboratorDAO();
@@ -137,6 +181,13 @@ public class ChoiceDAO {
 		}
 	}
 
+	/**
+	 * Deletes all Choices older than the given Date
+	 *
+	 * @param d the date cutoff for Choice deletion
+	 * @return the number of deleted Choices
+	 * @throws Exception If the database is inaccessible
+	 */
 	public int deleteChoicesOlderThan(Date d) throws Exception {
 		try {
 			CollaboratorDAO collabDao = new CollaboratorDAO();
@@ -147,8 +198,8 @@ public class ChoiceDAO {
 			ResultSet results = queryFindAll.executeQuery();
 
 			while (results.next()) {
-				collabDao.deleteAllCollaboratorsOfChoice(results.getObject("id", UUID.class));
 				altDao.deleteAllAlternativesInChoice(results.getObject("id", UUID.class));
+				collabDao.deleteAllCollaboratorsOfChoice(results.getObject("id", UUID.class));
 			}
 			queryFindAll.close();
 

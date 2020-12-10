@@ -15,14 +15,13 @@ import java.util.UUID;
 
 public class FinalizeChoiceHandler implements RequestHandler<FinalRequest, ApiResponse> {
 
-
 	public ApiResponse handleRequest(final FinalRequest input, final Context context) {
 		JsonObject body = new JsonObject();
 		ChoiceDAO choiceDAO = new ChoiceDAO();
 		AlternativeDAO altDAO = new AlternativeDAO();
 		try {
 			if (!validateRequest(input.toJsonObject())) {
-				body.addProperty("Message", "400 malformed AdminRequest");
+				body.addProperty("Message", "400 malformed FinalRequest");
 				body.addProperty("Input", input.toJson());
 				return new ApiResponse(400, body.toString());
 			}
@@ -45,19 +44,20 @@ public class FinalizeChoiceHandler implements RequestHandler<FinalRequest, ApiRe
 
 			Optional<Alternative> altOpt = altDAO.getAlternative(altId);
 
-			if(!altOpt.isPresent()){
-				body.addProperty("Message","404 Alternative not found");
+			if (!altOpt.isPresent()) {
+				body.addProperty("Message", "404 Alternative not found");
 				return new ApiResponse(404, body.toString());
 			}
 
-			if (!choiceOpt.get().finalize(altOpt.get())) {
-				body.addProperty("Message","500 could not finalize Alternative");
-				return new ApiResponse(500, body.toString());
+			if (!choiceDAO.finalizeChoice(choiceId, altId)) {
+				body.addProperty("Message", "400 could not finalize Choice");
+				return new ApiResponse(400, body.toString());
 			}
 
+			choiceOpt = choiceDAO.getChoice(choiceId);
+			assert choiceOpt.isPresent();
+
 			return new ApiResponse(200, choiceOpt.get().toJson());
-
-
 
 		} catch (Exception e) {
 			body.addProperty("Message", "500 server error");

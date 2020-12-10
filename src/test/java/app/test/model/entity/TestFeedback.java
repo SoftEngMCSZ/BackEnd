@@ -25,7 +25,7 @@ public class TestFeedback {
 	public void setupTests() {
 		collab = new Collaborator("Maxy", "Baboo");
 		alt1 = new Alternative("We could order dominos.");
-		feedback = new Feedback(alt1.getId(), collab, Date.from(Instant.now()), "But I don't like pizza :(");
+		feedback = new Feedback(alt1.getId(), collab.getId(), "But I don't like pizza :(");
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class TestFeedback {
 	@Test
 	public void testSerialize() {
 		JsonObject obj = feedback.toJsonObject();
-		Assert.assertEquals(obj.get("author").toString(), gson.toJson(feedback.getAuthor()));
+		Assert.assertEquals(obj.get("authorId").toString(), gson.toJson(feedback.getAuthor()));
 		Assert.assertEquals(obj.get("timestamp").toString(), gson.toJson(feedback.getTimestamp()));
 		Assert.assertEquals(obj.get("contents").toString(), gson.toJson(feedback.getContent()));
 	}

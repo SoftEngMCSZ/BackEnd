@@ -25,7 +25,7 @@ public class FeedbackDAO {
 	public boolean addFeedback(UUID altId, Feedback feedback) throws Exception {
 		try {
 			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
-			queryFind.setObject(1, feedback.getId());
+			queryFind.setObject(1, feedback.getFeedbackId());
 			ResultSet resultSet = queryFind.executeQuery();
 
 			// Check if feedback with the same id already exists
@@ -35,8 +35,8 @@ public class FeedbackDAO {
 			} else {
 				resultSet.close();
 				PreparedStatement queryAdd = conn.prepareStatement("INSERT INTO " + tblName + " (id, author, alternative, timestamp, content) values(?, ?,?,?,?);");
-				queryAdd.setObject(1, feedback.getId());
-				queryAdd.setObject(2, feedback.getAuthor().getId());
+				queryAdd.setObject(1, feedback.getFeedbackId());
+				queryAdd.setObject(2, feedback.getAuthor());
 				queryAdd.setObject(3, altId);
 				queryAdd.setObject(4, new Timestamp(feedback.getTimestamp().getTime()));
 				queryAdd.setString(5, feedback.getContent());
@@ -114,13 +114,8 @@ public class FeedbackDAO {
 
 	private static Feedback generateFeedback(ResultSet resultSet) throws Exception {
 		UUID id = resultSet.getObject("id", UUID.class);
-		Optional<Collaborator> author = new CollaboratorDAO().getCollaborator(resultSet.getObject("author", UUID.class));
-		// If this assertion fails, then db foreign key constraints have been violated.
-		// The DB would throw an error on insertion, well before reaching here
-		assert author.isPresent();
 		String content = resultSet.getString("content");
-		Date timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 
-		return new Feedback(id, author.get(), timestamp, content);
+		return new Feedback(id, resultSet.getObject("author", UUID.class), content);
 	}
 }

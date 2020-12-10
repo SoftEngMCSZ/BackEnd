@@ -28,15 +28,7 @@ public class FeedbackDAOTests {
 		// The Feedback DAO asserts that the author is in the db, so we need a test one
 		new CollaboratorDAO().addCollaborator(mockChoiceId, testFeedbackAuthor);
 		this.dao = new FeedbackDAO();
-
-		Calendar cal = new GregorianCalendar();
-		cal.set(1954, Calendar.FEBRUARY, 14);
-
-		this.testFeedback = new Feedback(
-				testFeedbackAuthor,
-				cal.getTime(),
-				"Come on, Mia. Let's go and get a steak."
-		);
+		this.testFeedback = new Feedback(mockAltId, testFeedbackAuthor.getId(),"test Content");
 	}
 
 	@Test
@@ -59,7 +51,7 @@ public class FeedbackDAOTests {
 				new Collaborator("Denise")
 		)) {
 			collabDao.addCollaborator(mockAltId, collaborator);
-			dao.addFeedback(mockAltId, new Feedback(collaborator, Date.from(Instant.now()), "No."));
+			dao.addFeedback(mockAltId, new Feedback(mockAltId, collaborator.getId(), "No."));
 		}
 
 		Assert.assertEquals(4, dao.deleteAllFeedbackForAlternative(mockAltId));
@@ -82,8 +74,8 @@ public class FeedbackDAOTests {
 		cal.set(1900, Calendar.AUGUST, 24);
 
 		Feedback testFeedback2 = new Feedback(
-				testCollab,
-				cal.getTime(),
+				mockAltId,
+				testCollab.getId(),
 				"Oh, God, goofo I'm drunk. Mark Twain. Isn't she smart—she has the hiccups. I hope it's beautiful and a fool—a beautiful little fool."
 		);
 
@@ -97,7 +89,7 @@ public class FeedbackDAOTests {
 	public void testDeleteFeedback() throws Exception {
 		dao.addFeedback(mockAltId, testFeedback);
 
-		Assert.assertTrue(dao.deleteFeedback(testFeedback.getId()));
+		Assert.assertTrue(dao.deleteFeedback(testFeedback.getFeedbackId()));
 		List<Feedback> allFeedback = dao.getAllFeedback(mockAltId);
 		Assert.assertEquals(0, allFeedback.size());
 	}
@@ -106,14 +98,14 @@ public class FeedbackDAOTests {
 	public void testGetFeedback() throws Exception {
 		dao.addFeedback(mockAltId, testFeedback);
 
-		Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getId());
+		Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getFeedbackId());
 		Assert.assertTrue(returnedFeedback.isPresent());
 		Assert.assertEquals(testFeedback, returnedFeedback.get());
 	}
 
 	@Test
 	public void testGetMissingFeedback() throws Exception {
-		Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getId());
+		Optional<Feedback> returnedFeedback = dao.getFeedback(testFeedback.getFeedbackId());
 		Assert.assertFalse(returnedFeedback.isPresent());
 	}
 }

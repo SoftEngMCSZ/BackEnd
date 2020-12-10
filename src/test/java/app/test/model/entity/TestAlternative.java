@@ -20,7 +20,7 @@ public class TestAlternative {
 	public void setupTests() {
 		collab = new Collaborator("Maxy", "Baboo");
 		alt1 = new Alternative("We eat pizza?");
-		feedback = new Feedback(alt1.getId(), collab, Date.from(Instant.now()), "But I don't like pizza :(");
+		feedback = new Feedback(alt1.getId(), collab.getId(), "But I don't like pizza :(");
 	}
 
 	@Test

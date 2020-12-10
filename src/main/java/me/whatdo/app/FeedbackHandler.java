@@ -1,8 +1,10 @@
-package me.whatdo.app.db;
+package me.whatdo.app;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.JsonObject;
+import me.whatdo.app.db.AlternativeDAO;
+import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.model.ApiResponse;
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Choice;

@@ -67,6 +67,7 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
 			} catch (Exception e) {
 				body.addProperty("Message", "400 malformed alternative ID");
 				body.addProperty("ID", request.getCollabId());
+				body.addProperty("Input", request.toJson());
 				return new ApiResponse(400, body.toString());
 			}
 

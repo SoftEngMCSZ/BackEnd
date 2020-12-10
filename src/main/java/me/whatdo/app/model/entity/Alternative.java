@@ -8,14 +8,14 @@ import java.util.*;
 
 public class Alternative {
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-	private UUID alternativeID;
+	private UUID alternativeId;
 	private String contents;
-	private Set<Collaborator> approvals;
+	private Set<Collaborator> approvals;4
 	private Set<Collaborator> disapprovals;
 	private List<Feedback> feedback;
 
 	public Alternative(String description) {
-		this.alternativeID = UUID.randomUUID();
+		this.alternativeId = UUID.randomUUID();
 		this.contents = description;
 		this.approvals = new HashSet<>();
 		this.disapprovals = new HashSet<>();
@@ -27,7 +27,7 @@ public class Alternative {
 
 	public Alternative(UUID id, String description, Set<Collaborator> approvals,
 					   Set<Collaborator> disapprovals, List<Feedback> feedback) {
-		this.alternativeID = id;
+		this.alternativeId = id;
 		this.contents = description;
 		this.approvals = approvals;
 		this.disapprovals = disapprovals;
@@ -92,16 +92,16 @@ public class Alternative {
 		this.feedback = feedback;
 	}
 
-	public String getAlternativeID(){
-		return alternativeID.toString();
+	public String getAlternativeId(){
+		return alternativeId.toString();
 	}
 
 	public UUID getId() {
-		return alternativeID;
+		return alternativeId;
 	}
 
-	public void setAlternativeID(String alternativeID) {
-		this.alternativeID = UUID.fromString(alternativeID);
+	public void setAlternativeId(String alternativeId) {
+		this.alternativeId = UUID.fromString(alternativeId);
 	}
 
 	public String getContents() {
@@ -116,10 +116,10 @@ public class Alternative {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Alternative that = (Alternative) o;
-		return this.alternativeID.equals(that.alternativeID);
+		return this.alternativeId.equals(that.alternativeId);
 	}
 
 	public int hashCode() {
-		return Objects.hash(alternativeID);
+		return Objects.hash(alternativeId);
 	}
 }

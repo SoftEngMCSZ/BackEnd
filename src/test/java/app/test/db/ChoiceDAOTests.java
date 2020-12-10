@@ -127,7 +127,7 @@ public class ChoiceDAOTests {
 		Assert.assertTrue(dao.finalizeChoice(mockChoice.getId(), finalAlt.getId()));
 		Assert.assertFalse(dao.finalizeChoice(mockChoice.getId(), mockChoice.getAlternatives().get(1).getId()));
 		Assert.assertEquals(Optional.of(Optional.of(finalAlt)),
-				dao.getChoice(mockChoice.getId()).map(Choice::getSelectedAlternative));
+				dao.getChoice(mockChoice.getId()).map(Choice::getFinalAlternative));
 	}
 
 	@Test

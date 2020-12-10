@@ -19,7 +19,7 @@ public class Choice {
 	private final Set<Collaborator> collaborators;
 	private final Date creationTime;
 	private final int maxCollaborators;
-	private Alternative selectedAlternative;
+	private Alternative finalAlternative;
 	private Date completionTime;
 
 	public Choice(CreateChoiceRequest choiceRequest) {
@@ -37,7 +37,7 @@ public class Choice {
 		this.collaborators = new HashSet<>();
 		this.maxCollaborators = maxCollaborators;
 		this.creationTime = Date.from(Instant.now());
-		this.selectedAlternative = null;
+		this.finalAlternative = null;
 		this.completionTime = null;
 	}
 
@@ -54,7 +54,7 @@ public class Choice {
 		this.question = question;
 		this.alternatives = alternatives;
 		this.collaborators = collaborators;
-		this.selectedAlternative = selectedAlternative.orElse(null);
+		this.finalAlternative = selectedAlternative.orElse(null);
 		this.creationTime = creationTime;
 		this.completionTime = completionTime.orElse(null);
 		this.maxCollaborators = maxCollaborators;
@@ -119,14 +119,27 @@ public class Choice {
 
 	public boolean selectAlternative(Alternative alt) {
 		if (this.alternatives.contains(alt)) {
-			this.selectedAlternative = alt;
+			this.finalAlternative = alt;
 			this.completionTime = Date.from(Instant.now());
 			return true;
 		} else return false;
 	}
 
-	public Optional<Alternative> getSelectedAlternative() {
-		return Optional.ofNullable(this.selectedAlternative);
+	public boolean finalize(Alternative finalAlt){
+		if (this.alternatives.remove(finalAlt)) {
+			this.completionTime = Date.from(Instant.now());
+			this.finalAlternative = finalAlt;
+			return true;
+		}
+		else {
+			return false;
+		}
+
+
+	}
+
+	public Optional<Alternative> getFinalAlternative() {
+		return Optional.ofNullable(this.finalAlternative);
 	}
 
 	public boolean equals(Object o) {

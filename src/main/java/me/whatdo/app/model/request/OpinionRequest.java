@@ -26,6 +26,14 @@ public class OpinionRequest {
 		return gson.fromJson(json, OpinionRequest.class);
 	}
 
+	public String toJson() {
+		return gson.toJson(this);
+	}
+
+	public JsonObject toJsonObject() {
+		return gson.fromJson(this.toJson(), JsonObject.class);
+	}
+
 	public String getCollabId() {
 		return collabId;
 	}
@@ -66,11 +74,5 @@ public class OpinionRequest {
 		this.actionType = actionType;
 	}
 
-	public String toJson() {
-		return gson.toJson(this);
-	}
 
-	public JsonObject toJsonObject() {
-		return gson.fromJson(this.toJson(), JsonObject.class);
-	}
 }

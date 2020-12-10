@@ -126,7 +126,8 @@ public class Choice {
 	}
 
 	public boolean finalize(Alternative finalAlt){
-		if (this.alternatives.remove(finalAlt)) {
+
+		if (this.completionTime==null && this.alternatives.remove(finalAlt)) {
 			this.completionTime = Date.from(Instant.now());
 			this.finalAlternative = finalAlt;
 			return true;

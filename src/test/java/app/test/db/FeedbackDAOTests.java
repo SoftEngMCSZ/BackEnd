@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.*;
 
 public class FeedbackDAOTests {
@@ -28,7 +27,7 @@ public class FeedbackDAOTests {
 		// The Feedback DAO asserts that the author is in the db, so we need a test one
 		new CollaboratorDAO().addCollaborator(mockChoiceId, testFeedbackAuthor);
 		this.dao = new FeedbackDAO();
-		this.testFeedback = new Feedback(mockAltId, testFeedbackAuthor.getId(),"test Content");
+		this.testFeedback = new Feedback(testFeedbackAuthor.getId(), "test Content");
 	}
 
 	@Test
@@ -51,7 +50,7 @@ public class FeedbackDAOTests {
 				new Collaborator("Denise")
 		)) {
 			collabDao.addCollaborator(mockAltId, collaborator);
-			dao.addFeedback(mockAltId, new Feedback(mockAltId, collaborator.getId(), "No."));
+			dao.addFeedback(mockAltId, new Feedback(collaborator.getId(), "No."));
 		}
 
 		Assert.assertEquals(4, dao.deleteAllFeedbackForAlternative(mockAltId));
@@ -74,7 +73,6 @@ public class FeedbackDAOTests {
 		cal.set(1900, Calendar.AUGUST, 24);
 
 		Feedback testFeedback2 = new Feedback(
-				mockAltId,
 				testCollab.getId(),
 				"Oh, God, goofo I'm drunk. Mark Twain. Isn't she smart—she has the hiccups. I hope it's beautiful and a fool—a beautiful little fool."
 		);

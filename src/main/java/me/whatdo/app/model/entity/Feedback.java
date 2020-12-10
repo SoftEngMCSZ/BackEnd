@@ -13,20 +13,26 @@ import java.util.UUID;
 public class Feedback {
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-	private final UUID feedbackId, alternativeId, authorId;
+	private final UUID feedbackId, authorId;
 	private final Date timestamp;
 	private final String contents;
 
-	public Feedback(FeedbackRequest req){
-		this(UUID.fromString(req.getAlternativeId()),UUID.fromString(req.getCollaboratorId()), req.getContents());
+	public Feedback(FeedbackRequest req) {
+		this(UUID.fromString(req.getCollaboratorId()), req.getContents());
 	}
 
-	public Feedback(UUID altId, UUID authorId, String content) {
+	public Feedback(UUID authorId, String content) {
 		this.feedbackId = UUID.randomUUID();
-		this.alternativeId = altId;
 		this.authorId = authorId;
 		this.contents = content;
 		this.timestamp = Date.from(Instant.now());
+	}
+
+	public Feedback(UUID feedbackId, UUID authorId, Date timestamp, String contents) {
+		this.feedbackId = feedbackId;
+		this.authorId = authorId;
+		this.timestamp = timestamp;
+		this.contents = contents;
 	}
 
 	public static Feedback fromJson(String json) {

@@ -1,6 +1,5 @@
 package me.whatdo.app.db;
 
-import me.whatdo.app.model.entity.Collaborator;
 import me.whatdo.app.model.entity.Feedback;
 
 import java.sql.Connection;
@@ -66,7 +65,7 @@ public class FeedbackDAO {
 	public List<Feedback> getAllFeedback(UUID alternativeID) throws Exception {
 		try {
 			ArrayList<Feedback> feedbackList = new ArrayList<>();
-			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ? ORDER BY timestamp;");
+			PreparedStatement queryFind = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE alternative = ? ORDER BY timestamp DESC;");
 			queryFind.setObject(1, alternativeID);
 			ResultSet resultSet = queryFind.executeQuery();
 
@@ -115,7 +114,8 @@ public class FeedbackDAO {
 	private static Feedback generateFeedback(ResultSet resultSet) throws Exception {
 		UUID id = resultSet.getObject("id", UUID.class);
 		String content = resultSet.getString("content");
+		Date timestamp = resultSet.getTimestamp("timestamp");
 
-		return new Feedback(id, resultSet.getObject("author", UUID.class), content);
+		return new Feedback(id, resultSet.getObject("author", UUID.class), timestamp, content);
 	}
 }

@@ -8,19 +8,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
-import java.util.Date;
-
 public class TestAlternative {
-	Collaborator collab = null;
-	Alternative alt1, alt2 = null;
-	Feedback feedback = null;
+	Collaborator collab;
+	Alternative alt1, alt2;
+	Feedback feedback;
 
 	@Before
 	public void setupTests() {
 		collab = new Collaborator("Maxy", "Baboo");
 		alt1 = new Alternative("We eat pizza?");
-		feedback = new Feedback(alt1.getId(), collab.getId(), "But I don't like pizza :(");
+		feedback = new Feedback(collab.getId(), "But I don't like pizza :(");
 	}
 
 	@Test

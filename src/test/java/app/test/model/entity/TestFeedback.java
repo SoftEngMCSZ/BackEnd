@@ -46,7 +46,7 @@ public class TestFeedback {
 		Feedback feedback2 = Feedback.fromJson(feedback.toJson());
 		JsonObject obj = feedback.toJsonObject();
 		JsonObject obj2 = feedback2.toJsonObject();
-		Assert.assertEquals(obj.get("author").toString(), obj2.get("author").toString());
+		Assert.assertEquals(obj.get("authorId").toString(), obj2.get("authorId").toString());
 		Assert.assertEquals(obj.get("timestamp").toString(), obj2.get("timestamp").toString());
 		Assert.assertEquals(obj.get("contents").toString(), obj2.get("contents").toString());
 

@@ -1,4 +1,4 @@
-package app.test.handlers.collaborator;
+package app.test.handlers.choice;
 
 import me.whatdo.app.handlers.choice.RegisterCollaboratorHandler;
 import me.whatdo.app.db.ChoiceDAO;

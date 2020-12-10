@@ -14,9 +14,10 @@ public class FeedbackRequest {
 
 	public FeedbackRequest() { }
 
-	public FeedbackRequest(String collabId, String alternativeId, String contents) {
+	public FeedbackRequest(String collabId, String alternativeId, String choiceId, String contents) {
 		this.collaboratorId = collabId;
 		this.alternativeId = alternativeId;
+		this.choiceId = choiceId;
 		this.contents = contents;
 	}
 

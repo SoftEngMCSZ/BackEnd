@@ -67,6 +67,11 @@ public class RegisterCollaboratorHandler implements RequestHandler<CollaboratorR
 					body.addProperty("Message", "400 maximum collaborators reached");
 					return new ApiResponse(400, body.toString());
 				}
+				if (choice.get().getFinalAlternative().isPresent()) {
+					body.addProperty("Message", "400 Choice already finalized");
+					return new ApiResponse(400, body.toString());
+				}
+
 				Collaborator collab;
 				if (password.isEmpty()) {
 					collab = new Collaborator(name);

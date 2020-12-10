@@ -2,6 +2,7 @@ package me.whatdo.app.db;
 
 import me.whatdo.app.model.entity.Alternative;
 import me.whatdo.app.model.entity.Collaborator;
+import me.whatdo.app.model.entity.Feedback;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,6 +24,7 @@ public class AlternativeDAO {
 	public boolean addAlternative(UUID choiceId, Alternative alt) throws Exception {
 		try {
 			OpinionDAO opinionDao = new OpinionDAO();
+			FeedbackDAO feedbackDao = new FeedbackDAO();
 
 			PreparedStatement queryFindExisting = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE id = ?;");
 			queryFindExisting.setObject(1, alt.getId());
@@ -47,6 +49,9 @@ public class AlternativeDAO {
 			}
 			for (Collaborator collab : alt.getDisapprovals()) {
 				opinionDao.addOpinion(alt.getId(), collab.getId(), Opinion.DISAPPROVAL);
+			}
+			for (Feedback f : alt.getFeedback()) {
+				feedbackDao.addFeedback(alt.getId(), f);
 			}
 			return true;
 		} catch (Exception e) {
@@ -90,9 +95,10 @@ public class AlternativeDAO {
 	public boolean deleteAlternative(Alternative alt) throws Exception {
 		try {
 			OpinionDAO opinionDao = new OpinionDAO();
+			FeedbackDAO feedbackDao = new FeedbackDAO();
 			PreparedStatement queryDelete = conn.prepareStatement("DELETE FROM " + tblName + " WHERE id = ?;");
 			queryDelete.setObject(1, alt.getId());
-			// TODO: Cascade delete all associated feedback
+			feedbackDao.deleteAllFeedbackForAlternative(alt.getId());
 			opinionDao.deleteAllOpinionsForAlt(alt.getId());
 			int numAffected = queryDelete.executeUpdate();
 			queryDelete.close();
@@ -105,12 +111,13 @@ public class AlternativeDAO {
 	public int deleteAllAlternativesInChoice(UUID choiceId) throws Exception {
 		try {
 			OpinionDAO opinionDao = new OpinionDAO();
+			FeedbackDAO feedbackDao = new FeedbackDAO();
 			PreparedStatement queryCollectIds = conn.prepareStatement("SELECT id FROM " + tblName + " WHERE choice = ?;");
 			queryCollectIds.setObject(1, choiceId);
 			ResultSet results = queryCollectIds.executeQuery();
 
 			while (results.next()) {
-				// TODO: Cascade delete all associated feedback
+				feedbackDao.deleteAllFeedbackForAlternative(results.getObject("id", UUID.class));
 				opinionDao.deleteAllOpinionsForAlt(results.getObject("id", UUID.class));
 			}
 
@@ -124,11 +131,12 @@ public class AlternativeDAO {
 
 	private static Alternative buildAlternative(ResultSet results) throws Exception {
 		OpinionDAO opinionDao = new OpinionDAO();
+		FeedbackDAO feedbackDao = new FeedbackDAO();
 		UUID id = results.getObject("id", UUID.class);
 		String description = results.getString("description");
 		Set<Collaborator> approvals = new HashSet<>(opinionDao.getAllOpinionsForAlt(id, Opinion.APPROVAL));
 		Set<Collaborator> disapprovals = new HashSet<>(opinionDao.getAllOpinionsForAlt(id, Opinion.DISAPPROVAL));
-		// TODO: Add all associated feedback
-		return new Alternative(id, description, approvals, disapprovals, new ArrayList<>());
+		List<Feedback> feedback = feedbackDao.getAllFeedback(id);
+		return new Alternative(id, description, approvals, disapprovals, feedback);
 	}
 }

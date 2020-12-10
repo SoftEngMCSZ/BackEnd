@@ -220,15 +220,17 @@ public class ChoiceDAO {
 		String question = results.getString("question");
 		Optional<UUID> selectedAltId = Optional.ofNullable(results.getObject("selected_alternative", UUID.class));
 		Optional<Alternative> selectedAlternative = Optional.empty();
+		List<Alternative> alternatives = altDao.getAllAlternativesInChoice(id);
 		if (selectedAltId.isPresent()) {
 			selectedAlternative = altDao.getAlternative(selectedAltId.get());
+			assert selectedAlternative.isPresent();
+			alternatives.remove(selectedAlternative.get());
 		}
 		Date creationTime = Date.from(results.getObject("creation_time", Timestamp.class).toInstant());
 		Optional<Date> completionTime = Optional.ofNullable(results.getObject("completion_time", Timestamp.class))
 												.map(ts -> Date.from(ts.toInstant()));
 		int maxCollaborators = results.getInt("max_collaborators");
 
-		List<Alternative> alternatives = altDao.getAllAlternativesInChoice(id);
 		Set<Collaborator> collaborators = new HashSet<>(collabDao.getAllCollaboratorsInChoice(id));
 
 		return new Choice(

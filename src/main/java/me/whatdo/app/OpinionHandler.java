@@ -40,6 +40,11 @@ public class OpinionHandler implements RequestHandler<OpinionRequest, ApiRespons
 
 			Choice choice = maybeChoice.get();
 
+			if (choice.getFinalAlternative().isPresent()) {
+				body.addProperty("Message", "400 Choice already finalized");
+				return new ApiResponse(400, body.toString());
+			}
+
 			UUID collabId;
 			try {
 				collabId = UUID.fromString(request.getCollabId());

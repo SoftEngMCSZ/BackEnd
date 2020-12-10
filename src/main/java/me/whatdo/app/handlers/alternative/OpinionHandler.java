@@ -1,4 +1,4 @@
-package me.whatdo.app;
+package me.whatdo.app.handlers.alternative;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;

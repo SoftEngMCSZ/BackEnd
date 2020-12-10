@@ -1,6 +1,6 @@
 package app.test.handlers.alternative;
 
-import me.whatdo.app.OpinionHandler;
+import me.whatdo.app.handlers.alternative.OpinionHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.db.Opinion;

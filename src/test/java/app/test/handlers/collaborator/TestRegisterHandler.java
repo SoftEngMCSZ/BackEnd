@@ -1,6 +1,6 @@
 package app.test.handlers.collaborator;
 
-import me.whatdo.app.RegisterCollaboratorHandler;
+import me.whatdo.app.handlers.choice.RegisterCollaboratorHandler;
 import me.whatdo.app.db.ChoiceDAO;
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;

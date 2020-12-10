@@ -1,6 +1,6 @@
 package app.test.handlers.choice;
 
-import me.whatdo.app.CreateChoiceHandler;
+import me.whatdo.app.handlers.choice.CreateChoiceHandler;
 import me.whatdo.app.db.DatabaseUtil;
 import me.whatdo.app.model.ApiResponse;
 import me.whatdo.app.model.entity.Alternative;

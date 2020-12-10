@@ -34,6 +34,7 @@ public class CreateChoiceHandler implements RequestHandler<CreateChoiceRequest, 
 		} catch (Exception e) {
 			body.addProperty("Message", "500 server error");
 			body.addProperty("Error", e.getMessage());
+			body.addProperty("Input", request.toJson());
 			return new ApiResponse(500, body.toString());
 		}
 	}

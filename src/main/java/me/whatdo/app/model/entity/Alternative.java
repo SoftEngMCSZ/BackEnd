@@ -60,32 +60,56 @@ public class Alternative {
 		return this.disapprovals.add(author);
 	}
 
+	public boolean removeDisapproval(Collaborator author) {
+		return this.disapprovals.remove(author);
+	}
+
 	public Set<Collaborator> getApprovals() {
 		return approvals;
+	}
+
+	public void setApprovals(Set<Collaborator> approvals) {
+		this.approvals = approvals;
 	}
 
 	public Set<Collaborator> getDisapprovals() {
 		return disapprovals;
 	}
 
-	public List<Feedback> getFeedback() {
-		return feedback;
+	public void setDisapprovals(Set<Collaborator> disapprovals) {
+		this.disapprovals = disapprovals;
 	}
 
-	public boolean removeDisapproval(Collaborator author) {
-		return this.disapprovals.remove(author);
+	public List<Feedback> getFeedback() {
+		return feedback;
 	}
 
 	public boolean addFeedback(Feedback feedback) {
 		return this.feedback.add(feedback);
 	}
 
+	public void setFeedback(List<Feedback> feedback){
+		this.feedback = feedback;
+	}
+
+	public String getAlternativeID(){
+		return alternativeID.toString();
+	}
+
 	public UUID getId() {
 		return alternativeID;
 	}
 
+	public void setAlternativeID(String alternativeID) {
+		this.alternativeID = UUID.fromString(alternativeID);
+	}
+
 	public String getContents() {
 		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
 	}
 
 	public boolean equals(Object o) {

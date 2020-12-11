@@ -10,7 +10,7 @@ public class Alternative {
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 	private UUID alternativeId;
 	private String contents;
-	private Set<Collaborator> approvals;4
+	private Set<Collaborator> approvals;
 	private Set<Collaborator> disapprovals;
 	private List<Feedback> feedback;
 

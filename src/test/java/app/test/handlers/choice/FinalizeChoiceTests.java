@@ -48,7 +48,7 @@ public class FinalizeChoiceTests {
 		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
 		Assert.assertEquals(200, response.getStatusCode());
 		Assert.assertTrue(object.has("finalAlternative"));
-		Assert.assertEquals(alt1.getId().toString(), object.get("finalAlternative").getAsJsonObject().get("alternativeID").getAsString());
+		Assert.assertEquals(alt1.getId().toString(), object.get("finalAlternative").getAsJsonObject().get("alternativeId").getAsString());
 	}
 
 	@Test
@@ -59,7 +59,8 @@ public class FinalizeChoiceTests {
 		JsonObject object = new Gson().fromJson(response.getBody(), JsonObject.class);
 		Assert.assertEquals(200, response.getStatusCode());
 		Assert.assertTrue(object.has("finalAlternative"));
-		Assert.assertEquals(alt1.getId().toString(), object.get("finalAlternative").getAsJsonObject().get("alternativeID").getAsString());
+		Assert.assertEquals(alt1.getId().toString(),
+				object.get("finalAlternative").getAsJsonObject().get("alternativeId").getAsString());
 
 		req = new FinalRequest(alt2.getId().toString(), choice.getId().toString());
 		response = handler.handleRequest(req, null);

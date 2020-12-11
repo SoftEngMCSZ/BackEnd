@@ -39,9 +39,6 @@ public class AlternativeDAO {
 			queryAdd.setObject(1, alt.getId());
 			queryAdd.setString(2, alt.getContents());
 			queryAdd.setObject(3, choiceId);
-
-			// TODO: Insert any associated feedback
-
 			queryAdd.execute();
 
 			for (Collaborator collab : alt.getApprovals()) {
